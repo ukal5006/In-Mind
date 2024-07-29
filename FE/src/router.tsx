@@ -1,6 +1,9 @@
+import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Overview from './pages/Overview';
-import ChildUpdatePage from './pages/Overview';
+<<<<<<< FE/src/router.tsx
+import Overview from './pages/Overview/';
+=======
+>>>>>>> FE/src/router.tsx
 
 const router = createBrowserRouter([
     {
