@@ -1,26 +1,25 @@
-package com.example.backend.reservation.entity;
+package com.example.backend.chat.entity;
+
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="reserve_info")
-public class Reservation {
+@Table(name = "counsel")
+public class Counsel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private Long id;
+    private int id;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @Column(name = "user_idx", nullable = false)
@@ -34,17 +33,12 @@ public class Reservation {
     private Date date;
 
     @Column(name = "start_time", nullable = false)
-    private LocalTime startTime;
+    private Timestamp startTime;
 
     @Column(name = "end_time", nullable = false)
-    private LocalTime endTime;
+    private Timestamp endTime;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
 }

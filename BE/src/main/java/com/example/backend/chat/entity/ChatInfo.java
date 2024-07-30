@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat_info")
-public class chatInfo {
+public class ChatInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class chatInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Column(name = "room_idx", nullable = false)
-    private chatRoom chatRoom;
+    private ChatRoom chatRoom;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @Column(name = "post_idx", nullable = false)
