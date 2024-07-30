@@ -55,12 +55,5 @@ pipeline {
                 sh 'docker-compose up -d'
             }
         }
-        
-        stage('Show Nginx Configuration') {
-            steps {
-                echo 'Showing Nginx Configuration...'
-                sh 'docker exec $(docker ps -qf "name=nginx") cat /etc/nginx/nginx.conf'
-            }
-        }
     }
 }
