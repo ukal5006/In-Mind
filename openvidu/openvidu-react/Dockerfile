@@ -19,8 +19,8 @@ RUN npm run build
 # serve를 전역으로 설치
 RUN npm install -g serve
 
-# 이 컨테이너 외부에서 포트 3001을 사용할 수 있도록 설정
-EXPOSE 3001
+# 이 컨테이너 외부에서 포트 3000을 사용할 수 있도록 설정
+EXPOSE 3000
 
 # 애플리케이션 실행
 CMD ["serve", "-s", "build"]
