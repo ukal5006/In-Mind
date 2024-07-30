@@ -6,18 +6,18 @@ import FindIdWrapper from './FindIdWrapper';
 import BigLogo from '../../components/BigLogo';
 
 function FindId() {
-    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
 
     const handleFindPw = () => {
-        console.log(email);
+        console.log(name);
         console.log(phone);
     };
     return (
         <FindIdContainer>
             <BigLogo />
             <FindIdWrapper>
-                <FindIdInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <FindIdInput placeholder="이메일" value={name} onChange={(e) => setName(e.target.value)} />
                 <FindIdInput
                     placeholder="전화번호 ( - 를 빼고 입력해주세요)"
                     value={phone}
