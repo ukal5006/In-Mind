@@ -10,4 +10,4 @@ COPY build/libs/inmind-0.0.1-SNAPSHOT.jar app.jar
 # 컨테이너가 시작될 때 실행될 명령어
 CMD ["java", "-jar", "app.jar"]
 
-EXPOSE 5000
+EXPOSE 4443 5000
