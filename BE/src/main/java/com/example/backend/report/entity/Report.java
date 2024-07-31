@@ -22,7 +22,7 @@ public class Report {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "child_idx", nullable = false)
+    @JoinColumn(name = "child_idx", nullable = false)
     private Child childIdx;
 
     @Column(name = "result", nullable = false)

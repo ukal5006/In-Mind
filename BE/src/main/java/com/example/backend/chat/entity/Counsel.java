@@ -1,6 +1,7 @@
 package com.example.backend.chat.entity;
 
 
+import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,13 +22,13 @@ public class Counsel {
     @Column(name = "idx")
     private int id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "user_idx", nullable = false)
-//    private User userIdx;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "co_idx", nullable = false)
-//    private User coIdx;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_idx", nullable = false)
+    private User userIdx;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "co_idx", nullable = false)
+    private User coIdx;
 
     @Column(name = "date", nullable = false)
     private Date date;

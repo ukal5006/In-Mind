@@ -1,5 +1,6 @@
 package com.example.backend.child.entity;
 
+import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,10 +21,9 @@ public class Child {
     @Column(name = "idx")
     private long id;
 
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "user_idx", nullable = false)
-//    private User userIdx;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_idx", nullable = false)
+    private User userIdx;
 
     @Column(nullable = false)
     private String name;

@@ -1,6 +1,7 @@
 package com.example.backend.chat.entity;
 
 
+import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,12 +22,12 @@ public class ChatInfo {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "room_idx", nullable = false)
+    @JoinColumn(name = "room_idx", nullable = false)
     private ChatRoom chatRoom;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @Column(name = "post_idx", nullable = false)
-//    private User postIdx;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_idx", nullable = false)
+    private User postIdx;
 
     @Column(name = "content", nullable = false)
     private String content;
