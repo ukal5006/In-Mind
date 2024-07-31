@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,8 +23,24 @@ public class User {
     private long id;
 
     //FK
-    @OneToOne
-    private Organization org;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "org_idx", nullable = false)
+    private Organization organization;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Certificate> certificates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Resume> resumes =  new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private RefreshToken refreshToken;
+
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
+    private DefaultTime defaultTime;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UnavailableTime> unavailableTimes = new ArrayList<>();
 
     @Column(nullable = false)
     private String email;
