@@ -1,5 +1,10 @@
 package com.example.backend.user.entity;
 
+import com.example.backend.chat.entity.ChatRoom;
+import com.example.backend.chat.entity.Counsel;
+import com.example.backend.child.entity.Child;
+import com.example.backend.notification.entity.Notification;
+import com.example.backend.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -41,6 +46,24 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UnavailableTime> unavailableTimes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Like> like = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Notification> notifications = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Child> children = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Reservation> reservations = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Counsel> counsels = new ArrayList<>();
 
     @Column(nullable = false)
     private String email;
