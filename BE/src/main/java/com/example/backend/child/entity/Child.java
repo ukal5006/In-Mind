@@ -28,7 +28,7 @@ public class Child {
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "child_idx", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
 
     @Column(nullable = false)
