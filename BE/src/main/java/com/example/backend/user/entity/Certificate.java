@@ -20,6 +20,7 @@ public class Certificate {
 
     //FK
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     @Column(nullable = false)

@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
@@ -16,6 +19,9 @@ public class Organization {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private Long id;
+
+    @OneToMany(mappedBy = "organization")
+    private List<User> users = new ArrayList<>();
 
     @Column(nullable = false)
     private String name;

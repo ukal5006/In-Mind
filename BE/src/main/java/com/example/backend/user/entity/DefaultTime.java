@@ -20,7 +20,8 @@ public class DefaultTime {
     private Long id;
 
     //FK
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     @Column(nullable = false)
