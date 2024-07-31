@@ -26,7 +26,6 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private long id;
-
     //FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_idx", nullable = false)
@@ -51,7 +50,7 @@ public class User {
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> like = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
