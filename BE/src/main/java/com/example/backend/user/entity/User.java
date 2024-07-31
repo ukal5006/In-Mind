@@ -7,6 +7,7 @@ import com.example.backend.notification.entity.Notification;
 import com.example.backend.reservation.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -21,6 +22,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @Table(name = "user")
+@Builder
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +53,7 @@ public class User {
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> like = new ArrayList<>();
+    private List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
@@ -100,4 +102,35 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    private User(long id, Organization organization, List<Certificate> certificates, List<Resume> resumes,
+                 RefreshToken refreshToken, DefaultTime defaultTime, List<UnavailableTime> unavailableTimes,
+                 List<ChatRoom> chatRooms, List<Like> like, List<Notification> notifications,
+                 List<Child> children, List<Reservation> reservations, List<Counsel> counsels,
+                 String email, String password, String name, String nickname, String tel, String profile,
+                 boolean isAuth, RoleStatus role, boolean isAlive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.organization = organization;
+        this.certificates = certificates;
+        this.resumes = resumes;
+        this.refreshToken = refreshToken;
+        this.defaultTime = defaultTime;
+        this.unavailableTimes = unavailableTimes;
+        this.chatRooms = chatRooms;
+        this.likes = like;
+        this.notifications = notifications;
+        this.children = children;
+        this.reservations = reservations;
+        this.counsels = counsels;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.nickname = nickname;
+        this.tel = tel;
+        this.profile = profile;
+        this.isAuth = isAuth;
+        this.role = role;
+        this.isAlive = isAlive;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
