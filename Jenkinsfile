@@ -67,20 +67,15 @@ pipeline {
         
         stage('Docker Compose Down') {
             steps {
-                dir('openvidu'){
-                    echo 'Stopping and removing existing Docker containers...'
-                    sh 'docker-compose down || true'
-                }
-                
+                echo 'Stopping and removing existing Docker containers...'
+                sh 'docker-compose down || true'
             }
         }
         
         stage('Docker Compose Up') {
             steps {
-                dir('openvidu'){
-                    echo 'Deploying Docker containers...'
-                    sh 'docker-compose up -d'
-                }
+                echo 'Deploying Docker containers...'
+                sh 'docker-compose up -d'
             }
         }
     }
