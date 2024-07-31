@@ -6,42 +6,6 @@ pipeline {
     }
 
     stages {
-        
-        // stage('BE Test') {
-        //     steps {
-        //         dir('BE'){
-        //             echo 'Back-End Testing...'
-        //         }
-        //     }
-        // }
-        
-        // stage('FE Test') {
-        //     steps {
-        //         dir('FE'){
-        //             echo 'Front-End Testing...'
-        //         }
-        //     }
-        // }
-        
-        // stage('BE Build') {
-        //     steps {
-        //         sh 'chmod -R 777 .'
-        //         dir('BE'){
-        //             sh './gradlew clean build'
-        //         }
-        //     }
-        // }
-        
-        // stage('FE Build') {
-        //     steps {
-        //         sh 'chmod -R 777 .'
-        //         dir('FE') {
-        //             sh 'npm install'
-        //             sh 'npm run build'
-        //         }
-        //     }
-        // }
-
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
@@ -59,7 +23,8 @@ pipeline {
                 dir('openvidu') {
                     dir('react'){
                         sh 'npm install'
-                        sh 'npm run build'
+                        // Node.js 버전 호환성 문제 해결
+                        sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
                     }
                 }
             }
