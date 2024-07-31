@@ -1,7 +1,7 @@
 import React from 'react';
 import ReportListPage from './reportListPage';
 
-const ReportListContainer = (): JSX.Element => {
+const ReportList = (): JSX.Element => {
   return (
     <div className="report-list-container">
       <header>
@@ -17,4 +17,4 @@ const ReportListContainer = (): JSX.Element => {
   );
 };
 
-export default ReportListContainer;
+export default ReportList;

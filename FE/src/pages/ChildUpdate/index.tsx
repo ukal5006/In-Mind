@@ -1,7 +1,7 @@
 import React from 'react';
 import ChildInfoEdit from './ChildUpdateContainer';
 
-const ChildUpdatePage = (): JSX.Element => {
+const ChildUpdate = (): JSX.Element => {
   return (
     <div className="child-update-page">
       <header>
@@ -17,4 +17,4 @@ const ChildUpdatePage = (): JSX.Element => {
   );
 };
 
-export default ChildUpdatePage;
+export default ChildUpdate;

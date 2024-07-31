@@ -5,7 +5,7 @@ interface CounselorSearchProps {
   children: ReactNode;
 }
 
-const CounselorSearch: React.FC<CounselorSearchProps> = ({ children }) => {
+const CounselorSearchContainer: React.FC<CounselorSearchProps> = ({ children }) => {
   const { fetchCounselors, isLoading, error } = useCounselorStore();
 
   useEffect(() => {
@@ -22,4 +22,4 @@ const CounselorSearch: React.FC<CounselorSearchProps> = ({ children }) => {
   );
 };
 
-export default CounselorSearch;
+export default CounselorSearchContainer;
