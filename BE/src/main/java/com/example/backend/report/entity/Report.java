@@ -19,11 +19,11 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private int id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "child_idx", nullable = false)
-    private Child childIdx;
+    private Child child;
 
     @Column(name = "result", nullable = false)
     private String result;

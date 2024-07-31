@@ -14,21 +14,21 @@ import java.util.Date;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "counsel")
+@Table(name = "consulting_history")
 public class Counsel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private int id;
+    private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx", nullable = false)
-    private User userIdx;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "co_idx", nullable = false)
-    private User coIdx;
+    private User counselor;
 
     @Column(name = "date", nullable = false)
     private Date date;
