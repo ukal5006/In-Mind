@@ -14,10 +14,10 @@ https://velog.io/@ksk0516/ssafy-%EA%B3%B5%ED%86%B5-PJT-%ED%9A%8C%EA%B3%A0
 
 https://docs.openvidu.io/en/stable/deployment/ce/on-premises/
 
-### Spring boot(BACK-END)
+### Spring boot(BACK-END) 5000 port 사용
 
 https://docs.openvidu.io/en/stable/application-server/openvidu-basic-java/
 
-### React(FRONT-END)
+### React(FRONT-END) 3000 port 사용
 
 https://docs.openvidu.io/en/stable/tutorials/openvidu-react/
