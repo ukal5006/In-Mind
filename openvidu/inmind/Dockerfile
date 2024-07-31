@@ -5,7 +5,7 @@ FROM openjdk:17
 WORKDIR /app
 
 # 빌드된 JAR 파일을 컨테이너로 복사
-COPY build/libs/openvidu-basic-java-2.30.0.jar app.jar
+COPY build/libs/inmind-0.0.1-SNAPSHOT.jar app.jar
 
 # 컨테이너가 시작될 때 실행될 명령어
 CMD ["java", "-jar", "app.jar"]

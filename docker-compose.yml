@@ -1,16 +1,16 @@
-version: '2.1'
+version: "2.1"
 
 services:
-  backend:
-    image: backend:latest
-    network_mode: host
-    build:
-      context: ./openvidu/springboot
-      dockerfile: Dockerfile
+    backend:
+        image: backend:latest
+        network_mode: host
+        build:
+            context: ./openvidu/inmind
+            dockerfile: Dockerfile
 
-  frontend:
-    image: frontend:latest
-    network_mode: host
-    build:
-      context: ./openvidu/react
-      dockerfile: Dockerfile
+    frontend:
+        image: frontend:latest
+        network_mode: host
+        build:
+            context: ./openvidu/react
+            dockerfile: Dockerfile
