@@ -10,7 +10,7 @@ pipeline {
             steps {
                 sh 'chmod -R 777 .'
                 dir('openvidu'){
-                    dir('react'){
+                    dir('inmind'){
                         sh './gradlew clean build'
                     }
                 }
