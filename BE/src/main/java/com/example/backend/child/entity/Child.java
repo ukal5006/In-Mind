@@ -1,5 +1,6 @@
 package com.example.backend.child.entity;
 
+import com.example.backend.report.entity.Report;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,7 +26,10 @@ public class Child {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx", nullable = false)
-    private User userIdx;
+    private User user;
+
+    @OneToMany(mappedBy = "child_idx", cascade = CascadeType.ALL)
+    private List<Report> reports = new ArrayList<>();
 
     @Column(nullable = false)
     private String name;
