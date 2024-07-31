@@ -7,27 +7,48 @@ pipeline {
 
     stages {
         
-        stage('BE Test') {
-            steps {
-                dir('BE'){
-                    echo 'Back-End Testing...'
-                }
-            }
-        }
+        // stage('BE Test') {
+        //     steps {
+        //         dir('BE'){
+        //             echo 'Back-End Testing...'
+        //         }
+        //     }
+        // }
         
-        stage('FE Test') {
-            steps {
-                dir('FE'){
-                    echo 'Front-End Testing...'
-                }
-            }
-        }
+        // stage('FE Test') {
+        //     steps {
+        //         dir('FE'){
+        //             echo 'Front-End Testing...'
+        //         }
+        //     }
+        // }
         
+        // stage('BE Build') {
+        //     steps {
+        //         sh 'chmod -R 777 .'
+        //         dir('BE'){
+        //             sh './gradlew clean build'
+        //         }
+        //     }
+        // }
+        
+        // stage('FE Build') {
+        //     steps {
+        //         sh 'chmod -R 777 .'
+        //         dir('FE') {
+        //             sh 'npm install'
+        //             sh 'npm run build'
+        //         }
+        //     }
+        // }
+
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('BE'){
-                    sh './gradlew clean build'
+                dir('openvidu'){
+                    dir('react'){
+                        sh './gradlew clean build'
+                    }
                 }
             }
         }
@@ -35,24 +56,31 @@ pipeline {
         stage('FE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('FE') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                dir('openvidu') {
+                    dir('react'){
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
                 }
             }
         }
         
         stage('Docker Compose Down') {
             steps {
-                echo 'Stopping and removing existing Docker containers...'
-                sh 'docker-compose down || true'
+                dir('openvidu'){
+                    echo 'Stopping and removing existing Docker containers...'
+                    sh 'docker-compose down || true'
+                }
+                
             }
         }
         
         stage('Docker Compose Up') {
             steps {
-                echo 'Deploying Docker containers...'
-                sh 'docker-compose up -d'
+                dir('openvidu'){
+                    echo 'Deploying Docker containers...'
+                    sh 'docker-compose up -d'
+                }
             }
         }
     }

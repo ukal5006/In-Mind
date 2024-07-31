@@ -1,17 +1,14 @@
-version: "3.7"
+version: '2.1'
 
 services:
-    openvidu-backend:
-        build:
-            context: ./java
-            dockerfile: Dockerfile
-        expose:
-            - "6080"
-        environment:
-            - SPRING_PROFILES_ACTIVE=prod
-    openvidu-front:
-        build:
-            context: ./openvidu-react
-            dockerfile: Dockerfile
-        expose:
-            - "3000"
+  backend:
+    image: backend:latest
+    build:
+      context: ./springboot
+      dockerfile: Dockerfile
+
+  frontend:
+    image: frontend:latest
+    build:
+      context: ./react
+      dockerfile: Dockerfile
