@@ -18,7 +18,8 @@ public class RefreshToken {
     private long id;
 
     //FK
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_idx")
     private User user;
 
     @Column(nullable = false)
