@@ -1,8 +1,8 @@
 import React from 'react';
 import HTPExamContainer from './HTPExamContainer';
 
-const HTPExamPage = (): JSX.Element => {
+const Test = (): JSX.Element => {
   return <HTPExamContainer />;
 };
 
-export default HTPExamPage;
+export default Test;

@@ -13,7 +13,7 @@ const HTPExamContainer = (): JSX.Element => {
   useEffect(() => {
     const fetchChildren = async () => {
       try {
-        const response = await axios.get('/api/children'); //자녀 목록 받아오는 api 주소 수정 필요
+        const response = await axios.get('/api/children'); //자녀 목록 받아오는 api 주소 수정 필요 , api request와 스토어 항목 일치하는지 확인필요
         setChildren(response.data);
       } catch (error) {
         console.error('Failed to fetch children:', error);
@@ -21,7 +21,7 @@ const HTPExamContainer = (): JSX.Element => {
     };
 
     fetchChildren();
-  }, [setChildren]);
+  }, [setChildren]); //setchildren은 useEffect로 컨트롤됨
 
   const handleChildSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const child = children.find(c => c.id === parseInt(e.target.value));
@@ -45,7 +45,7 @@ const HTPExamContainer = (): JSX.Element => {
     formData.append('image', file);
 
     try {
-      const response = await axios.post('/api/upload-image', formData, {
+      const response = await axios.post('/api/upload-image', formData, {  //api 확정 후 이미지 업로드하는 api 정확하게 연결 필요
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -58,9 +58,9 @@ const HTPExamContainer = (): JSX.Element => {
   };
 
   const handleSubmit = async () => {
-    if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {
+    if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {  //현재 플로우를 제공받는게 1번부터 7번까지 모두 입력되는걸 전제로 하지만, 수정필요할듯 6개까지만 쓰거나 숫자 7이 포함되어 있을 경우 개수 검사를 안 하는 식으로
       alert('모든 필드를 입력해주세요.');
-      return;
+      return;                                               // 플로우 입력을 체크박스를 통한 순서입력으로 바꿀지 고민중, 추후에 개발진행
     }
 
     try {
@@ -121,7 +121,9 @@ const HTPExamContainer = (): JSX.Element => {
         />
       </div>
 
-      <button onClick={handleSubmit}>검사 시작</button>
+      <button onClick={handleSubmit}>검사 시작</button>  
+      {/* 검사 시작 버튼 누르고 라우팅 필요, 검사이력 페이지나, 예약페이지로 이동이라던지 이동할 페이지 만들면 이동해야함 */}
+      {/* 검사가 끝나면 reportListStore에 지금 검사한 결과를 삽입하여 최신화해야할지도. */}
     </div>
   );
 };

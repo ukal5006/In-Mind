@@ -7,7 +7,7 @@ interface CounselorDetailProps {
   userId: string;
 }
 
-const CounselorDetail: React.FC<CounselorDetailProps> = ({ userId }): JSX.Element => {
+const CounselorDetailPage: React.FC<CounselorDetailProps> = ({ userId }): JSX.Element => {
   const { counselor, loading, error, fetchCounselor } = useCounselorStore();
   const [activeTab, setActiveTab] = useState<'info' | 'reviews'>('info');
 
@@ -89,4 +89,4 @@ const CounselorDetail: React.FC<CounselorDetailProps> = ({ userId }): JSX.Elemen
   );
 };
 
-export default CounselorDetail;
+export default CounselorDetailPage;

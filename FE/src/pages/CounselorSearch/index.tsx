@@ -1,22 +1,22 @@
 import React from 'react';
-import CounselorSearch from './CounselorSearch';
+import CounselorSearchContainer from './CounselorSearch';
 import SearchBar from './SearchBar';
 import FilterOptions from './FilterOptions';
 import CounselorList from './CounselorList';
 import Pagination from './Pagination';
 
-const CounselorSearchPage: React.FC = () => {
+const CounselorSearch: React.FC = () => {
   return (
     <div className="counselor-search-page">
       <h1>상담사 검색</h1>
-      <CounselorSearch>
+      <CounselorSearchContainer>
         <SearchBar />
         <FilterOptions />
         <CounselorList />
         <Pagination />
-      </CounselorSearch>
+      </CounselorSearchContainer>
     </div>
   );
 };
 
-export default CounselorSearchPage;
+export default CounselorSearch;
