@@ -1,4 +1,3 @@
-import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import Overview from './pages/Overview/';
 import Login from './pages/Login';
@@ -7,6 +6,13 @@ import FindId from './pages/FindId';
 import Join from './pages/Join';
 import User from './pages/Join/User';
 import Counselor from './pages/Join/Counselor';
+import CounselorMain from './pages/CounselorMain';
+import UserMain from './pages/UserMain';
+import MyPage from './pages/MyPage';
+import UserHome from './pages/UserMain/UserHome';
+import UserInfo from './pages/UserInfo';
+import ChildInfo from './pages/ChildInfo';
+import CounselorHome from './pages/CounselorMain/CounselorHome';
 
 const router = createBrowserRouter([
     {
@@ -36,6 +42,44 @@ const router = createBrowserRouter([
             {
                 path: 'counselor',
                 element: <Counselor />,
+            },
+        ],
+    },
+    {
+        path: '/user',
+        element: <UserMain />,
+        children: [
+            {
+                path: 'home',
+                element: <UserHome />,
+            },
+            {
+                path: 'mypage',
+                element: <MyPage />,
+                children: [
+                    {
+                        path: 'userInfo',
+                        element: <UserInfo />,
+                    },
+                    {
+                        path: 'childInfo',
+                        element: <ChildInfo />,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        path: '/counselor',
+        element: <CounselorMain />,
+        children: [
+            {
+                path: 'home',
+                element: <CounselorHome />,
+            },
+            {
+                path: 'mypage',
+                element: <MyPage />,
             },
         ],
     },
