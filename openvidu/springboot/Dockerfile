@@ -9,6 +9,3 @@ COPY build/libs/BackEnd-0.0.1-SNAPSHOT.jar /app/app.jar
 
 # 컨테이너가 시작될 때 실행될 명령어
 CMD ["java", "-jar", "/app/app.jar"]
-
-# 컨테이너 외부로 노출할 포트 번호
-EXPOSE 5000
