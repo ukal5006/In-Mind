@@ -16,7 +16,7 @@ public class Certificate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private Long id;
+    private long id;
 
     //FK
     @ManyToOne(fetch = FetchType.LAZY)

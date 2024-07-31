@@ -18,7 +18,7 @@ public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private Long id;
+    private long id;
 
     @OneToMany(mappedBy = "organization")
     private List<User> users = new ArrayList<>();

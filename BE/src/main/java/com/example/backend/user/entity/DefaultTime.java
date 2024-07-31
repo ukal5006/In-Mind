@@ -17,7 +17,7 @@ public class DefaultTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private Long id;
+    private long id;
 
     //FK
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
