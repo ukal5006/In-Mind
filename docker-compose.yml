@@ -1,29 +1,18 @@
 version: '2.1'
 
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    depends_on:
-      - backend
-      - frontend
-
   backend:
     image: backend:latest
     build:
-      context: ./BE
+      context: ./springboot
       dockerfile: Dockerfile
     expose:
-      - "7777"
+      - "5000"
 
   frontend:
     image: frontend:latest
     build:
-      context: ./FE
+      context: ./react
       dockerfile: Dockerfile
     expose:
       - "3000"
