@@ -22,14 +22,13 @@ selected_criteria = [29, 49, 84, 113, 124, 139, 150]
 
 # 선택된 기준에 대한 설명 추출
 selected_descriptions = criteria_df[criteria_df['번호'].isin(selected_criteria)]
-
 # 설명을 텍스트로 변환
-descriptions_text = "\n".join([f"Criteria {row['번호']}: {row['설명']}" for index, row in selected_descriptions.iterrows()])
-
+descriptions_text = "\n".join([f"{row['기준']}: {row['설명']}" for index, row in selected_descriptions.iterrows()])
+print(descriptions_text)
 # 서술형 텍스트 생성 프롬프트
 prompt = (
     f"당신은 세계 최고의 HTP (House-Tree-Person) 심리검사 상담가입니다. "
-    f"사용자가 업로드한 {selected_criteria}을 기반으로 전문가 분석과 피드백을 제공하세요. "
+    f"사용자가 업로드한 {criteria_df}을 기반으로 전문가 분석과 피드백을 제공하세요. "
     f"다음은 주어진 기준 설명입니다:\n\n"
     f"{descriptions_text}\n\n"
     f"이 기준들을 바탕으로 서술형 분석 결과를 한국어로 작성해 주세요."
@@ -37,7 +36,7 @@ prompt = (
 
 # 모델 입력 준비
 messages = [
-    {"role": "system", "content": "친절한 챗봇으로서 상대방의 요청에 최대한 자세하고 친절하게 답하자. 모든 대답은 한국어(Korean)으로 대답해줘."},
+    {"role": "system", "content": "전문적인 HTP상담가로서 주어진 데이터프레임을 바탕으로 사용자가 입력한 번호에 대해 상세히 해석해주자. 모든 대답은 한국어(Korean)으로 대답해줘."},
     {"role": "user", "content": prompt},
 ]
 
