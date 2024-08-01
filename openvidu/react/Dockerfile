@@ -22,4 +22,4 @@ RUN npm install -g serve
 # 애플리케이션 실행
 CMD ["serve", "-s", "build"]
 
-EXPOSE 3000
+EXPOSE 5442

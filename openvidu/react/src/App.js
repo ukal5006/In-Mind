@@ -1,11 +1,12 @@
-import { OpenVidu } from 'openvidu-browser';
+import { OpenVidu } from "openvidu-browser";
 
-import axios from 'axios';
-import React, { Component } from 'react';
-import './App.css';
-import UserVideoComponent from './UserVideoComponent';
+import axios from "axios";
+import React, { Component } from "react";
+import "./App.css";
+import UserVideoComponent from "./UserVideoComponent";
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+// const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === "production" ? "" : "https://b301.xyz/";
 
 class App extends Component {
     constructor(props) {
@@ -13,10 +14,10 @@ class App extends Component {
 
         // These properties are in the state's component in order to re-render the HTML whenever their values change
         this.state = {
-            mySessionId: 'SessionA',
-            myUserName: 'Participant' + Math.floor(Math.random() * 100),
+            mySessionId: "SessionA",
+            myUserName: "Participant" + Math.floor(Math.random() * 100),
             session: undefined,
-            mainStreamManager: undefined,  // Main video of the page. Will be the 'publisher' or one of the 'subscribers'
+            mainStreamManager: undefined, // Main video of the page. Will be the 'publisher' or one of the 'subscribers'
             publisher: undefined,
             subscribers: [],
         };
@@ -31,11 +32,11 @@ class App extends Component {
     }
 
     componentDidMount() {
-        window.addEventListener('beforeunload', this.onbeforeunload);
+        window.addEventListener("beforeunload", this.onbeforeunload);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('beforeunload', this.onbeforeunload);
+        window.removeEventListener("beforeunload", this.onbeforeunload);
     }
 
     onbeforeunload(event) {
@@ -57,7 +58,7 @@ class App extends Component {
     handleMainVideoStream(stream) {
         if (this.state.mainStreamManager !== stream) {
             this.setState({
-                mainStreamManager: stream
+                mainStreamManager: stream,
             });
         }
     }
@@ -90,7 +91,7 @@ class App extends Component {
                 // --- 3) Specify the actions when events take place in the session ---
 
                 // On every new Stream received...
-                mySession.on('streamCreated', (event) => {
+                mySession.on("streamCreated", (event) => {
                     // Subscribe to the Stream to receive it. Second parameter is undefined
                     // so OpenVidu doesn't create an HTML video by its own
                     var subscriber = mySession.subscribe(event.stream, undefined);
@@ -104,14 +105,13 @@ class App extends Component {
                 });
 
                 // On every Stream destroyed...
-                mySession.on('streamDestroyed', (event) => {
-
+                mySession.on("streamDestroyed", (event) => {
                     // Remove the stream from 'subscribers' array
                     this.deleteSubscriber(event.stream.streamManager);
                 });
 
                 // On every asynchronous exception...
-                mySession.on('exception', (exception) => {
+                mySession.on("exception", (exception) => {
                     console.warn(exception);
                 });
 
@@ -121,9 +121,9 @@ class App extends Component {
                 this.getToken().then((token) => {
                     // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
                     // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-                    mySession.connect(token, { clientData: this.state.myUserName })
+                    mySession
+                        .connect(token, { clientData: this.state.myUserName })
                         .then(async () => {
-
                             // --- 5) Get your own camera stream ---
 
                             // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
@@ -133,9 +133,9 @@ class App extends Component {
                                 videoSource: undefined, // The source of video. If undefined default webcam
                                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                                 publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                                resolution: '640x480', // The resolution of your video
+                                resolution: "640x480", // The resolution of your video
                                 frameRate: 30, // The frame rate of your video
-                                insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
+                                insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
                                 mirror: false, // Whether to mirror your local video or not
                             });
 
@@ -145,9 +145,14 @@ class App extends Component {
 
                             // Obtain the current video device in use
                             var devices = await this.OV.getDevices();
-                            var videoDevices = devices.filter(device => device.kind === 'videoinput');
-                            var currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
-                            var currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
+                            var videoDevices = devices.filter((device) => device.kind === "videoinput");
+                            var currentVideoDeviceId = publisher.stream
+                                .getMediaStream()
+                                .getVideoTracks()[0]
+                                .getSettings().deviceId;
+                            var currentVideoDevice = videoDevices.find(
+                                (device) => device.deviceId === currentVideoDeviceId
+                            );
 
                             // Set the main video in the page to display our webcam and store our Publisher
                             this.setState({
@@ -157,15 +162,14 @@ class App extends Component {
                             });
                         })
                         .catch((error) => {
-                            console.log('There was an error connecting to the session:', error.code, error.message);
+                            console.log("There was an error connecting to the session:", error.code, error.message);
                         });
                 });
-            },
+            }
         );
     }
 
     leaveSession() {
-
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
 
         const mySession = this.state.session;
@@ -179,21 +183,22 @@ class App extends Component {
         this.setState({
             session: undefined,
             subscribers: [],
-            mySessionId: 'SessionA',
-            myUserName: 'Participant' + Math.floor(Math.random() * 100),
+            mySessionId: "SessionA",
+            myUserName: "Participant" + Math.floor(Math.random() * 100),
             mainStreamManager: undefined,
-            publisher: undefined
+            publisher: undefined,
         });
     }
 
     async switchCamera() {
         try {
-            const devices = await this.OV.getDevices()
-            var videoDevices = devices.filter(device => device.kind === 'videoinput');
+            const devices = await this.OV.getDevices();
+            var videoDevices = devices.filter((device) => device.kind === "videoinput");
 
             if (videoDevices && videoDevices.length > 1) {
-
-                var newVideoDevice = videoDevices.filter(device => device.deviceId !== this.state.currentVideoDevice.deviceId)
+                var newVideoDevice = videoDevices.filter(
+                    (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
+                );
 
                 if (newVideoDevice.length > 0) {
                     // Creating a new publisher with specific videoSource
@@ -202,13 +207,13 @@ class App extends Component {
                         videoSource: newVideoDevice[0].deviceId,
                         publishAudio: true,
                         publishVideo: true,
-                        mirror: true
+                        mirror: true,
                     });
 
                     //newPublisher.once("accessAllowed", () => {
-                    await this.state.session.unpublish(this.state.mainStreamManager)
+                    await this.state.session.unpublish(this.state.mainStreamManager);
 
-                    await this.state.session.publish(newPublisher)
+                    await this.state.session.publish(newPublisher);
                     this.setState({
                         currentVideoDevice: newVideoDevice[0],
                         mainStreamManager: newPublisher,
@@ -258,7 +263,12 @@ class App extends Component {
                                     />
                                 </p>
                                 <p className="text-center">
-                                    <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
+                                    <input
+                                        className="btn btn-lg btn-success"
+                                        name="commit"
+                                        type="submit"
+                                        value="JOIN"
+                                    />
                                 </p>
                             </form>
                         </div>
@@ -288,18 +298,23 @@ class App extends Component {
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
                                 <UserVideoComponent streamManager={this.state.mainStreamManager} />
-
                             </div>
                         ) : null}
                         <div id="video-container" className="col-md-6">
                             {this.state.publisher !== undefined ? (
-                                <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                    <UserVideoComponent
-                                        streamManager={this.state.publisher} />
+                                <div
+                                    className="stream-container col-md-6 col-xs-6"
+                                    onClick={() => this.handleMainVideoStream(this.state.publisher)}
+                                >
+                                    <UserVideoComponent streamManager={this.state.publisher} />
                                 </div>
                             ) : null}
                             {this.state.subscribers.map((sub, i) => (
-                                <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
+                                <div
+                                    key={sub.id}
+                                    className="stream-container col-md-6 col-xs-6"
+                                    onClick={() => this.handleMainVideoStream(sub)}
+                                >
                                     <span>{sub.id}</span>
                                     <UserVideoComponent streamManager={sub} />
                                 </div>
@@ -310,7 +325,6 @@ class App extends Component {
             </div>
         );
     }
-
 
     /**
      * --------------------------------------------
@@ -333,17 +347,29 @@ class App extends Component {
     }
 
     async createSession(sessionId) {
-        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-            headers: { 'Content-Type': 'application/json', },
-        });
+        const response = await axios.post(
+            APPLICATION_SERVER_URL + "openvidu/api/sessions",
+            { customSessionId: sessionId },
+            {
+                headers: { "Content-Type": "application/json", Authorization: "Basic T1BFTlZJRFVBUFA6c3NhZnk=" },
+            }
+        );
+        console.log(sessionId);
+        console.log(response.data);
         return response.data; // The sessionId
     }
 
     async createToken(sessionId) {
-        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-            headers: { 'Content-Type': 'application/json', },
-        });
-        return response.data; // The token
+        console.log(sessionId);
+        const response = await axios.post(
+            APPLICATION_SERVER_URL + "openvidu/api/sessions/" + sessionId.sessionId + "/connection",
+            {},
+            {
+                headers: { "Content-Type": "application/json", Authorization: "Basic T1BFTlZJRFVBUFA6c3NhZnk=" },
+            }
+        );
+        console.log(response.data);
+        return response.data.token; // The token
     }
 }
 

@@ -18,15 +18,15 @@ https://demos.openvidu.io/basic-videoconference/
 
 https://docs.openvidu.io/en/stable/deployment/ce/on-premises/
 
-### Spring boot(BACK-END) 5000 port 사용
+### Spring boot(BACK-END) 사용 X
 
 https://docs.openvidu.io/en/stable/application-server/openvidu-basic-java/
 
-### React(FRONT-END) 3000 port 사용
+### React(FRONT-END) 5442 port 사용(PORT=5442 npm start)
 
 https://docs.openvidu.io/en/stable/tutorials/openvidu-react/
 
-### RESTAPI 문서
+### RESTAPI 문서 (매우 중요)
 
 https://docs.openvidu.io/en/stable/reference-docs/REST-API/
 
