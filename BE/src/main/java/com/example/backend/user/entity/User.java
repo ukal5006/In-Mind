@@ -5,6 +5,7 @@ import com.example.backend.chat.entity.Counsel;
 import com.example.backend.child.entity.Child;
 import com.example.backend.notification.entity.Notification;
 import com.example.backend.reservation.entity.Reservation;
+import com.example.backend.reservation.entity.UnavailableTime;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

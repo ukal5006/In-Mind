@@ -1,17 +1,18 @@
 package com.example.backend.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "default_time")
 public class DefaultTime {
     @Id
@@ -25,10 +26,10 @@ public class DefaultTime {
     private User user;
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @Column(nullable = false)
     private String info;

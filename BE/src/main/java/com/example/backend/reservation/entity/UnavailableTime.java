@@ -1,9 +1,9 @@
-package com.example.backend.user.entity;
+package com.example.backend.reservation.entity;
 
+import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
