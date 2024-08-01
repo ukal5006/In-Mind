@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import axios from 'axios';
 
 const API_BASE_URL = 'your_api_base_url';  //api 확정 후 변경 필요
