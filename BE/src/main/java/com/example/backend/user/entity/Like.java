@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "likes") // like는 SQL 예약어이기 때문에 에러 발생
+@Table(name = "likes")
 public class Like {
 
     @Id
