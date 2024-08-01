@@ -2,17 +2,19 @@ package com.example.backend.reservation.dto;
 
 
 import com.example.backend.reservation.entity.Reservation;
+import com.example.backend.user.entity.User;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 
-@Getter @Setter
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class ReserveRequestDto {
 
     @NotNull(message = "User ID는 필수입니다.")
@@ -33,16 +35,4 @@ public class ReserveRequestDto {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    public static ReserveRequestDto fromEntity(Reservation reservation) {
-        ReserveRequestDto dto = new ReserveRequestDto();
-        dto.setUserIdx(reservation.getUser().getId());
-        dto.setCoIdx(reservation.getCounselor().getId());
-        dto.setReserveInfoDate(reservation.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        dto.setReserveInfoStartTime(reservation.getStartTime());
-        dto.setReserveInfoEndTime(reservation.getEndTime());
-        dto.setCreatedAt(reservation.getCreatedAt());
-        dto.setUpdatedAt(reservation.getUpdatedAt());
-        return dto;
-    }
 }

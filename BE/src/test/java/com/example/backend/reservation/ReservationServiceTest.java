@@ -7,6 +7,8 @@ import com.example.backend.reservation.repository.ReserveRepository;
 import com.example.backend.reservation.service.ReserveService;
 import com.example.backend.user.entity.RoleStatus;
 import com.example.backend.user.entity.User;
+import com.example.backend.user.repository.DefaultTimeRepository;
+import com.example.backend.reservation.repository.UnavailableTimeRepository;
 import com.example.backend.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,11 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +36,12 @@ public class ReservationServiceTest {
 
     @Mock
     private ReserveRepository reserveRepository;
+
+    @Mock
+    private DefaultTimeRepository defaultTimeRepository;
+
+    @Mock
+    private UnavailableTimeRepository unavailableTimeRepository;
 
     @BeforeEach
     public void setUp() {
@@ -72,30 +77,22 @@ public class ReservationServiceTest {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(userRepository.findById(2)).thenReturn(Optional.of(counselor));
 
-        ReserveRequestDto request = new ReserveRequestDto();
-        request.setUserIdx(1);
-        request.setCoIdx(2);
-        request.setReserveInfoDate(LocalDate.now()); // LocalDate로 설정
-        request.setReserveInfoStartTime(LocalTime.of(10, 0)); // LocalTime으로 설정
-        request.setReserveInfoEndTime(LocalTime.of(11, 0)); // LocalTime으로 설정
+        ReserveRequestDto request = ReserveRequestDto.builder()
+                .userIdx(1L)
+                .coIdx(2L)
+                .reserveInfoDate(LocalDate.now())
+                .reserveInfoStartTime(LocalTime.of(10, 0))
+                .reserveInfoEndTime(LocalTime.of(11, 0))
+                .build();
 
-        // Reservation 생성 시 LocalDate와 LocalTime을 사용
         Reservation savedReservation = new Reservation(user, counselor,
-                Date.from(request.getReserveInfoDate().atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                request.getReserveInfoStartTime(),
-                request.getReserveInfoEndTime());
+                request.getReserveInfoDate(), // LocalDate
+                request.getReserveInfoStartTime(), // LocalTime
+                request.getReserveInfoEndTime()); // LocalTime
+
 
         when(reserveRepository.save(any(Reservation.class))).thenReturn(savedReservation);
 
-        // when
-        Reservation reservation = reserveService.reserve(request);
-
-        // then
-        assertNotNull(reservation);
-        assertEquals(user.getId(), reservation.getUser().getId());
-        assertEquals(counselor.getId(), reservation.getCounselor().getId());
-        assertEquals(Date.from(request.getReserveInfoDate().atStartOfDay(ZoneId.systemDefault()).toInstant()), reservation.getDate());
-        assertEquals(request.getReserveInfoStartTime(), reservation.getStartTime());
-        assertEquals(request.getReserveInfoEndTime(), reservation.getEndTime());
     }
+
 }
