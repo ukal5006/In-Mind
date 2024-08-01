@@ -1,17 +1,19 @@
 package com.example.backend.user.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "unavailable_time")
 public class UnavailableTime {
     @Id
@@ -25,13 +27,13 @@ public class UnavailableTime {
     private User user;
 
     @Column(nullable = false)
-    private LocalDateTime date; // 날짜여서 설정이필요 string으로 할 건지 아닌지
+    private LocalDate date; // 날짜여서 설정이필요 string으로 할 건지 아닌지
 
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(nullable = false)
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
