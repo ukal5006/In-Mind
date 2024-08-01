@@ -1,9 +1,11 @@
 package com.example.backend.reservation.entity;
 
+import com.example.backend.common.BaseEntity;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +17,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "unavailable_time")
-public class UnavailableTime {
+public class UnavailableTime extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
