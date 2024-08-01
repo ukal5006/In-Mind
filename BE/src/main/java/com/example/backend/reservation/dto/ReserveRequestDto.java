@@ -33,6 +33,4 @@ public class ReserveRequestDto {
     @NotNull(message = "종료 시간은 필수입니다.")
     private LocalTime reserveInfoEndTime;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

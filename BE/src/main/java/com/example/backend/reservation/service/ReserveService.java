@@ -43,9 +43,6 @@ public class ReserveService {
         User counselor = userRepository.findById((int) request.getCoIdx())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
 
-        ZoneId zoneId = ZoneId.of("Asia/Seoul");
-        LocalDateTime now = LocalDateTime.now(zoneId);
-
         LocalDate reservationDate = request.getReserveInfoDate();
         LocalTime startTime = request.getReserveInfoStartTime();
         LocalTime endTime = request.getReserveInfoEndTime();
@@ -68,8 +65,6 @@ public class ReserveService {
                 .localDate(reservationDate)
                 .startTime(startTime)
                 .endTime(endTime)
-                .createdAt(now)
-                .updatedAt(now)
                 .build();
 
         reserveRepository.save(reservation);
@@ -80,7 +75,6 @@ public class ReserveService {
                 .date(request.getReserveInfoDate())
                 .startTime(request.getReserveInfoStartTime())
                 .endTime(request.getReserveInfoEndTime())
-                .createdAt(now)
                 .build();
 
         unavailableTimeRepository.save(unavailableTime);
@@ -122,5 +116,4 @@ public class ReserveService {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
     }
-
 }

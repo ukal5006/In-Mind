@@ -22,7 +22,7 @@ public class ReserveController {
     private final ReserveService reserveService;
 
     @PostMapping()
-    public ResponseEntity<Void> reserve(@RequestBody ReserveRequestDto request) throws RestApiException {
+    public ResponseEntity<Void> reserve(@RequestBody ReserveRequestDto request){
         reserveService.reserve(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -34,13 +34,13 @@ public class ReserveController {
     }
 
     @PutMapping
-    public ResponseEntity<Void> updateReserve(@RequestBody ReserveUpdateDto request) throws RestApiException {
+    public ResponseEntity<Void> updateReserve(@RequestBody ReserveUpdateDto request){
         reserveService.updateReserve(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping()
-    public ResponseEntity<Void> deleteReservation(@RequestBody ReserveDeleteDto request) throws RestApiException{
+    public ResponseEntity<Void> deleteReservation(@RequestBody ReserveDeleteDto request){
         reserveService.deleteReserve(request.getReserveInfoIdx());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
