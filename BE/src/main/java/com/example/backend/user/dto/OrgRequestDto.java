@@ -2,10 +2,9 @@ package com.example.backend.user.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrgRequestDto {
 
     private String name;
