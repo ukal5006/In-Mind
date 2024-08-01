@@ -1,6 +1,7 @@
 package com.example.backend.user.controller;
 
-import com.example.backend.user.dto.OrgRequestDTO;
+import com.example.backend.exception.RestApiException;
+import com.example.backend.user.dto.OrgRequestDto;
 import com.example.backend.user.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,7 @@ public class OrganizationController {
     private final OrganizationService orgService;
 
     @PostMapping
-    public ResponseEntity<?> addOrganization(@RequestBody OrgRequestDTO requestDTO) {
-        log.info(requestDTO.toString());
+    public ResponseEntity<Void> addOrganization(@RequestBody OrgRequestDto requestDTO) throws RestApiException {
         orgService.saveOrg(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -1,8 +1,10 @@
 package com.example.backend.user.entity;
 
+import com.example.backend.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @Table(name = "organization")
-public class Organization {
+
+public class Organization extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
@@ -32,7 +35,8 @@ public class Organization {
     @Column(nullable = false)
     private String tel;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+//    @CreatedDate
+//    @Column(name = "created_at", updatable = false, nullable = false)
+//    private LocalDateTime createdAt;
+
 }
