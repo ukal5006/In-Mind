@@ -10,8 +10,8 @@ const TestHistoryContainer = styled(Container)`
 const TestHistoryWrapper = styled(Wrapper)`
     width: 90%;
     height: 70%;
-    border: 1px solid black;
     border-radius: 10px;
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 `;
 function TestHistory() {
     return (

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Overview from './pages/Overview/';
 import Login from './pages/Login';
 import FindPw from './pages/FindPw';
@@ -49,6 +49,10 @@ const router = createBrowserRouter([
         path: '/user',
         element: <UserMain />,
         children: [
+            {
+                path: '',
+                element: <Navigate to="home" />, // 리다이렉트 추가
+            },
             {
                 path: 'home',
                 element: <UserHome />,

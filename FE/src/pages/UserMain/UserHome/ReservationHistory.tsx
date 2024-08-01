@@ -10,7 +10,7 @@ const ReservationHistoryContainer = styled(Container)`
 const ReservationHistoryWrapper = styled(Wrapper)`
     width: 90%;
     height: 70%;
-    border: 1px solid black;
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     border-radius: 10px;
 `;
 
