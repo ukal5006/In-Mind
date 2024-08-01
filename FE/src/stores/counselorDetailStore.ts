@@ -1,5 +1,5 @@
 // store.ts
-import create from 'zustand';
+import {create} from 'zustand';
 import axios from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api'; //나중에 api연결시 제대로 된 주소 연결 필요
