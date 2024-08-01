@@ -9,11 +9,11 @@ function UserHome() {
     return (
         <UserHomeContainer>
             <UserHomeLeftWrapper>
-                <ChildTestResult></ChildTestResult>
+                <ChildTestResult />
             </UserHomeLeftWrapper>
             <UserHomeRightWrapper>
-                <TestHistory></TestHistory>
-                <ReservationHistory></ReservationHistory>
+                <TestHistory />
+                <ReservationHistory />
             </UserHomeRightWrapper>
         </UserHomeContainer>
     );
