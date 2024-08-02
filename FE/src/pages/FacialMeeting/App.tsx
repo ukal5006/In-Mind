@@ -8,14 +8,14 @@ const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'htt
 
 const createSession = async (sessionId: string) => {
   const response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions', { customSessionId: sessionId }, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json' , 'Authorization': 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
   });
-  return response.data; // The sessionId
+  return response.data.sessionId; // The sessionId
 };
 
 const createToken = async (sessionId: string) => {
-  const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-    headers: { 'Content-Type': 'application/json' },
+  const response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions/' + sessionId + '/connection', {}, {
+    headers: { 'Content-Type': 'application/json' , 'Authorization': 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
   });
   return response.data; // The token
 };
