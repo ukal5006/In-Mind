@@ -4,8 +4,10 @@ import huggingface_hub
 import pandas as pd
 from datasets import Dataset
 
+torch.cuda.empty_cache()
+
 # Hugging Face 로그인
-huggingface_hub.login('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', add_to_git_credential=True)
+huggingface_hub.login('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')
 
 # 1. 데이터 준비
 df = pd.read_csv("/home/byunggyu/HTP_Project/S11P12B301/AI/나무 그림 해석 - 시트1.csv")
@@ -36,19 +38,19 @@ tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_column
 training_args = TrainingArguments(
     output_dir="./results",
     num_train_epochs=3,
-    per_device_train_batch_size=2,  # 배치 크기 줄이기
+    per_device_train_batch_size=1,  # 배치 크기 줄이기
     save_steps=10_000,
-    save_total_limit=2,
+    save_total_limit=1,
     fp16=True,  # Mixed Precision Training 활성화
 )
 
-# Gradient checkpointing을 사용하여 모델의 일부 레이어를 감싸기
-def apply_gradient_checkpointing(model):
-    for layer in model.children():
-        if isinstance(layer, torch.nn.Module):
-            layer.forward = torch.utils.checkpoint.checkpoint(layer.forward)
+# # Gradient checkpointing을 사용하여 모델의 일부 레이어를 감싸기
+# def apply_gradient_checkpointing(model):
+#     for layer in model.children():
+#         if isinstance(layer, torch.nn.Module):
+#             layer.forward = torch.utils.checkpoint.checkpoint(layer.forward)
 
-apply_gradient_checkpointing(model)
+# apply_gradient_checkpointing(model)
 
 # 데이터 콜레이터
 data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
