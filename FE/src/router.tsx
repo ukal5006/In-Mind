@@ -14,6 +14,8 @@ import UserInfo from './pages/UserInfo';
 import ChildInfo from './pages/ChildInfo';
 import CounselorHome from './pages/CounselorMain/CounselorHome';
 
+import App from './pages/FacialMeeting/App'
+
 const router = createBrowserRouter([
     {
         path: '/',
@@ -31,6 +33,12 @@ const router = createBrowserRouter([
         path: '/findId',
         element: <FindId />,
     },
+
+    {
+        path:'/FacialMeeting',
+        element:<App />
+    },
+
     {
         path: '/join',
         element: <Join />,

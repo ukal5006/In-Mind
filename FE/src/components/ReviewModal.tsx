@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import axios from 'axios';
-import { useReservationStore } from '../stores/ReservationStore'; //예약정보를 기억할 저장소를 만들어야 할 듯?
-import { useUserStore } from '../stores/UserStore'; //로그인한 유저정보를 기억할 저장소도 만들어야함
+// import { useReservationStore } from '../stores/ReservationStore'; //예약정보를 기억할 저장소를 만들어야 할 듯?
+// import { useUserStore } from '../stores/UserStore'; //로그인한 유저정보를 기억할 저장소도 만들어야함
 
 const ReviewModal = ():JSX.Element => {
   const [rating, setRating] = useState<number>(0);
   const [content, setContent] = useState<string>('');
-  const { reservationIdx, counselorIdx } = useReservationStore();
-  const { userName } = useUserStore();
+  // const { reservationIdx, counselorIdx } = useReservationStore();
+  // const { userName } = useUserStore();
 
   const handleSubmit = async () => {
     try {
       await axios.post('/api/reviews', {
-        reservationIdx,
-        counselorIdx,
-        userName,
+        // reservationIdx,
+        // counselorIdx,
+        // userName,
         rating,
         content
       });
