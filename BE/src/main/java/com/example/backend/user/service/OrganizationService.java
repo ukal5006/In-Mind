@@ -8,14 +8,15 @@ import com.example.backend.user.dto.OrgSearchResponseDto;
 import com.example.backend.user.entity.Organization;
 import com.example.backend.user.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrganizationService {
 
     private final OrganizationRepository orgRepository;
@@ -31,17 +32,23 @@ public class OrganizationService {
         orgRepository.save(org);
     }
 
-    public List<OrgSearchResponseDto> getOrgList(String type, String keyword) {
-        List<Organization> result = new ArrayList<>();
+    public List<OrgSearchResponseDto> getOrgList(OrgSearchRequestDto requestDto) {
+        String type = requestDto.getType();
+        String keyword = requestDto.getKeyword();
 
-        if ("addr".equals(type)) {
-            result = orgRepository.findByAddrContaining(keyword);
-        } else if ("name".equals(type)) {
-            result = orgRepository.findByName(keyword);
+        List<Organization> result;
+
+        if (type == null || keyword == null || type.isEmpty() || keyword.isEmpty()) {
+            result = orgRepository.findAll();
+        }
+        else if (type.equals("addr")) {
+            result = orgRepository.findByAddrLike(keyword);
+        } else if (type.equals("name")) {
+            result = orgRepository.findByNameLike(keyword);
         } else {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
-        System.out.println(result);
+
         return result.stream()
                 .map(OrgSearchResponseDto::fromEntity)
                 .collect(Collectors.toList());
