@@ -2,6 +2,9 @@ package com.example.backend.reservation.service;
 
 import com.example.backend.exception.ErrorCode;
 import com.example.backend.exception.RestApiException;
+import com.example.backend.notification.entity.Notification;
+import com.example.backend.notification.entity.NotificationType;
+import com.example.backend.notification.repository.NotificationRepository;
 import com.example.backend.reservation.dto.ReserveRequestDto;
 import com.example.backend.reservation.dto.ReserveResponseDto;
 import com.example.backend.reservation.dto.ReserveUpdateDto;
@@ -33,6 +36,7 @@ public class ReserveService {
     private final ReserveRepository reserveRepository;
     private final UserRepository userRepository;
     private final UnavailableTimeRepository unavailableTimeRepository;
+    private final NotificationRepository notificationRepository;
 
     // 상담 예약 추가
     @Transactional
@@ -78,6 +82,8 @@ public class ReserveService {
                 .build();
 
         unavailableTimeRepository.save(unavailableTime);
+
+        createAndSaveNotifications(user, counselor, reservationDate, startTime);
     }
 
     // 상담 예약 정보 조회
@@ -101,8 +107,6 @@ public class ReserveService {
                 .localDate(request.getReserveInfoDate())
                 .startTime(request.getReserveInfoStartTime())
                 .endTime(request.getReserveInfoEndTime())
-                .createdAt(reservation.getCreatedAt())
-                .updatedAt(LocalDateTime.now()) // 수정일 업데이트
                 .build();
 
         reserveRepository.save(updatedReservation);
@@ -116,4 +120,40 @@ public class ReserveService {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
     }
+
+    // 알림 생성 및 저장 메서드
+    private void createAndSaveNotifications(User user, User counselor, LocalDate reservationDate, LocalTime startTime) {
+        String startTimeString = startTime.toString();
+        String reminderTimeString = startTime.minusMinutes(30).toString();
+
+        Notification reminderNotification = Notification.builder()
+                .user(user)
+                .message("상담 30분 전입니다.")
+                .type(NotificationType.RESERVATION_REMINDER)
+                .scheduledDate(reservationDate)
+                .scheduledTime(startTimeString)
+                .build();
+
+        Notification startNotification = Notification.builder()
+                .user(user)
+                .message("상담이 시작되었습니다.")
+                .type(NotificationType.RESERVATION_START)
+                .scheduledDate(reservationDate)
+                .scheduledTime(reminderTimeString)
+                .build();
+
+        Notification reserveNotification = Notification.builder()
+                .user(counselor)
+                .message("예약이 접수되었습니다.")
+                .type(NotificationType.RESERVATION_CONFIRMED)
+                .scheduledDate(reservationDate)
+                .scheduledTime(startTimeString)
+                .build();
+
+
+        notificationRepository.save(reminderNotification);
+        notificationRepository.save(startNotification);
+        notificationRepository.save(reserveNotification);
+    }
+
 }
