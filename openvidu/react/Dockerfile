@@ -1,25 +1,26 @@
-# 공식 Node 런타임을 부모 이미지로 사용
-FROM node:18
+# Use the official Node.js image as the base image
+FROM node:16
 
-# 작업 디렉토리를 /react로 설정
-WORKDIR /react
+# Set the working directory
+WORKDIR /app
 
-# package.json과 package-lock.json 복사
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# 의존성 설치
+# Install dependencies
 RUN npm install
 
-# 애플리케이션 코드의 나머지 부분 복사
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# 환경 변수 설정 및 애플리케이션 빌드
-RUN export NODE_OPTIONS=--openssl-legacy-provider && npm run build
+# Build the React application
+RUN npm run build
 
-# serve를 전역으로 설치
+# Install serve to serve the build
 RUN npm install -g serve
 
-# 애플리케이션 실행
-CMD ["serve", "-s", "build"]
+# Expose the port the app runs on
+EXPOSE 3000
 
-EXPOSE 5442
+# Start the application
+CMD ["serve", "-s", "build"]
