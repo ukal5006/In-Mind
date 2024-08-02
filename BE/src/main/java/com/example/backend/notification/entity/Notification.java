@@ -1,5 +1,6 @@
 package com.example.backend.notification.entity;
 
+import com.example.backend.common.BaseEntity;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name="notification")
-public class Notification {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,9 +30,5 @@ public class Notification {
 
     @Column(name = "is_read", nullable = false)
     private boolean isRead = false;
-
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
 }
