@@ -101,8 +101,6 @@ public class ReserveService {
                 .localDate(request.getReserveInfoDate())
                 .startTime(request.getReserveInfoStartTime())
                 .endTime(request.getReserveInfoEndTime())
-                .createdAt(reservation.getCreatedAt())
-                .updatedAt(LocalDateTime.now()) // 수정일 업데이트
                 .build();
 
         reserveRepository.save(updatedReservation);
