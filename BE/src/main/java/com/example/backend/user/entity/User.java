@@ -3,14 +3,12 @@ package com.example.backend.user.entity;
 import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.chat.entity.Counsel;
 import com.example.backend.child.entity.Child;
+import com.example.backend.common.BaseEntity;
 import com.example.backend.notification.entity.Notification;
 import com.example.backend.reservation.entity.Reservation;
 import com.example.backend.reservation.entity.UnavailableTime;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,10 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 @Table(name = "user")
-public class User {
+public class User extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
@@ -90,12 +90,4 @@ public class User {
     @Column(name = "is_alive", nullable = false)
     @ColumnDefault("true")
     private boolean isAlive;
-
-    @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

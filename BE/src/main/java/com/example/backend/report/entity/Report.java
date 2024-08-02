@@ -1,6 +1,7 @@
 package com.example.backend.report.entity;
 
 import com.example.backend.child.entity.Child;
+import com.example.backend.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.Fetch;
 import lombok.AccessLevel;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "report")
-public class Report {
+public class Report extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +38,4 @@ public class Report {
     @Column(name = "drawing_flow", nullable = false)
     private String drawingFlow;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 }

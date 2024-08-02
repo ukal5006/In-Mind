@@ -1,5 +1,6 @@
 package com.example.backend.child.entity;
 
+import com.example.backend.common.BaseEntity;
 import com.example.backend.report.entity.Report;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="child_info")
-public class Child {
+public class Child extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +37,4 @@ public class Child {
 
     @Column(name = "birthday", nullable = false)
     private String birthday;
-
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }
