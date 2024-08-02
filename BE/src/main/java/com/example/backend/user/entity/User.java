@@ -30,7 +30,7 @@ public class User {
     private long id;
     //FK
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "org_idx", nullable = false)
+    @JoinColumn(name = "org_idx")
     private Organization organization;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -75,15 +75,13 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    private String nickname;
-
     @Column(nullable = false)
     private String tel;
 
     private String profile;
 
     @Column(name = "is_auth")
-    private boolean isAuth;
+    private Boolean isAuth;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

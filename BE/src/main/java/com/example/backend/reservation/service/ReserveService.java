@@ -41,10 +41,10 @@ public class ReserveService {
     // 상담 예약 추가
     @Transactional
     public void reserve(ReserveRequestDto request) {
-        User user = userRepository.findById((int) request.getUserIdx())
+        User user = userRepository.findById(request.getUserIdx())
                 .orElseThrow(() -> new RuntimeException("User not ,found"));
 
-        User counselor = userRepository.findById((int) request.getCoIdx())
+        User counselor = userRepository.findById(request.getCoIdx())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
 
         LocalDate reservationDate = request.getReserveInfoDate();
