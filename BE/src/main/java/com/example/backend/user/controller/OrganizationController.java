@@ -2,6 +2,7 @@ package com.example.backend.user.controller;
 
 import com.example.backend.exception.RestApiException;
 import com.example.backend.user.dto.OrgRequestDto;
+import com.example.backend.user.dto.OrgSearchRequestDto;
 import com.example.backend.user.dto.OrgSearchResponseDto;
 import com.example.backend.user.entity.Organization;
 import com.example.backend.user.service.OrganizationService;
@@ -29,8 +30,8 @@ public class OrganizationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrgSearchResponseDto>> getOrgList(@RequestParam String type, @RequestParam String keyword) {
-        List<OrgSearchResponseDto> list = orgService.getOrgList(type, keyword);
+    public ResponseEntity<List<OrgSearchResponseDto>> getOrgList(OrgSearchRequestDto requestDto) throws RestApiException {
+        List<OrgSearchResponseDto> list = orgService.getOrgList(requestDto);
         return ResponseEntity.ok(list);
     }
 
