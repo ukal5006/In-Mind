@@ -7,17 +7,21 @@ import 'slick-carousel/slick/slick-theme.css';
 import { colors } from '../../../theme/colors';
 import childInfo from '../../../testData/childInfo';
 import Text from '../../../components/Text';
+import profileImage from './profile.png';
+import testResult from './testresult.png';
 
 interface childData {
     name: string;
     birthday: string;
     created_at: string;
     updated_at: string;
+    testDate: string;
+    // testResult: string;
 }
 
 const ChildTestContainer = styled(Container)`
-    width: 90%;
-    height: 80%;
+    width: 400px;
+    height: 700px;
     border-radius: 10px;
     /* overflow: hidden; 캐러셀이 컨테이너를 넘치지 않도록 설정 */
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
@@ -29,7 +33,7 @@ const Slide = styled.div`
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    height: 500px;
+    /* height: 500px; */
     position: relative;
 `;
 
@@ -43,8 +47,68 @@ const Pagination = styled.div`
     padding: 5px 10px;
 `;
 
+const ChildTestResultContainer = styled(Container)`
+    flex-direction: column;
+`;
+
+const ChildInfoContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+const ChildImage = styled.div`
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: ${colors.darkGray};
+    margin-right: 20px;
+`;
+
+const ChildInfo = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
+`;
+
 const NameText = styled(Text)`
+    margin-bottom: 10px;
+    height: 25px;
+    font-weight: 700;
+`;
+
+const ChildName = styled(Text)`
+    font-size: 18px;
     color: ${colors.green};
+    margin-right: 10px;
+    &:hover {
+        box-shadow: 0 2px 0 ${colors.green};
+    }
+`;
+
+const TestGraph = styled.div`
+    height: 300px;
+    & > img {
+        width: 300px;
+    }
+`;
+
+const TestDate = styled(Text)``;
+
+const ResultContainer = styled(Container)`
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    width: 320px;
+    border-radius: 10px;
+    height: 200px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+`;
+
+const ResultText = styled(Text)`
+    width: 95%;
 `;
 
 function ChildTestResult() {
@@ -64,10 +128,26 @@ function ChildTestResult() {
             <Slider {...settings}>
                 {childInfo.map((e: childData, index: number) => (
                     <Slide key={index}>
-                        <NameText>{e.name}</NameText>
-                        <div>{e.birthday}</div>
-                        <div>{e.created_at}</div>
-                        <div>{e.updated_at}</div>
+                        <ChildTestResultContainer>
+                            <ChildInfoContainer>
+                                <ChildImage>
+                                    <img src={profileImage} alt="" />
+                                </ChildImage>
+                                <ChildInfo>
+                                    <NameText>
+                                        <ChildName>{e.name}</ChildName>
+                                        어린이 ({e.birthday})
+                                    </NameText>
+                                    <TestDate>검사 일시 : {e.testDate}</TestDate>
+                                </ChildInfo>
+                            </ChildInfoContainer>
+                            <TestGraph>
+                                <img src={testResult} alt="" />
+                            </TestGraph>
+                            <ResultContainer>
+                                <ResultText>{e.updated_at}</ResultText>
+                            </ResultContainer>
+                        </ChildTestResultContainer>
                     </Slide>
                 ))}
             </Slider>

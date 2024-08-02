@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Container from './Container';
 import SmallLogo from './SmallLogo';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../theme/colors';
 import { IoMenu } from 'react-icons/io5';
 import Btn from './Btn';
@@ -69,6 +69,7 @@ const LogoutBtn = styled(Btn)`
 `;
 
 function Nav() {
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false); // 메뉴 열림 상태
 
     const toggleMenu = () => {
@@ -83,7 +84,7 @@ function Nav() {
             <SmallLogo />
             <UserInfoContainer>
                 <UserInfoWrapper to="mypage">user님, 환영합니다!</UserInfoWrapper>
-                <LogoutBtn>로그아웃</LogoutBtn>
+                <LogoutBtn onClick={() => navigate('/')}>로그아웃</LogoutBtn>
             </UserInfoContainer>
             {menuOpen && (
                 <DropdownMenu>
