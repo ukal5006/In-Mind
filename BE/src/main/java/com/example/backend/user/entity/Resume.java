@@ -20,7 +20,7 @@ public class Resume {
     private long id;
 
     //FK
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
