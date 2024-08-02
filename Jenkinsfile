@@ -6,28 +6,13 @@ pipeline {
     }
 
     stages {
-        
-        stage('BE Test') {
-            steps {
-                dir('BE'){
-                    echo 'Back-End Testing...'
-                }
-            }
-        }
-        
-        stage('FE Test') {
-            steps {
-                dir('FE'){
-                    echo 'Front-End Testing...'
-                }
-            }
-        }
-        
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('BE'){
-                    sh './gradlew clean build'
+                dir('openvidu'){
+                    dir('inmind'){
+                        sh './gradlew clean build'
+                    }
                 }
             }
         }
@@ -35,9 +20,12 @@ pipeline {
         stage('FE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('FE') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                dir('openvidu') {
+                    dir('react'){
+                        sh 'npm install'
+                        // Node.js 버전 호환성 문제 해결
+                        sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
+                    }
                 }
             }
         }
