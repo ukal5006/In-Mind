@@ -1,16 +1,16 @@
 package com.example.backend.reservation.entity;
 
 import com.example.backend.common.BaseEntity;
+import com.example.backend.notification.entity.Notification;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,4 +42,12 @@ public class Reservation extends BaseEntity {
 
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
+
+    public Reservation(User user, User counselor, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
+        this.user = user;
+        this.counselor = counselor;
+        this.localDate = localDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

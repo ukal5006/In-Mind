@@ -1,29 +1,10 @@
-version: '2.1'
+version: "2.1"
 
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    depends_on:
-      - backend
-      - frontend
-
-  backend:
-    image: backend:latest
-    build:
-      context: ./BE
-      dockerfile: Dockerfile
-    expose:
-      - "7777"
-
-  frontend:
-    image: frontend:latest
-    build:
-      context: ./FE
-      dockerfile: Dockerfile
-    expose:
-      - "3000"
+    frontend:
+        image: frontend:latest
+        build:
+            context: ./openvidu-react
+            dockerfile: Dockerfile
+        ports:
+            - "5442:3000"
