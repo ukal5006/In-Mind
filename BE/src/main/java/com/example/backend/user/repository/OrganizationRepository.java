@@ -10,8 +10,8 @@ import java.util.List;
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
     @Query("SELECT o FROM Organization o WHERE o.addr LIKE %:keyword%")
-    List<Organization> findByAddr(@Param("keyword") String keyword);
+    List<Organization> findByAddrLike(@Param("keyword") String keyword);
 
     @Query("SELECT o FROM Organization o WHERE o.name LIKE %:keyword%")
-    List<Organization> findByName(@Param("keyword") String keyword);
+    List<Organization> findByNameLike(@Param("keyword") String keyword);
 }
