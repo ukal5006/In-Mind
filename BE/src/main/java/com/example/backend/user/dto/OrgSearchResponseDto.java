@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrgSearchResponseDto {
 
-    private long id;
+    private long idx;
 
     private String name;
 
@@ -21,7 +21,7 @@ public class OrgSearchResponseDto {
 
     public static OrgSearchResponseDto fromEntity(Organization organization) {
         return OrgSearchResponseDto.builder()
-                .id(organization.getId())
+                .idx(organization.getId())
                 .name(organization.getName())
                 .addr(organization.getAddr())
                 .tel(organization.getTel())
