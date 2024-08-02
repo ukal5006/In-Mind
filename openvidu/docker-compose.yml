@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  react-app:
+    build:
+      context: ./openvidu-react
+    ports:
+      - "5442:3000"
+    networks:
+      - internal
+    restart: always
+
+networks:
+  internal:
+    driver: bridge
