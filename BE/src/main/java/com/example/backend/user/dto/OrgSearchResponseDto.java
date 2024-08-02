@@ -24,7 +24,7 @@ public class OrgSearchResponseDto {
                 .id(organization.getId())
                 .name(organization.getName())
                 .addr(organization.getAddr())
-                .addr(organization.getTel())
+                .tel(organization.getTel())
                 .build();
     }
 }
