@@ -1,12 +1,13 @@
 package com.ssafy.inmind.user.service;
 
-import com.example.backend.exception.ErrorCode;
-import com.example.backend.exception.RestApiException;
-import com.example.backend.user.dto.OrgRequestDto;
-import com.example.backend.user.dto.OrgSearchRequestDto;
-import com.example.backend.user.dto.OrgSearchResponseDto;
-import com.example.backend.user.entity.Organization;
-import com.example.backend.user.repository.OrganizationRepository;
+
+import com.ssafy.inmind.exception.ErrorCode;
+import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.user.dto.OrgRequestDto;
+import com.ssafy.inmind.user.dto.OrgSearchRequestDto;
+import com.ssafy.inmind.user.dto.OrgSearchResponseDto;
+import com.ssafy.inmind.user.entity.Organization;
+import com.ssafy.inmind.user.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

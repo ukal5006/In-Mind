@@ -1,19 +1,16 @@
 package com.ssafy.inmind.user.entity;
 
-import com.example.backend.chat.entity.ChatRoom;
-import com.example.backend.chat.entity.Counsel;
-import com.example.backend.child.entity.Child;
-import com.example.backend.common.BaseEntity;
-import com.example.backend.notification.entity.Notification;
-import com.example.backend.reservation.entity.Reservation;
-import com.example.backend.reservation.entity.UnavailableTime;
+import com.ssafy.inmind.chat.entity.ChatRoom;
+import com.ssafy.inmind.chat.entity.Counsel;
+import com.ssafy.inmind.child.entity.Child;
+import com.ssafy.inmind.common.BaseEntity;
+import com.ssafy.inmind.notification.entity.Notification;
+import com.ssafy.inmind.reservation.entity.Reservation;
+import com.ssafy.inmind.reservation.entity.UnavailableTime;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

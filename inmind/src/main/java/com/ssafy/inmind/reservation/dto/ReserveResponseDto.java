@@ -1,10 +1,9 @@
 package com.ssafy.inmind.reservation.dto;
 
-import com.example.backend.reservation.entity.Reservation;
+import com.ssafy.inmind.reservation.entity.Reservation;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter

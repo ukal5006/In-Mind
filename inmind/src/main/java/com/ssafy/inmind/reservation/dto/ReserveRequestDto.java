@@ -1,14 +1,11 @@
 package com.ssafy.inmind.reservation.dto;
 
 
-import com.example.backend.reservation.entity.Reservation;
-import com.example.backend.user.entity.User;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter

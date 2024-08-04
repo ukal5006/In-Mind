@@ -1,7 +1,6 @@
 package com.ssafy.inmind.reservation.repository;
 
-import com.example.backend.reservation.entity.UnavailableTime;
-import com.example.backend.user.entity.User;
+import com.ssafy.inmind.reservation.entity.UnavailableTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

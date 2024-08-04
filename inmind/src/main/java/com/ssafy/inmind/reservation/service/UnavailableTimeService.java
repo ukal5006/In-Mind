@@ -1,8 +1,9 @@
 package com.ssafy.inmind.reservation.service;
 
-import com.example.backend.reservation.dto.UnavailableTimeDto;
-import com.example.backend.reservation.entity.UnavailableTime;
-import com.example.backend.reservation.repository.UnavailableTimeRepository;
+
+import com.ssafy.inmind.reservation.dto.UnavailableTimeDto;
+import com.ssafy.inmind.reservation.entity.UnavailableTime;
+import com.ssafy.inmind.reservation.repository.UnavailableTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

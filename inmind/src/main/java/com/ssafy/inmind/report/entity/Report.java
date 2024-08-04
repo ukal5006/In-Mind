@@ -1,15 +1,11 @@
 package com.ssafy.inmind.report.entity;
 
-import com.example.backend.child.entity.Child;
-import com.example.backend.common.BaseEntity;
+import com.ssafy.inmind.child.entity.Child;
+import com.ssafy.inmind.common.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Fetch;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

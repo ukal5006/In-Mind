@@ -1,16 +1,14 @@
 package com.ssafy.inmind.reservation.entity;
 
-import com.example.backend.common.BaseEntity;
-import com.example.backend.notification.entity.Notification;
-import com.example.backend.user.entity.User;
+
+import com.ssafy.inmind.common.BaseEntity;
+import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

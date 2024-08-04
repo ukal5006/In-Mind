@@ -1,7 +1,8 @@
 package com.ssafy.inmind.reservation.controller;
 
-import com.example.backend.reservation.dto.UnavailableTimeDto;
-import com.example.backend.reservation.service.UnavailableTimeService;
+
+import com.ssafy.inmind.reservation.dto.UnavailableTimeDto;
+import com.ssafy.inmind.reservation.service.UnavailableTimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

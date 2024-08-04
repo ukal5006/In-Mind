@@ -1,8 +1,6 @@
 package com.ssafy.inmind.user.dto;
 
-import com.example.backend.reservation.dto.ReserveResponseDto;
-import com.example.backend.reservation.entity.Reservation;
-import com.example.backend.user.entity.Organization;
+import com.ssafy.inmind.user.entity.Organization;
 import lombok.*;
 
 @Getter

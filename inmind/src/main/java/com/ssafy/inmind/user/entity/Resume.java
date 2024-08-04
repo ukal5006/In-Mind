@@ -1,6 +1,6 @@
 package com.ssafy.inmind.user.entity;
 
-import com.example.backend.common.BaseEntity;
+import com.ssafy.inmind.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

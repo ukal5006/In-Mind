@@ -1,6 +1,6 @@
 package com.ssafy.inmind.user.repository;
 
-import com.example.backend.user.entity.Organization;
+import com.ssafy.inmind.user.entity.Organization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

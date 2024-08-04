@@ -1,12 +1,11 @@
 package com.ssafy.inmind.reservation.controller;
 
 
-import com.example.backend.exception.RestApiException;
-import com.example.backend.reservation.dto.ReserveDeleteDto;
-import com.example.backend.reservation.dto.ReserveRequestDto;
-import com.example.backend.reservation.dto.ReserveResponseDto;
-import com.example.backend.reservation.dto.ReserveUpdateDto;
-import com.example.backend.reservation.service.ReserveService;
+import com.ssafy.inmind.reservation.dto.ReserveDeleteDto;
+import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
+import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
+import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
+import com.ssafy.inmind.reservation.service.ReserveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

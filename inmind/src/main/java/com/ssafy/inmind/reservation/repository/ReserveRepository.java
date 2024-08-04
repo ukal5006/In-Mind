@@ -1,6 +1,7 @@
 package com.ssafy.inmind.reservation.repository;
 
-import com.example.backend.reservation.entity.Reservation;
+
+import com.ssafy.inmind.reservation.entity.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,13 +1,10 @@
 package com.ssafy.inmind.user.entity;
 
-import com.example.backend.common.BaseEntity;
+import com.ssafy.inmind.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

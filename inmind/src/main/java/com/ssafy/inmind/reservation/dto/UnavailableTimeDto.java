@@ -1,6 +1,7 @@
 package com.ssafy.inmind.reservation.dto;
 
-import com.example.backend.reservation.entity.UnavailableTime;
+
+import com.ssafy.inmind.reservation.entity.UnavailableTime;
 import lombok.*;
 
 import java.time.LocalDate;

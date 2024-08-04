@@ -1,20 +1,20 @@
 package com.ssafy.inmind.reservation.service;
 
-import com.example.backend.exception.ErrorCode;
-import com.example.backend.exception.RestApiException;
-import com.example.backend.notification.entity.Notification;
-import com.example.backend.notification.entity.NotificationType;
-import com.example.backend.notification.repository.NotificationRepository;
-import com.example.backend.reservation.dto.ReserveRequestDto;
-import com.example.backend.reservation.dto.ReserveResponseDto;
-import com.example.backend.reservation.dto.ReserveUpdateDto;
-import com.example.backend.reservation.entity.Reservation;
-import com.example.backend.reservation.repository.ReserveRepository;
-import com.example.backend.reservation.entity.UnavailableTime;
-import com.example.backend.user.entity.User;
-import com.example.backend.user.repository.DefaultTimeRepository;
-import com.example.backend.reservation.repository.UnavailableTimeRepository;
-import com.example.backend.user.repository.UserRepository;
+
+import com.ssafy.inmind.exception.ErrorCode;
+import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.notification.entity.Notification;
+import com.ssafy.inmind.notification.entity.NotificationType;
+import com.ssafy.inmind.notification.repository.NotificationRepository;
+import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
+import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
+import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
+import com.ssafy.inmind.reservation.entity.Reservation;
+import com.ssafy.inmind.reservation.entity.UnavailableTime;
+import com.ssafy.inmind.reservation.repository.ReserveRepository;
+import com.ssafy.inmind.reservation.repository.UnavailableTimeRepository;
+import com.ssafy.inmind.user.entity.User;
+import com.ssafy.inmind.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,9 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
