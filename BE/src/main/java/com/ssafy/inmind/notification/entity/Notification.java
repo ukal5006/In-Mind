@@ -1,8 +1,13 @@
 package com.ssafy.inmind.notification.entity;
 
+<<<<<<< HEAD:BE/src/main/java/com/ssafy/inmind/notification/entity/Notification.java
 
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.user.entity.User;
+=======
+import com.example.backend.common.BaseEntity;
+import com.example.backend.user.entity.User;
+>>>>>>> 310205a9454e5847643b2127a74539ea5d895c18:BE/src/main/java/com/example/backend/notification/entity/Notification.java
 import jakarta.persistence.*;
 import lombok.*;
 
