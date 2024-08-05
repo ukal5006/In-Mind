@@ -14,6 +14,8 @@ import UserInfo from './pages/UserInfo';
 import ChildInfo from './pages/ChildInfo';
 import CounselorHome from './pages/CounselorMain/CounselorHome';
 
+import App from './pages/FacialMeeting/App'
+
 const router = createBrowserRouter([
     {
         path: '/',

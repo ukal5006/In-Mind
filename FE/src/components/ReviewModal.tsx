@@ -62,6 +62,7 @@ const ReviewModal = (): JSX.Element => {
         //         </div>
         <></>
     );
+>>>>>>> FE/src/components/ReviewModal.tsx
 };
 
 export default ReviewModal;
