@@ -13,6 +13,9 @@ import UserHome from './pages/UserMain/UserHome';
 import UserInfo from './pages/UserInfo';
 import ChildInfo from './pages/ChildInfo';
 import CounselorHome from './pages/CounselorMain/CounselorHome';
+import CounselorInfo from './pages/CounselorInfo';
+import CounselorCareers from './pages/CounselorCareers';
+import MyReviews from './pages/MyReviews';
 
 const router = createBrowserRouter([
     {
@@ -78,12 +81,30 @@ const router = createBrowserRouter([
         element: <CounselorMain />,
         children: [
             {
+                path: '',
+                element: <Navigate to="home" />, // 리다이렉트 추가
+            },
+            {
                 path: 'home',
                 element: <CounselorHome />,
             },
             {
                 path: 'mypage',
                 element: <MyPage />,
+                children: [
+                    {
+                        path: 'counselorInfo',
+                        element: <CounselorInfo />,
+                    },
+                    {
+                        path: 'counselorCareers',
+                        element: <CounselorCareers />,
+                    },
+                    {
+                        path: 'myReviews',
+                        element: <MyReviews />,
+                    },
+                ],
             },
         ],
     },

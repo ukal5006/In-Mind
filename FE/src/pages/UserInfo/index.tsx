@@ -102,14 +102,6 @@ const UserInfo = () => {
                     <span>휴대전화 : 010-1234-5678</span>
                     <EditButton>수정</EditButton>
                 </Info>
-                <Info>
-                    <span>닉네임 : 삼성맨</span>
-                    <EditButton>수정</EditButton>
-                </Info>
-                <Info>
-                    <span>지역 : 대전</span>
-                    <EditButton>수정</EditButton>
-                </Info>
             </Section>
 
             <Section>

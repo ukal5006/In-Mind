@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import Container from '../../../components/Container';
@@ -23,28 +22,20 @@ const ChildTestContainer = styled(Container)`
     width: 400px;
     height: 700px;
     border-radius: 10px;
-    /* overflow: hidden; 캐러셀이 컨테이너를 넘치지 않도록 설정 */
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     position: relative;
 `;
 
+const CustomSlider = styled(Slider)`
+    width: 100%;
+    height: 90%;
+`;
 const Slide = styled.div`
     display: flex !important;
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
-    /* height: 500px; */
     position: relative;
-`;
-
-const Pagination = styled.div`
-    position: absolute;
-    bottom: 10px; /* 페이지네이션 위치 조정 */
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.8); /* 배경색 */
-    border-radius: 5px;
-    padding: 5px 10px;
 `;
 
 const ChildTestResultContainer = styled(Container)`
@@ -56,7 +47,7 @@ const ChildInfoContainer = styled.div`
     align-items: center;
     justify-content: center;
 `;
-const ChildImage = styled.div`
+const ChildImage = styled.img`
     width: 100px;
     height: 100px;
     display: flex;
@@ -112,27 +103,37 @@ const ResultText = styled(Text)`
 `;
 
 function ChildTestResult() {
-    const [currentSlide, setCurrentSlide] = useState(0);
-
     const settings = {
         dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        beforeChange: (current: number, next: number) => setCurrentSlide(next), // 슬라이드 변경 시 현재 슬라이드 인덱스 업데이트
+        // appendDots: (dots: any) => (
+        //     <div
+        //         style={{
+        //             width: '100%',
+        //             position: 'absolute',
+        //             bottom: '-10px',
+        //             display: 'flex',
+        //             alignItems: 'center',
+        //             justifyContent: 'center',
+        //         }}
+        //     >
+        //         <ul> {dots} </ul>
+        //     </div>
+        // ),
+        // dotsClass: 'dots_custom',
     };
 
     return (
         <ChildTestContainer>
-            <Slider {...settings}>
+            <CustomSlider {...settings}>
                 {childInfo.map((e: childData, index: number) => (
                     <Slide key={index}>
                         <ChildTestResultContainer>
                             <ChildInfoContainer>
-                                <ChildImage>
-                                    <img src={profileImage} alt="" />
-                                </ChildImage>
+                                <ChildImage src={profileImage} alt="" />
                                 <ChildInfo>
                                     <NameText>
                                         <ChildName>{e.name}</ChildName>
@@ -150,10 +151,7 @@ function ChildTestResult() {
                         </ChildTestResultContainer>
                     </Slide>
                 ))}
-            </Slider>
-            <Pagination>
-                {currentSlide + 1} / {childInfo.length} {/* 현재 슬라이드와 총 슬라이드 수 표시 */}
-            </Pagination>
+            </CustomSlider>
         </ChildTestContainer>
     );
 }

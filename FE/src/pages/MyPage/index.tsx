@@ -43,6 +43,12 @@ function MyPage() {
         }
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSubmit();
+        }
+    };
+
     return (
         <MyPageContainer>
             {userInfo.role === 'user' ? <UserMyPageList /> : <CounselorMyPageList />}
@@ -54,6 +60,7 @@ function MyPage() {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={handleKeyDown}
                             placeholder="비밀번호를 입력하세요"
                         />
                         {error && <span>{error}</span>}
