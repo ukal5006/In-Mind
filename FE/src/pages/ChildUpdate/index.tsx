@@ -1,18 +1,18 @@
-import React from 'react';
 import ChildInfoEdit from './ChildUpdateContainer';
 
-const ChildUpdate = (): JSX.Element => {
+interface ChildUpdateProps {
+  type: 'create' | 'update';
+}
+
+const ChildUpdate: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
   return (
     <div className="child-update-page">
       <header>
-        <h1>아이 정보 업데이트</h1>
+        {type === 'create' ? <h1>아이 등록</h1> : <h1>아이 정보 수정</h1>}
       </header>
       <main>
-        <ChildInfoEdit />
+        <ChildInfoEdit type={type} />
       </main>
-      <footer>
-        <p>© 2024 아이 정보 관리 시스템</p>
-      </footer>
     </div>
   );
 };
