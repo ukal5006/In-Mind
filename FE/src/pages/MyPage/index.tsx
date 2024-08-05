@@ -2,8 +2,10 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import MyPageContainer from './MyPageContainer';
 import MyPageContent from './MyPageContent';
-import MyPageList from './MyPageList';
+import UserMyPageList from './UserMyPageList';
+import CounselorMyPageList from './CounselorMyPageList';
 import styled from 'styled-components';
+import userInfo from '../../testData/userInfo';
 
 const PasswordContainer = styled.div`
     display: flex;
@@ -31,7 +33,11 @@ function MyPage() {
         if (password === correctPassword) {
             setIsAuthenticated(true);
             setError('');
-            navigate('userInfo');
+            if (userInfo.role === 'user') {
+                navigate('userInfo');
+            } else {
+                navigate('counselorInfo');
+            }
         } else {
             setError('비밀번호가 일치하지 않습니다.');
         }
@@ -39,7 +45,7 @@ function MyPage() {
 
     return (
         <MyPageContainer>
-            <MyPageList />
+            {userInfo.role === 'user' ? <UserMyPageList /> : <CounselorMyPageList />}
             <MyPageContent>
                 {!isAuthenticated ? (
                     <PasswordContainer>
