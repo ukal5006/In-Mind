@@ -1,6 +1,7 @@
 package com.ssafy.inmind.notification.service;
 
 
+import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.repository.EmitterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,11 @@ public class SseEmitterService {
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         // 연결 시 503 에러 방지용 더미 이벤트 전송
-        String eventId = makeTimeIncludeId(userId);
         sendInitialNotification(userId, emitterId);
 
         // 클라이언트가 미수신한 event 목록 존재 시 전송(event 유실 방지)
         if (hasLostData(lastEventId)) {
-            sendLostData(lastEventId, userId, emitterId, emitter);
+            sendLostData(lastEventId, userId, emitterId);
         }
 
         return emitter;
@@ -45,18 +45,21 @@ public class SseEmitterService {
 
     // 연결 시 알림 처리
     private void sendInitialNotification(Long userId, String emitterId) {
-        String message = "EventStream Created. [userId=" + userId + "]";
-        sendNotification(emitterId, message, userId);
+        NotificationDto notificationDto = NotificationDto.builder()
+                    .userId(userId)
+                    .message("EventStream Created. [userId=" + userId + "]")
+                    .build();
+        sendNotification(emitterId, notificationDto);
     }
 
-    public void sendNotification(String emitterId, Object data, Long userId) {
+    public void sendNotification(String emitterId, NotificationDto notificationDto) {
         SseEmitter sseEmitter = emitterRepository.findById(emitterId);
         if (sseEmitter != null) {
             try {
                 sseEmitter.send(SseEmitter.event()
                         .id(emitterId)
                         .name("sse")
-                        .data(data));
+                        .data(notificationDto));
             } catch (IOException exception) {
                 System.out.println("삭제되었습니다");
                 emitterRepository.deleteById(emitterId); // 오류 발생 시 emitter 삭제
@@ -70,10 +73,16 @@ public class SseEmitterService {
     }
 
     // 미수신 이벤트 송신
-    private void sendLostData(String lastEventId, Long userId, String emitterId, SseEmitter emitter) {
+    private void sendLostData(String lastEventId, Long userId, String emitterId) {
         Map<String, Object> eventCaches = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(userId));
         eventCaches.entrySet().stream()
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                .forEach(entry -> sendNotification(entry.getKey(), emitterId, userId));
+                .forEach(entry -> {
+                    NotificationDto notificationDto = NotificationDto.builder()
+                            .userId(userId)
+                            .message(entry.getValue())
+                            .build();
+                    sendNotification(emitterId, notificationDto);
+                });
     }
 }

@@ -3,6 +3,7 @@ package com.ssafy.inmind.reservation.service;
 
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.entity.NotificationType;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
@@ -163,7 +164,11 @@ public class ReserveService {
     private void sendNotification(Long counselorId) {
         String message = "예약이 접수되었습니다.";
         String emitterId = sseEmitterService.makeTimeIncludeId(counselorId);
-        sseEmitterService.sendNotification(emitterId, message, counselorId);
+        NotificationDto notificationDto = NotificationDto.builder()
+                .userId(counselorId)
+                .message(message)
+                .build();
+        sseEmitterService.sendNotification(emitterId, notificationDto);
     }
 
 }

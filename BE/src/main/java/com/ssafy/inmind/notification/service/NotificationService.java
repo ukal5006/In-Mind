@@ -1,5 +1,8 @@
 package com.ssafy.inmind.notification.service;
 
+import com.ssafy.inmind.exception.ErrorCode;
+import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.repository.EmitterRepository;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
@@ -18,10 +21,9 @@ public class NotificationService {
 
     private final SseEmitterService sseEmitterService;
     private final NotificationRepository notificationRepository;
-    private final EmitterRepository emitterRepository;
 
     // 알림 스케줄러
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0,30 * * * *")
     public void eventSchedule() {
         LocalDateTime now = LocalDateTime.now();
         LocalDate today = now.toLocalDate();
@@ -29,10 +31,19 @@ public class NotificationService {
 
         List<Notification> notifications = notificationRepository.findByScheduledDateAndScheduledTime(today, currentTime);
 
+        if (notifications.isEmpty()) {
+            System.out.println("알림이 없습니다.");
+            return;
+        }
+
         for (Notification notification : notifications) {
             Long userId = notification.getUser().getId();
             String emitterId = sseEmitterService.makeTimeIncludeId(userId);
-            sseEmitterService.sendNotification(emitterId, notification.getMessage(), userId);
+            NotificationDto notificationDto = NotificationDto.builder()
+                    .userId(userId)
+                    .message(notification.getMessage())
+                    .build();
+            sseEmitterService.sendNotification(emitterId, notificationDto);
         }
     }
 }
