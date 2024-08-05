@@ -10,6 +10,7 @@ import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void saveChild(ChildRequestDto requestDto) {
         User user = userRepository.findById(requestDto.getUserIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
@@ -43,6 +45,7 @@ public class ChildService {
         return ChildResponseDto.fromEntity(child);
     }
 
+    @Transactional
     public void updateChild(Long childIdx, ChildUpdateRequestDto requestDto) {
         Child child = childRepository.findById(childIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
@@ -57,6 +60,7 @@ public class ChildService {
         childRepository.save(updateChild);
     }
 
+    @Transactional
     public void deleteChild(Long childIdx) {
         Child child = childRepository.findById(childIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
