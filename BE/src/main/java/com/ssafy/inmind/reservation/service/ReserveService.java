@@ -6,6 +6,7 @@ import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.entity.NotificationType;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
+import com.ssafy.inmind.notification.service.SseEmitterService;
 import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
 import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
 import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
@@ -35,12 +36,13 @@ public class ReserveService {
     private final UserRepository userRepository;
     private final UnavailableTimeRepository unavailableTimeRepository;
     private final NotificationRepository notificationRepository;
+    private final SseEmitterService sseEmitterService;
 
     // 상담 예약 추가
     @Transactional
     public void reserve(ReserveRequestDto request) {
         User user = userRepository.findById(request.getUserIdx())
-                .orElseThrow(() -> new RuntimeException("User not ,found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         User counselor = userRepository.findById(request.getCoIdx())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
@@ -80,8 +82,8 @@ public class ReserveService {
                 .build();
 
         unavailableTimeRepository.save(unavailableTime);
-
         createAndSaveNotifications(user, counselor, reservationDate, startTime);
+        sendNotification(counselor.getId());
     }
 
     // 상담 예약 정보 조회
@@ -130,6 +132,7 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_REMINDER)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
+                .isRead("n")
                 .build();
 
         Notification startNotification = Notification.builder()
@@ -138,6 +141,7 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_START)
                 .scheduledDate(reservationDate)
                 .scheduledTime(reminderTimeString)
+                .isRead("n")
                 .build();
 
         Notification reserveNotification = Notification.builder()
@@ -146,12 +150,20 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_CONFIRMED)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
+                .isRead("n")
                 .build();
 
 
         notificationRepository.save(reminderNotification);
         notificationRepository.save(startNotification);
         notificationRepository.save(reserveNotification);
+    }
+
+    // 예약 접수 알림
+    private void sendNotification(Long counselorId) {
+        String message = "예약이 접수되었습니다.";
+        String emitterId = sseEmitterService.makeTimeIncludeId(counselorId);
+        sseEmitterService.sendNotification(emitterId, message, counselorId);
     }
 
 }

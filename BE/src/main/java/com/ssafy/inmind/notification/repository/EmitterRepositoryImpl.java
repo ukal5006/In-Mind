@@ -1,12 +1,14 @@
 package com.ssafy.inmind.notification.repository;
 
+import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class EmitterRepositoryImpl implements EmitterRepository{
+@Repository
+public class EmitterRepositoryImpl implements EmitterRepository {
 
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
@@ -15,6 +17,11 @@ public class EmitterRepositoryImpl implements EmitterRepository{
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
         emitters.put(emitterId, sseEmitter);
         return sseEmitter;
+    }
+
+    @Override
+    public SseEmitter findById(String emitterId) {
+        return emitters.get(emitterId);
     }
 
     @Override
@@ -43,23 +50,11 @@ public class EmitterRepositoryImpl implements EmitterRepository{
 
     @Override
     public void deleteAllEmitterStartWithId(String memberId) {
-        emitters.forEach(
-                (key, emitter) -> {
-                    if (key.startsWith(memberId)) {
-                        emitters.remove(key);
-                    }
-                }
-        );
+        emitters.keySet().removeIf(key -> key.startsWith(memberId));
     }
 
     @Override
     public void deleteAllEventCacheStartWithId(String memberId) {
-        eventCache.forEach(
-                (key, emitter) -> {
-                    if (key.startsWith(memberId)) {
-                        eventCache.remove(key);
-                    }
-                }
-        );
+        eventCache.keySet().removeIf(key -> key.startsWith(memberId));
     }
 }
