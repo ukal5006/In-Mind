@@ -1,5 +1,6 @@
 package com.example.backend.user.entity;
 
+import com.example.backend.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,7 +15,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @Builder
 @Table(name = "default_time")
-public class DefaultTime {
+public class DefaultTime extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
@@ -33,12 +34,4 @@ public class DefaultTime {
 
     @Column(nullable = false)
     private String info;
-
-    @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }
