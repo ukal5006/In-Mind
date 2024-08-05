@@ -33,12 +33,6 @@ const router = createBrowserRouter([
         path: '/findId',
         element: <FindId />,
     },
-
-    {
-        path:'/FacialMeeting',
-        element:<App />
-    },
-
     {
         path: '/join',
         element: <Join />,
