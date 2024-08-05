@@ -22,7 +22,6 @@
 
 // export default UserInfo;
 
-import React from 'react';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -101,14 +100,6 @@ const UserInfo = () => {
                 <SectionTitle>기본정보</SectionTitle>
                 <Info>
                     <span>휴대전화 : 010-1234-5678</span>
-                    <EditButton>수정</EditButton>
-                </Info>
-                <Info>
-                    <span>닉네임 : 삼성맨</span>
-                    <EditButton>수정</EditButton>
-                </Info>
-                <Info>
-                    <span>지역 : 대전</span>
                     <EditButton>수정</EditButton>
                 </Info>
             </Section>
