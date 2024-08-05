@@ -133,7 +133,7 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_REMINDER)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
-                .isRead("n")
+                .isRead("N")
                 .build();
 
         Notification startNotification = Notification.builder()
@@ -142,7 +142,7 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_START)
                 .scheduledDate(reservationDate)
                 .scheduledTime(reminderTimeString)
-                .isRead("n")
+                .isRead("N")
                 .build();
 
         Notification reserveNotification = Notification.builder()
@@ -151,7 +151,7 @@ public class ReserveService {
                 .type(NotificationType.RESERVATION_CONFIRMED)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
-                .isRead("n")
+                .isRead("N")
                 .build();
 
 

@@ -1,10 +1,7 @@
 package com.ssafy.inmind.notification.service;
 
-import com.ssafy.inmind.exception.ErrorCode;
-import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
-import com.ssafy.inmind.notification.repository.EmitterRepository;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -45,5 +42,9 @@ public class NotificationService {
                     .build();
             sseEmitterService.sendNotification(emitterId, notificationDto);
         }
+    }
+
+    public List<Notification> getUnreadNotification(Long userId) {
+        return notificationRepository.findByUserIdAndIsRead(userId, "N");
     }
 }

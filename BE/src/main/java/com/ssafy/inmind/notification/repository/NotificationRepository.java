@@ -14,4 +14,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByScheduledDateAndScheduledTime(
             @Param("date") LocalDate date,
             @Param("time") String time);
+
+    List<Notification> findByUserIdAndIsRead(Long userId, String isRead);
 }

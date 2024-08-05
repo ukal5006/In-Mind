@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class NotificationDto {
+@AllArgsConstructor
+@Builder
+public class UnReadDto {
 
-    private long userId;
-    private Object message;
+    private long id;
+    private String message;
+
+
 }
