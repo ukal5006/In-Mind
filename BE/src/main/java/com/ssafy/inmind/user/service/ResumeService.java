@@ -1,4 +1,3 @@
-<<<<<<< HEAD:BE/src/main/java/com/ssafy/inmind/user/service/ResumeService.java
 package com.ssafy.inmind.user.service;
 
 
@@ -11,19 +10,6 @@ import com.ssafy.inmind.user.entity.Resume;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.ResumeRepository;
 import com.ssafy.inmind.user.repository.UserRepository;
-=======
-package com.example.backend.user.service;
-
-import com.example.backend.exception.ErrorCode;
-import com.example.backend.exception.RestApiException;
-import com.example.backend.user.dto.ResumeRequestDto;
-import com.example.backend.user.dto.ResumeResponseDto;
-import com.example.backend.user.dto.ResumeUpdateRequestDto;
-import com.example.backend.user.entity.Resume;
-import com.example.backend.user.entity.User;
-import com.example.backend.user.repository.ResumeRepository;
-import com.example.backend.user.repository.UserRepository;
->>>>>>> 310205a9454e5847643b2127a74539ea5d895c18:BE/src/main/java/com/example/backend/user/service/ResumeService.java
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
