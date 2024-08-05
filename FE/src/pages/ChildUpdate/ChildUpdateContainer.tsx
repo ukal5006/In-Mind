@@ -9,12 +9,16 @@ interface ChildInfo {
   childInfoUserBackground: string;
 }
 
-const ChildInfoEdit = (): JSX.Element => {
+interface ChildUpdateProps {
+  type: 'create' | 'update';
+}
+
+const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
   const [childInfo, setChildInfo] = useState<ChildInfo>({
     childInfoUserIdx: 0, // 초기값 설정, 실제 사용 시 적절한 값으로 초기화 필요
     childInfoUserName: '',
     childInfoUserBirthDate: '',
-    childInfoUserBackground: ''
+    childInfoUserBackground: '',
   });
   const [error, setError] = useState<string>('');
 
@@ -25,22 +29,27 @@ const ChildInfoEdit = (): JSX.Element => {
     } else if (numbers.length <= 6) {
       return `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
     } else {
-      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(6, 8)}`;
+      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(
+        6,
+        8
+      )}`;
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     if (name === 'childInfoUserBirthDate') {
       const formattedDate = formatDate(value);
-      setChildInfo(prevInfo => ({
+      setChildInfo((prevInfo) => ({
         ...prevInfo,
-        [name]: formattedDate
+        [name]: formattedDate,
       }));
     } else {
-      setChildInfo(prevInfo => ({
+      setChildInfo((prevInfo) => ({
         ...prevInfo,
-        [name]: value
+        [name]: value,
       }));
     }
     setError('');
@@ -79,7 +88,10 @@ const ChildInfoEdit = (): JSX.Element => {
     }
 
     try {
-      const response = await axios.put(`/api/children/{childInfoUserIdx}`, childInfo);
+      const response = await axios.put(
+        `/api/children/{childInfoUserIdx}`,
+        childInfo
+      );
       console.log('서버 응답:', response.data);
       // 성공 메시지 표시 또는 다음 단계로 진행
     } catch (error) {
@@ -90,7 +102,6 @@ const ChildInfoEdit = (): JSX.Element => {
 
   return (
     <div>
-      <h2>아이 정보 수정</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="childInfoUserName">이름</label>
@@ -126,7 +137,9 @@ const ChildInfoEdit = (): JSX.Element => {
           />
         </div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
-        <Btn type="submit">정보 수정</Btn>
+        <Btn type="submit">
+          {type === 'create' ? '아이 등록' : '아이 정보 수정'}
+        </Btn>
       </form>
     </div>
   );
