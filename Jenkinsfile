@@ -6,25 +6,25 @@ pipeline {
     }
 
     stages {
+        stage('Wait for MySQL') {
+            steps {
+                script {
+                    echo 'Waiting for MySQL to be ready...'
+                    sh '''
+                    while ! docker exec openvidu-mysql-1 mysqladmin --user=root --password=1234 ping --silent; do
+                        sleep 5
+                    done
+                    '''
+                }
+            }
+        }
+
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
                 dir('openvidu'){
                     dir('inmind'){
                         sh './gradlew clean build'
-                    }
-                }
-            }
-        }
-        
-        stage('FE Build') {
-            steps {
-                sh 'chmod -R 777 .'
-                dir('openvidu') {
-                    dir('react'){
-                        sh 'npm install'
-                        // Node.js 버전 호환성 문제 해결
-                        sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
                     }
                 }
             }
