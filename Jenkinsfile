@@ -22,10 +22,8 @@ pipeline {
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('openvidu'){
-                    dir('inmind'){
-                        sh './gradlew clean build'
-                    }
+                dir('BE'){
+                    sh './gradlew clean build'
                 }
             }
         }
