@@ -3,7 +3,7 @@ import Container from '../../../components/Container';
 
 const CounselorHomeContainer = styled(Container)`
     width: 100vw;
-    height: calc(100vh - 80px);
+    height: 100%;
     justify-content: space-evenly;
 `;
 
