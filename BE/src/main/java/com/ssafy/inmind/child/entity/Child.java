@@ -4,13 +4,13 @@ import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.entity.Report;
 import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
+@AllArgsConstructor
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
