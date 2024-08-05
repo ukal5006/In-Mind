@@ -1,14 +1,11 @@
 package com.example.backend.notification.entity;
 
 import com.example.backend.common.BaseEntity;
-import com.example.backend.reservation.entity.Reservation;
 import com.example.backend.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

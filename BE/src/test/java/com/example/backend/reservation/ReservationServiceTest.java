@@ -57,7 +57,6 @@ public class ReservationServiceTest {
                 .email("test@example.com")
                 .password("password123")
                 .name("Test User")
-                .nickname("Tester")
                 .tel("123-456-7890")
                 .isAuth(false)
                 .role(RoleStatus.USER)
@@ -68,14 +67,13 @@ public class ReservationServiceTest {
                 .email("counselor@example.com")
                 .password("password456")
                 .name("Counselor Name")
-                .nickname("Counselor")
                 .tel("098-765-4321")
                 .isAuth(true)
                 .role(RoleStatus.COUNSELOR)
                 .build();
 
-        when(userRepository.findById(1)).thenReturn(Optional.of(user));
-        when(userRepository.findById(2)).thenReturn(Optional.of(counselor));
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(counselor));
 
         ReserveRequestDto request = ReserveRequestDto.builder()
                 .userIdx(1L)

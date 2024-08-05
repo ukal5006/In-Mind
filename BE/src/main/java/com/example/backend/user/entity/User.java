@@ -7,10 +7,7 @@ import com.example.backend.notification.entity.Notification;
 import com.example.backend.reservation.entity.Reservation;
 import com.example.backend.reservation.entity.UnavailableTime;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,6 +19,8 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @Table(name = "user")
 public class User {
 
