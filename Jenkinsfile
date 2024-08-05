@@ -9,26 +9,24 @@ pipeline {
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('openvidu'){
-                    dir('inmind'){
-                        sh './gradlew clean build'
-                    }
+                dir('BE'){
+                    sh './gradlew clean build'
                 }
             }
         }
         
-        stage('FE Build') {
-            steps {
-                sh 'chmod -R 777 .'
-                dir('openvidu') {
-                    dir('react'){
-                        sh 'npm install'
-                        // Node.js 버전 호환성 문제 해결
-                        sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
-                    }
-                }
-            }
-        }
+        // stage('FE Build') {
+        //     steps {
+        //         sh 'chmod -R 777 .'
+        //         dir('openvidu') {
+        //             dir('react'){
+        //                 sh 'npm install'
+        //                 // Node.js 버전 호환성 문제 해결
+        //                 sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
+        //             }
+        //         }
+        //     }
+        // }
         
         stage('Docker Compose Down') {
             steps {

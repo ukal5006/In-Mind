@@ -1,14 +1,19 @@
 package com.ssafy.inmind.user.controller;
 
+import com.ssafy.inmind.child.dto.ChildListResponseDto;
+import com.ssafy.inmind.child.service.ChildService;
 import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.user.dto.UserLoginRequestDto;
 import com.ssafy.inmind.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final ChildService childService;
 
     @Operation(summary = "로그인", description = "로그인 기능")
     @PostMapping
@@ -31,5 +37,12 @@ public class UserController {
     @GetMapping("JwtTest")
     public ResponseEntity<String> jwtTest() throws RestApiException {
         return ResponseEntity.ok("JWT가 정상적으로 작동되고 있습니다.");
+    }
+
+    @Operation(summary = "자녀정보목록조회", description = "유저가 자녀정보목록을 조회합니다.")
+    @GetMapping("/{userId}/child")
+    public ResponseEntity<List<ChildListResponseDto>> getChildList(@PathVariable @Parameter(description = "유저번호") Long userId) {
+        List<ChildListResponseDto> childList = childService.getChildList(userId);
+        return ResponseEntity.ok(childList);
     }
 }

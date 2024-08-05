@@ -1,10 +1,9 @@
 version: "2.1"
 
 services:
-    frontend:
-        image: frontend:latest
+    backend:
+        image: backend:latest
         build:
-            context: ./openvidu-react
+            context: ./BE
             dockerfile: Dockerfile
-        ports:
-            - "5442:3000"
+
