@@ -131,6 +131,7 @@ public class ReserveService {
                 .user(user)
                 .message("상담 30분 전입니다.")
                 .type(NotificationType.RESERVATION_REMINDER)
+                .alertTime(reminderTimeString)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
                 .isRead("N")
@@ -140,8 +141,9 @@ public class ReserveService {
                 .user(user)
                 .message("상담이 시작되었습니다.")
                 .type(NotificationType.RESERVATION_START)
+                .alertTime(startTimeString)
                 .scheduledDate(reservationDate)
-                .scheduledTime(reminderTimeString)
+                .scheduledTime(startTimeString)
                 .isRead("N")
                 .build();
 
@@ -149,6 +151,7 @@ public class ReserveService {
                 .user(counselor)
                 .message("예약이 접수되었습니다.")
                 .type(NotificationType.RESERVATION_CONFIRMED)
+                .alertTime(startTimeString)
                 .scheduledDate(reservationDate)
                 .scheduledTime(startTimeString)
                 .isRead("N")

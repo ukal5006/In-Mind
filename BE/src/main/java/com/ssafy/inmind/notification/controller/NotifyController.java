@@ -1,6 +1,7 @@
 package com.ssafy.inmind.notification.controller;
 
 
+import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.repository.EmitterRepository;
 import com.ssafy.inmind.notification.service.NotificationService;
@@ -31,9 +32,21 @@ public class NotifyController {
         return sseEmitterService.subscribe(userId, lastEventId);
     }
 
+    @GetMapping("/unread")
+    public ResponseEntity<List<NotificationDto>> getUnreadNotifications(@RequestParam Long userId) {
+        List<NotificationDto> notificationDtoList = notificationService.getUnreadNotification(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(notificationDtoList);
+    }
+
     @GetMapping
-    public ResponseEntity<List<Notification>> getUnreadNotifications(@RequestParam Long userId) {
-        List<Notification> unreadNotifications = notificationService.getUnreadNotification(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(unreadNotifications);
+    public ResponseEntity<NotificationDto> getNotification(@RequestParam Long id) {
+        NotificationDto notificationDto = notificationService.getNotification(id);
+            return ResponseEntity.status(HttpStatus.OK).body(notificationDto);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteNotification(@RequestParam Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

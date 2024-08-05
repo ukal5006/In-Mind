@@ -40,4 +40,7 @@ public class Notification extends BaseEntity {
 
     @Column(name = "scheduled_time", nullable = false)
     private String scheduledTime;
+
+    @Column(name = "alert_time", nullable = false)
+    private String alertTime;
 }

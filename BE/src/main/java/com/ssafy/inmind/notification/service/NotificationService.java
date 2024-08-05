@@ -1,9 +1,13 @@
 package com.ssafy.inmind.notification.service;
 
+import com.ssafy.inmind.exception.ErrorCode;
+import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,17 +39,47 @@ public class NotificationService {
         }
 
         for (Notification notification : notifications) {
-            Long userId = notification.getUser().getId();
+            long userId = notification.getUser().getId();
             String emitterId = sseEmitterService.makeTimeIncludeId(userId);
             NotificationDto notificationDto = NotificationDto.builder()
+                    .id(notification.getId())
                     .userId(userId)
                     .message(notification.getMessage())
+                    .scheduledDate(notification.getScheduledDate())
+                    .scheduledTime(notification.getScheduledTime())
                     .build();
             sseEmitterService.sendNotification(emitterId, notificationDto);
         }
     }
 
-    public List<Notification> getUnreadNotification(Long userId) {
-        return notificationRepository.findByUserIdAndIsRead(userId, "N");
+    public List<NotificationDto> getUnreadNotification(Long userId) {
+         return notificationRepository.findByUserIdAndIsRead(userId, "N").stream()
+                 .map(notification -> NotificationDto.builder()
+                         .id(notification.getId())
+                         .userId(userId).message(notification.getMessage())
+                         .scheduledDate(notification.getScheduledDate())
+                         .scheduledTime(notification.getScheduledTime())
+                         .build())
+                 .collect(Collectors.toList());
+    }
+
+    public NotificationDto getNotification(Long id) {
+        return notificationRepository.findById(id)
+                .map(notification -> NotificationDto.builder()
+                        .id(notification.getId())
+                        .userId(notification.getUser().getId())
+                        .message(notification.getMessage())
+                        .scheduledDate(notification.getScheduledDate())
+                        .scheduledTime(notification.getScheduledTime())
+                        .build())
+                .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
+    }
+
+    public void deleteNotification(Long id) {
+        try {
+            notificationRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
     }
 }
