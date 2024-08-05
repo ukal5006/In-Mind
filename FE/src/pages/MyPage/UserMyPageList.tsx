@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Container from '../../components/Container';
 import { Link } from 'react-router-dom';
 import Text from '../../components/Text';
+import defaultImage from './defaultImg.png';
 
 const MyPageListContainer = styled(Container)`
     height: 95%;
@@ -16,8 +17,7 @@ const ProfileContainer = styled(Container)`
     height: 50%;
     flex-direction: column;
 `;
-const ProfileImage = styled.div`
-    background-color: tomato;
+const ProfileImage = styled.img`
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -46,7 +46,7 @@ function MyPageList() {
     return (
         <MyPageListContainer>
             <ProfileContainer>
-                <ProfileImage />
+                <ProfileImage src={defaultImage} />
                 <ProfileName>김싸피</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
