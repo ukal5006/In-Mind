@@ -5,6 +5,7 @@ import Text from '../../components/Text';
 import Wrapper from '../../components/Wrapper';
 import Btn from '../../components/Btn';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const CounselorInfoContainer = styled(Container)`
     padding: 30px 20px;
@@ -92,7 +93,66 @@ const DeleteIdLink = styled(Link)`
     }
 `;
 
+const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const ModalContainer = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+`;
+
+const ModalTitle = styled(Text)`
+    font-weight: 700;
+    margin-bottom: 20px;
+`;
+
+const ModalInput = styled.input`
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid ${colors.gray};
+`;
+
+const ModalWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    & > ${ModalInput} {
+        width: 50px;
+    }
+`;
+
+const ModalButton = styled(Btn)`
+    background-color: ${colors.darkGreen};
+    color: ${colors.white};
+    width: 100%;
+`;
+
 function CounselorInfo() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [name, setName] = useState('오은영');
+    const [email, setEmail] = useState('counselor@naver.com');
+    const [phone, setPhone] = useState('010-5050-5050');
+    const [intro, setIntro] = useState('한국 최고의 심리상담가 오은영 입니다.');
+    const [startTime, setStartTime] = useState('19');
+    const [endTime, setEndTime] = useState('22');
+
+    const handleUpdate = () => {
+        // 기본정보 업데이트 로직을 추가하세요.
+        setIsModalOpen(false);
+    };
+
     return (
         <CounselorInfoContainer>
             <ProfileContainer>
@@ -106,16 +166,20 @@ function CounselorInfo() {
             <InfoContainer>
                 <InfoContainerHeader>기본정보</InfoContainerHeader>
                 <InfoList>
-                    <InfoListItem>이름 : 오은영</InfoListItem>
+                    <InfoListItem>이름 : {name}</InfoListItem>
                     <Line />
-                    <InfoListItem>이메일 : counselor@naver.com</InfoListItem>
+                    <InfoListItem>이메일 : {email}</InfoListItem>
                     <Line />
-                    <InfoListItem>전화번호 : 010-5050-5050</InfoListItem>
+                    <InfoListItem>전화번호 : {phone}</InfoListItem>
                     <Line />
-                    <InfoListItem>한줄소개 : 한국 최고의 심리상담가 오은영 입니다.</InfoListItem>
+                    <InfoListItem>한줄소개 : {intro}</InfoListItem>
                     <Line />
                     <InfoListItem>
-                        <UpdateBtn>수정하기</UpdateBtn>
+                        상담 가능 시간 : {startTime}시 ~ {endTime}시
+                    </InfoListItem>
+                    <Line />
+                    <InfoListItem>
+                        <UpdateBtn onClick={() => setIsModalOpen(true)}>수정하기</UpdateBtn>
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
@@ -133,6 +197,56 @@ function CounselorInfo() {
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
+
+            {isModalOpen && (
+                <ModalOverlay>
+                    <ModalContainer>
+                        <ModalTitle>기본정보 수정</ModalTitle>
+                        <ModalInput
+                            type="text"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="이름"
+                        />
+                        <ModalInput
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="이메일"
+                        />
+                        <ModalInput
+                            type="text"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            placeholder="전화번호"
+                        />
+                        <ModalInput
+                            type="text"
+                            value={intro}
+                            onChange={(e) => setIntro(e.target.value)}
+                            placeholder="한줄소개"
+                        />
+                        <ModalWrapper>
+                            <ModalInput
+                                type="text"
+                                value={startTime}
+                                onChange={(e) => setStartTime(e.target.value)}
+                                placeholder="시작시간"
+                            />
+                            시~
+                            <ModalInput
+                                type="text"
+                                value={endTime}
+                                onChange={(e) => setEndTime(e.target.value)}
+                                placeholder="종료시간"
+                            />
+                            시
+                        </ModalWrapper>
+                        <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                        <ModalButton onClick={() => setIsModalOpen(false)}>취소하기</ModalButton>
+                    </ModalContainer>
+                </ModalOverlay>
+            )}
         </CounselorInfoContainer>
     );
 }
