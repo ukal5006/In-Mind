@@ -16,13 +16,13 @@ const NotificationModal = ({ notification, onClose }: NotificationModalProps): J
         <div>
           <div>
             <p><strong>보낸 사람:</strong> 운영자</p>
-            <p><strong>보낸 날짜:</strong> {new Date(notification.createdAt).toLocaleString()}</p>
+            <p><strong>보낸 날짜:</strong> {new Date(notification.created_at).toLocaleString()}</p>
           </div>
           <div>
-            <p>{notification.title}</p>
+            <p>{notification.message}</p>
           </div>
           <div>
-            <p>{notification.content}</p>
+            <p>{notification.scheduleDate}</p>
           </div>
         </div>
         <button onClick={onClose}>닫기</button>
@@ -64,8 +64,8 @@ const NotificationPage = (): JSX.Element => {
           >
             <div>
               <span>운영자</span>
-              <span>{notification.title}</span>
-              <span>{new Date(notification.createdAt).toLocaleString()}</span>
+              <span>{notification.message}</span>
+              <span>{new Date(notification.created_at).toLocaleString()}</span>
             </div>
             <div>
               <button onClick={(e) => { 
