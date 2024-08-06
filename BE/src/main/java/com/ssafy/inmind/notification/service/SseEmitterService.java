@@ -46,7 +46,6 @@ public class SseEmitterService {
     // 연결 시 알림 처리
     private void sendInitialNotification(Long userId, String emitterId) {
         NotificationDto notificationDto = NotificationDto.builder()
-                    .userId(userId)
                     .message("EventStream Created. [userId=" + userId + "]")
                     .build();
         sendNotification(emitterId, notificationDto);
@@ -79,7 +78,6 @@ public class SseEmitterService {
                 .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                 .forEach(entry -> {
                     NotificationDto notificationDto = NotificationDto.builder()
-                            .userId(userId)
                             .message(entry.getValue())
                             .build();
                     sendNotification(emitterId, notificationDto);

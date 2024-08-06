@@ -30,7 +30,4 @@ public class DefaultTime extends BaseEntity {
 
     @Column(nullable = false)
     private LocalTime endTime;
-
-    @Column(nullable = false)
-    private String info;
 }
