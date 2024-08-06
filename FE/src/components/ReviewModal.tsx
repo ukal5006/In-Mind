@@ -4,11 +4,19 @@ import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
 import '../theme/class.css'
 
+const swaggerUrl = 'https://i11b301.p.ssafy.io/api'
+
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
 }
+// 내부 backend 서버(ssh npm start) >> openvidu도 쓸 수 있음
+// http://localhost:5000/
+
+// 외부 backend 서버(로컬 npm start) >> openvidu는 못 씀
+// https://i11b301.p.ssafy.io/api/
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -46,8 +54,8 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
   const [hoverRating, setHoverRating] = useState<number>(0);
   const [selectedRating, setSelectedRating] = useState<number>(0);
   const [content, setContent] = useState<string>('');
-  const { reservationIdx, counselorIdx } = reservations;
-  const { userName } = username;
+  const { reserveIdx, coIdx } = reservations;
+  const { name } = username;
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
@@ -55,18 +63,23 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
   const handleSubmit = async () => {
     try {
       console.log({
-        reservationIdx,
-        counselorIdx,
-        userName,
-        rating: selectedRating,
+        reserveIdx,
+        coIdx,
+        name,
+        score: selectedRating,
         content,
       });
-      await axios.post('/api/reviews', {
-        reservationIdx,
-        counselorIdx,
-        userName,
-        rating: selectedRating,
-        content,
+      await axios.post(swaggerUrl+'/reviews', {
+        reserveIdx,
+        coIdx,
+        name,
+        score: selectedRating,
+        content
+      }, {
+        headers: {
+          'accept': '*/*',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
       });
       console.log('리뷰가 성공적으로 제출되었습니다.');
       closeModal();
@@ -75,9 +88,9 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
     }
   };
 
-  const handleMouseEnter = (rating: number) => {
+  const handleMouseEnter = (score: number) => {
     if (selectedRating === 0) {
-      setHoverRating(rating);
+      setHoverRating(score);
     }
   };
 
@@ -87,9 +100,9 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
     }
   };
 
-  const handleClick = (rating: number) => {
-    setSelectedRating(rating);
-    setHoverRating(rating);
+  const handleClick = (score: number) => {
+    setSelectedRating(score);
+    setHoverRating(score);
   };
 
   const renderStars = () => {
@@ -113,14 +126,14 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
   };
 
   return (
-    <div>
+    <div className='rounded'>
       <button onClick={openModal}>{children}</button>
-      <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal isOpen={isOpen} onClose={closeModal} >
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
-          <div className='greenHeader'>
-          <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
+          <div className='greenHeader rounded'>
+            <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
           </div>
-          <div className='reviewModalInner'>
+          <div className='PD20FS30'>
             <p className="mb-4">상담은 만족하셨나요?</p>
             <br />
             <br />
@@ -136,11 +149,11 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
               />
               <br />
               <br />
-              <div className='modaleBtnDiv'>  
-                <button className="bg-green-500 text-white px-4 py-2 rounded registerReview" onClick={handleSubmit}>
+              <div className='contentSpaceBetween'>  
+                <button className="bg-green-500 text-white px-4 py-2 rounded lightGreenBGC" onClick={handleSubmit}>
                   리뷰 남기기
                 </button>
-                <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded ml-2 modalCloseBtn">
+                <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded ml-2 lightRedBGC">
                   닫기
                 </button>
               </div>
