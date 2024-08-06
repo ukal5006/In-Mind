@@ -63,14 +63,19 @@ public class ManagementService {
         LocalDate date = dto.getDate();
 
         for (LocalTime time = startTime; time.isBefore(endTime); time = time.plusHours(1)) {
-            UnavailableTime unavailableTime = UnavailableTime.builder()
-                    .user(user)
-                    .date(date)
-                    .startTime(time)
-                    .endTime(time.plusHours(1))
-                    .build();
+            List<UnavailableTime> conflictingTimes = unavailableTimeRepository.findConflictingUnavailableTimes(
+                    user.getId(), date, time);
 
-            unavailableTimeRepository.save(unavailableTime);
+            if (conflictingTimes.isEmpty()) {
+                UnavailableTime unavailableTime = UnavailableTime.builder()
+                        .user(user)
+                        .date(date)
+                        .startTime(time)
+                        .endTime(time.plusHours(1))
+                        .build();
+
+                unavailableTimeRepository.save(unavailableTime);
+            }
         }
     }
 

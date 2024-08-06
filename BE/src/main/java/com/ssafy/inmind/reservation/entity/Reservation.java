@@ -44,12 +44,4 @@ public class Reservation extends BaseEntity {
 
     @Column(name = "end_time", nullable = false)
     private LocalTime endTime;
-
-    public Reservation(User user, User counselor, LocalDate localDate, LocalTime startTime, LocalTime endTime) {
-        this.user = user;
-        this.counselor = counselor;
-        this.localDate = localDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }
