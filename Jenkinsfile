@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('BE Build') {
             steps {
@@ -13,8 +13,11 @@ pipeline {
         
         stage('Docker Compose Down') {
             steps {
-                echo 'Stopping and removing existing Docker containers...'
-                sh 'docker-compose down || true'
+                echo 'Stopping and removing the Docker container named inmind-server...'
+                sh '''
+                docker stop inmind-server || true
+                docker rm inmind-server || true
+                '''
             }
         }
         
