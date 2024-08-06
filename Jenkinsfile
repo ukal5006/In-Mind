@@ -6,8 +6,29 @@ pipeline {
     }
 
     stages {
+        stage('Wait for MySQL') {
+            steps {
+<<<<<<< HEAD
+                script {
+                    echo 'Waiting for MySQL to be ready...'
+                    sh '''
+                    while ! docker exec openvidu-mysql-1 mysqladmin --user=root --password=1234 ping --silent; do
+                        sleep 5
+                    done
+                    '''
+                }
+            }
+        }
+
         stage('BE Build') {
             steps {
+                sh 'chmod -R 777 .'
+                dir('BE'){
+                    sh './gradlew clean build'
+                }
+            }
+        }
+=======
                 sh 'chmod -R 777 .'
                 dir('BE'){
                     sh './gradlew clean build'
@@ -27,6 +48,7 @@ pipeline {
         //         }
         //     }
         // }
+>>>>>>> df217d7bb21a1de23662f4d89d21e1c82aeea470
         
         stage('Docker Compose Down') {
             steps {

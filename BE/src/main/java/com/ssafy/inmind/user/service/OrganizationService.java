@@ -10,6 +10,7 @@ import com.ssafy.inmind.user.entity.Organization;
 import com.ssafy.inmind.user.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
