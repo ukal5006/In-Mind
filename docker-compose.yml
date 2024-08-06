@@ -7,3 +7,4 @@ services:
         build:
             context: ./BE
             dockerfile: Dockerfile
+        container_name: inmind-server
