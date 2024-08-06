@@ -1,0 +1,27 @@
+.greenHeader{
+    background-color: #10c263;
+    width: 100%;
+    font-size: 45px;
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reviewModalInner{
+    padding: 20px;
+    font-size: 30px;
+}
+.modaleBtnDiv {
+    display:flex;
+    justify-content:space-between
+}
+.textArea {
+    height: 110px;
+    width: 85%;
+}
+.registerReview{
+    background-color: #c6eedb;
+}
+.modalCloseBtn{
+    background-color: #FF7F7F;
+}

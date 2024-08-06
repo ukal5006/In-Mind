@@ -2,6 +2,7 @@ import React, { useState, ReactNode } from 'react';
 import { Star } from 'lucide-react';
 import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
+import '../theme/class.css'
 
 interface ModalProps {
   isOpen: boolean;
@@ -25,9 +26,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     }}>
       <div style={{
         background: 'white',
-        padding: '20px',
+        padding: '0px',
         borderRadius: '5px',
-        width: '300px'
+        width: '600px',
+        height:'500px',
       }}>
         {children}
       </div>
@@ -41,7 +43,8 @@ interface ReviewModalButtonProps {
 
 const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [rating, setRating] = useState<number>(0);
+  const [hoverRating, setHoverRating] = useState<number>(0);
+  const [selectedRating, setSelectedRating] = useState<number>(0);
   const [content, setContent] = useState<string>('');
   const { reservationIdx, counselorIdx } = reservations;
   const { userName } = username;
@@ -55,14 +58,14 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
         reservationIdx,
         counselorIdx,
         userName,
-        rating,
+        rating: selectedRating,
         content,
       });
       await axios.post('/api/reviews', {
         reservationIdx,
         counselorIdx,
         userName,
-        rating,
+        rating: selectedRating,
         content,
       });
       console.log('리뷰가 성공적으로 제출되었습니다.');
@@ -72,17 +75,36 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
     }
   };
 
+  const handleMouseEnter = (rating: number) => {
+    if (selectedRating === 0) {
+      setHoverRating(rating);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (selectedRating === 0) {
+      setHoverRating(0);
+    }
+  };
+
+  const handleClick = (rating: number) => {
+    setSelectedRating(rating);
+    setHoverRating(rating);
+  };
+
   const renderStars = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
+      const currentRating = selectedRating || hoverRating;
       stars.push(
         <Star
           key={i}
           size={24}
-          fill={rating >= i ? 'gold' : 'none'}
-          stroke={rating >= i ? 'gold' : 'gray'}
-          onClick={() => setRating(i)}
-          onMouseEnter={() => setRating(i)}
+          fill={currentRating >= i ? 'gold' : 'none'}
+          stroke={currentRating >= i ? 'gold' : 'gray'}
+          onClick={() => handleClick(i)}
+          onMouseEnter={() => handleMouseEnter(i)}
+          onMouseLeave={handleMouseLeave}
           style={{ cursor: 'pointer' }}
         />
       );
@@ -95,22 +117,34 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
       <button onClick={openModal}>{children}</button>
       <Modal isOpen={isOpen} onClose={closeModal}>
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
+          <div className='greenHeader'>
           <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
-          <p className="mb-4">상담은 만족하셨나요?</p>
-          <div className="flex mb-4">{renderStars()}</div>
-          <textarea
-            className="w-full p-2 border rounded mb-4"
-            rows={4}
-            placeholder="상담에 대해 리뷰를 남겨주세요."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-          <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={handleSubmit}>
-            리뷰 남기기
-          </button>
-          <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded ml-2">
-            닫기
-          </button>
+          </div>
+          <div className='reviewModalInner'>
+            <p className="mb-4">상담은 만족하셨나요?</p>
+            <br />
+            <br />
+            <div className="flex mb-4">{renderStars()}</div>
+            <p className="mb-2">만족도 : {selectedRating} / 5</p>
+            <br />
+            <textarea
+              className="w-3/4 p-2 border rounded mb-4 textArea"
+              rows={6}
+              placeholder="상담에 대해 리뷰를 남겨주세요."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              />
+              <br />
+              <br />
+              <div className='modaleBtnDiv'>  
+                <button className="bg-green-500 text-white px-4 py-2 rounded registerReview" onClick={handleSubmit}>
+                  리뷰 남기기
+                </button>
+                <button onClick={closeModal} className="bg-red-500 text-white px-4 py-2 rounded ml-2 modalCloseBtn">
+                  닫기
+                </button>
+              </div>
+          </div>
         </div>
       </Modal>
     </div>

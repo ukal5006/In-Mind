@@ -9,6 +9,7 @@ import LoginWrapper from './LoginWrapper';
 import BigLogo from '../../components/BigLogo';
 import userInfo from '../../testData/userInfo';
 import { useNavigate } from 'react-router-dom';
+import ReviewModalButton from '../../components/ReviewModal';
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -35,6 +36,7 @@ function Login() {
 
     return (
         <LoginContainer>
+            <ReviewModalButton>리뷰모달</ReviewModalButton>
             <BigLogo />
             <LoginWrapper>
                 <LoginInput
