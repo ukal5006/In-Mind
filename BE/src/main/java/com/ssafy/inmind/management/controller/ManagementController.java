@@ -41,7 +41,7 @@ public class ManagementController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @Operation(summary = "상담 불가능 시간 조회", description = "상담사 예약 시 상담사의 불가능 시간을 조회합니다")
+    @Operation(summary = "상담 불가능 시간 삭제", description = "상담사가 상담 불가능 시간을 삭제합니다.")
     @DeleteMapping("/unavailable-time")
     public ResponseEntity<Void> deleteUnavailableTime(@RequestParam Long unavailableTimeIdx) {
         managementService.deleteUnavailableTime(unavailableTimeIdx);
