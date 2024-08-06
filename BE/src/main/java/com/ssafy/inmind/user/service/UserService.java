@@ -3,6 +3,7 @@ package com.ssafy.inmind.user.service;
 import com.ssafy.inmind.config.JwtUtil;
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.user.dto.CounselorListDto;
 import com.ssafy.inmind.user.dto.CounselorRequestDto;
 import com.ssafy.inmind.user.dto.UserLoginRequestDto;
 import com.ssafy.inmind.user.dto.UserRequestDto;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
+
     private final Long expiredMs = 1000 * 60 * 60L;
 
     @Value("${jwt.secret}")
@@ -96,5 +99,9 @@ public class UserService {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    public List<CounselorListDto> getCounselorList(String name) {
+        return userRepository.findCounselorsByName(name);
     }
 }

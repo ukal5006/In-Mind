@@ -18,6 +18,6 @@ public class ReviewRequestDto {
 
     private String content;
 
-    private float score;
+    private int score;
 
 }

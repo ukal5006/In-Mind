@@ -19,7 +19,7 @@ public class ReviewResponseDto {
 
     private Long userIdx;
 
-    private float reviewScore;
+    private int reviewScore;
 
     private LocalDateTime createdAt;
 
