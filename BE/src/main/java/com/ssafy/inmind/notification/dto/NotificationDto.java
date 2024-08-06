@@ -18,4 +18,5 @@ public class NotificationDto {
     private Object message;
     private LocalDate scheduledDate;
     private String scheduledTime;
+    private String isRead;
 }

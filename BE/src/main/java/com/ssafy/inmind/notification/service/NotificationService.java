@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -47,6 +48,7 @@ public class NotificationService {
                     .message(notification.getMessage())
                     .scheduledDate(notification.getScheduledDate())
                     .scheduledTime(notification.getScheduledTime())
+                    .isRead(notification.getIsRead())
                     .build();
             sseEmitterService.sendNotification(emitterId, notificationDto);
         }
@@ -59,6 +61,7 @@ public class NotificationService {
                          .userId(userId).message(notification.getMessage())
                          .scheduledDate(notification.getScheduledDate())
                          .scheduledTime(notification.getScheduledTime())
+                         .isRead(notification.getIsRead())
                          .build())
                  .collect(Collectors.toList());
     }
@@ -71,6 +74,7 @@ public class NotificationService {
                         .message(notification.getMessage())
                         .scheduledDate(notification.getScheduledDate())
                         .scheduledTime(notification.getScheduledTime())
+                        .isRead(notification.getIsRead())
                         .build())
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
     }
@@ -78,6 +82,19 @@ public class NotificationService {
     public void deleteNotification(Long id) {
         try {
             notificationRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+    }
+
+    @Transactional
+    public void updateRead(List<Long> ids) {
+        notificationRepository.markAsRead(ids);
+    }
+
+    public void deleteNotifications(List<Long> ids) {
+        try {
+            notificationRepository.deleteAllById(ids);
         } catch (EmptyResultDataAccessException e) {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
