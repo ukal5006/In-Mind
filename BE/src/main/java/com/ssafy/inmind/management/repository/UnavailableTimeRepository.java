@@ -1,7 +1,7 @@
-package com.ssafy.inmind.reservation.repository;
+package com.ssafy.inmind.management.repository;
 
 
-import com.ssafy.inmind.reservation.entity.UnavailableTime;
+import com.ssafy.inmind.management.entity.UnavailableTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +18,5 @@ public interface UnavailableTimeRepository extends JpaRepository<UnavailableTime
                                                           @Param("date") LocalDate date,
                                                           @Param("startTime") LocalTime startTime);
 
-    List<UnavailableTime> findByUserId(long coIdx);
+    List<UnavailableTime> findByUserId(long counselorId);
 }
