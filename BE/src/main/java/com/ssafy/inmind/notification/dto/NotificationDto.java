@@ -16,11 +16,10 @@ import java.time.LocalDateTime;
 public class NotificationDto {
 
     private long id;
-    private long userId;
     private Object message;
     private LocalDate scheduledDate;
     private String scheduledTime;
     private String isRead;
     private NotificationType notificationType;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }
