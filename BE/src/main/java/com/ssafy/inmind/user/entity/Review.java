@@ -32,5 +32,5 @@ public class Review extends BaseEntity {
     private String content;
 
     @Column(name = "score", nullable = false)
-    private float score;
+    private int score;
 }

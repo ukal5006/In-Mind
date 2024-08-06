@@ -3,6 +3,7 @@ package com.ssafy.inmind.user.controller;
 import com.ssafy.inmind.child.dto.ChildListResponseDto;
 import com.ssafy.inmind.child.service.ChildService;
 import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.user.dto.CounselorListDto;
 import com.ssafy.inmind.user.dto.CounselorRequestDto;
 import com.ssafy.inmind.user.dto.UserLoginRequestDto;
 import com.ssafy.inmind.user.dto.UserRequestDto;
@@ -62,4 +63,12 @@ public class UserController {
         List<ChildListResponseDto> childList = childService.getChildList(userId);
         return ResponseEntity.ok(childList);
     }
+
+    @Operation(summary = "상담사목록조회", description = "상담사 이름으로 상담사를 검색합니다.")
+    @GetMapping()
+    public ResponseEntity<List<CounselorListDto>> getCounselorList(@RequestParam String name) {
+        List<CounselorListDto> counselorList = userService.getCounselorList(name);
+        return ResponseEntity.ok(counselorList);
+    }
+
 }
