@@ -1,11 +1,17 @@
 import { create } from 'zustand';
+// userStore에서 userIdx받아와야 함.
+// 일단 지금은 testData에서 해볼 예정
+import userInfo  from '../testData/userInfo';
+
 
 export interface Notification {
   notificationIdx: number;
-  title: string;
-  content: string;
+  message: string;
+  // 제목
+  scheduleDate: string;
+  // 컨텐츠
   isRead: boolean;
-  createdAt: string;
+  created_at: string;
 }
 
 interface NotificationStore {
@@ -44,7 +50,9 @@ const useNotificationStore = create<NotificationStore>((set) => ({
   }),
   deleteAllNotifications: () => set({ notifications: [], unreadCount: 0 }),
   initializeSSE: () => {
-    const eventSource = new EventSource('/api/notifications/sse');  //일단 api명세서에도 적어놓긴 했으나 수정되도 상관없음.
+    // userStore 받아온 이후에 import변경과 userStore.userIdx로 변경해야함
+    const userIdx = userInfo.userIdx
+    const eventSource = new EventSource(`/notify?userIdx=${userIdx}`);  //일단 api명세서에도 적어놓긴 했으나 수정되도 상관없음.
     
     eventSource.onmessage = (event) => {
       const newNotification:Notification = JSON.parse(event.data);

@@ -1,5 +1,6 @@
 const userInfo = {
   name: '홍길동',
+  userIdx: 1,
   email: 'user@naver.com',
   phone: '010-1234-5678',
   nickName: '삼성맨',
@@ -10,6 +11,7 @@ const userInfo = {
 
 // const userInfo = {
 //     name: '오은영',
+//     userIdx: 2,
 //     email: 'counselor@naver.com',
 //     phone: '010-1234-5678',
 //     nickName: '삼성맨',
