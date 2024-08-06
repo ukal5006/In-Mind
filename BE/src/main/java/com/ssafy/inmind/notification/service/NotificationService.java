@@ -49,6 +49,8 @@ public class NotificationService {
                     .scheduledDate(notification.getScheduledDate())
                     .scheduledTime(notification.getScheduledTime())
                     .isRead(notification.getIsRead())
+                    .notificationType(notification.getType())
+                    .created_at(notification.getCreatedAt())
                     .build();
             sseEmitterService.sendNotification(emitterId, notificationDto);
         }
@@ -62,6 +64,8 @@ public class NotificationService {
                          .scheduledDate(notification.getScheduledDate())
                          .scheduledTime(notification.getScheduledTime())
                          .isRead(notification.getIsRead())
+                         .notificationType(notification.getType())
+                         .created_at(notification.getCreatedAt())
                          .build())
                  .collect(Collectors.toList());
     }
@@ -75,6 +79,8 @@ public class NotificationService {
                         .scheduledDate(notification.getScheduledDate())
                         .scheduledTime(notification.getScheduledTime())
                         .isRead(notification.getIsRead())
+                        .notificationType(notification.getType())
+                        .created_at(notification.getCreatedAt())
                         .build())
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
     }
