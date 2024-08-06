@@ -11,7 +11,6 @@ import com.ssafy.inmind.user.entity.Organization;
 import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.OrganizationRepository;
-import com.ssafy.inmind.user.repository.SearchRepository;
 import com.ssafy.inmind.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

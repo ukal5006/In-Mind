@@ -1,11 +1,9 @@
-package com.ssafy.inmind.user.repository;
+package com.ssafy.inmind.user.repository.search;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.inmind.reservation.entity.QReservation;
 import com.ssafy.inmind.user.dto.CounselorListDto;
-import com.ssafy.inmind.user.dto.OrgListResponseDto;
 import com.ssafy.inmind.user.dto.QCounselorListDto;
-import com.ssafy.inmind.user.dto.QOrgListResponseDto;
 import com.ssafy.inmind.user.entity.*;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -13,11 +11,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class SearchRepositoryImpl implements SearchRepository{
+public class SearchCounselorRepositoryImpl implements SearchCounselorRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public SearchRepositoryImpl(EntityManager em) {
+    public SearchCounselorRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
@@ -57,25 +55,6 @@ public class SearchRepositoryImpl implements SearchRepository{
                         organization.name, organization.tel,
                         certificate.title, resume.info
                 )
-                .fetch();
-    }
-
-    @Override
-    public List<OrgListResponseDto> findOrgByName(String name) {
-        QOrganization organization = QOrganization.organization;
-        QUser user = QUser.user;
-
-        return queryFactory
-                .select(new QOrgListResponseDto(
-                        organization.name,
-                        organization.addr,
-                        organization.tel,
-                        user.id.count().intValue()
-                ))
-                .from(organization)
-                .leftJoin(user).on(organization.id.eq(user.organization.id))
-                .where(organization.name.contains(name))
-                .groupBy(organization.id)
                 .fetch();
     }
 }

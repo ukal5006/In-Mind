@@ -1,14 +1,14 @@
 package com.ssafy.inmind.user.repository;
 
-
 import com.ssafy.inmind.user.entity.Organization;
+import com.ssafy.inmind.user.repository.search.SearchOrgRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface OrganizationRepository extends JpaRepository<Organization, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> , SearchOrgRepository {
 
     @Query("SELECT o FROM Organization o WHERE o.addr LIKE %:keyword%")
     List<Organization> findByAddrLike(@Param("keyword") String keyword);
