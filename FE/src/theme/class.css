@@ -7,11 +7,12 @@
     justify-content: center;
     align-items: center;
 }
-.reviewModalInner{
+/* PaDding 20 FontSize 30 */
+.PD20FS30{
     padding: 20px;
     font-size: 30px;
 }
-.modaleBtnDiv {
+.contentSpaceBetween {
     display:flex;
     justify-content:space-between
 }
@@ -19,9 +20,9 @@
     height: 110px;
     width: 85%;
 }
-.registerReview{
+.lightGreenBGC{
     background-color: #c6eedb;
 }
-.modalCloseBtn{
+.lightRedBGC{
     background-color: #FF7F7F;
 }
