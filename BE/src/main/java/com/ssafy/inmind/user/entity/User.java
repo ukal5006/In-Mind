@@ -75,14 +75,18 @@ public class User extends BaseEntity {
 
     private String profile;
 
-    @Column(name = "is_auth")
-    private Boolean isAuth;
+    @Column(name = "is_auth", nullable = false)
+    @ColumnDefault("'N'")
+    private String isAuth;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleStatus role;
 
     @Column(name = "is_alive", nullable = false)
-    @ColumnDefault("true")
-    private boolean isAlive;
+    @ColumnDefault("'Y'")
+    private String isAlive;
+
+    @Column(name= "intro")
+    private String intro;
 }
