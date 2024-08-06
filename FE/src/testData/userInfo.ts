@@ -18,6 +18,7 @@ const userInfo = {
 //     created_at: '2024.08.01',
 //     updated_at: '2024.08.01',
 //     role: 'counselor',
-// };
+
+};
 
 export default userInfo;
