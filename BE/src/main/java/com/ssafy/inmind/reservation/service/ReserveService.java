@@ -168,7 +168,6 @@ public class ReserveService {
         String message = "예약이 접수되었습니다.";
         String emitterId = sseEmitterService.makeTimeIncludeId(counselorId);
         NotificationDto notificationDto = NotificationDto.builder()
-                .userId(counselorId)
                 .message(message)
                 .build();
         sseEmitterService.sendNotification(emitterId, notificationDto);

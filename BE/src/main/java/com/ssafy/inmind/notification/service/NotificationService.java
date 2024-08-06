@@ -4,7 +4,9 @@ import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.notification.dto.NotificationDto;
 import com.ssafy.inmind.notification.entity.Notification;
+import com.ssafy.inmind.notification.entity.NotificationType;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
+import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,13 +46,12 @@ public class NotificationService {
             String emitterId = sseEmitterService.makeTimeIncludeId(userId);
             NotificationDto notificationDto = NotificationDto.builder()
                     .id(notification.getId())
-                    .userId(userId)
                     .message(notification.getMessage())
                     .scheduledDate(notification.getScheduledDate())
                     .scheduledTime(notification.getScheduledTime())
                     .isRead(notification.getIsRead())
                     .notificationType(notification.getType())
-                    .created_at(notification.getCreatedAt())
+                    .createdAt(notification.getCreatedAt())
                     .build();
             sseEmitterService.sendNotification(emitterId, notificationDto);
         }
@@ -60,29 +61,41 @@ public class NotificationService {
          return notificationRepository.findByUserIdAndIsRead(userId, "N").stream()
                  .map(notification -> NotificationDto.builder()
                          .id(notification.getId())
-                         .userId(userId).message(notification.getMessage())
+                         .message(notification.getMessage())
                          .scheduledDate(notification.getScheduledDate())
                          .scheduledTime(notification.getScheduledTime())
                          .isRead(notification.getIsRead())
                          .notificationType(notification.getType())
-                         .created_at(notification.getCreatedAt())
+                         .createdAt(notification.getCreatedAt())
                          .build())
                  .collect(Collectors.toList());
     }
 
     public NotificationDto getNotification(Long id) {
-        return notificationRepository.findById(id)
-                .map(notification -> NotificationDto.builder()
-                        .id(notification.getId())
-                        .userId(notification.getUser().getId())
-                        .message(notification.getMessage())
-                        .scheduledDate(notification.getScheduledDate())
-                        .scheduledTime(notification.getScheduledTime())
-                        .isRead(notification.getIsRead())
-                        .notificationType(notification.getType())
-                        .created_at(notification.getCreatedAt())
-                        .build())
+
+        Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
+
+        Notification updateNotification = Notification.builder()
+                .id(notification.getId())
+                .message(notification.getMessage())
+                .scheduledDate(notification.getScheduledDate())
+                .scheduledTime(notification.getScheduledTime())
+                .isRead(notification.getIsRead())
+                .type(notification.getType())
+                .build();
+
+        notificationRepository.save(updateNotification);
+
+        return NotificationDto.builder()
+                .id(updateNotification.getId())
+                .message(updateNotification.getMessage())
+                .scheduledDate(updateNotification.getScheduledDate())
+                .scheduledTime(updateNotification.getScheduledTime())
+                .isRead(updateNotification.getIsRead())
+                .notificationType(updateNotification.getType())
+                .build();
+
     }
 
     public void deleteNotification(Long id) {
