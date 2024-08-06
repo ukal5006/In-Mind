@@ -16,8 +16,8 @@ import CounselorHome from './pages/CounselorMain/CounselorHome';
 import CounselorInfo from './pages/CounselorInfo';
 import CounselorCareers from './pages/CounselorCareers';
 import MyReviews from './pages/MyReviews';
-
-import App from './pages/FacialMeeting/App'
+import CounselorSearch from './pages/CounselorSearch';
+import Test from './pages/Test';
 
 const router = createBrowserRouter([
     {
@@ -61,6 +61,14 @@ const router = createBrowserRouter([
             {
                 path: 'home',
                 element: <UserHome />,
+            },
+            {
+                path: 'test',
+                element: <Test />,
+            },
+            {
+                path: 'counselorSearch',
+                element: <CounselorSearch />,
             },
             {
                 path: 'mypage',
