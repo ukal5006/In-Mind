@@ -1,4 +1,4 @@
-package com.ssafy.inmind.reservation.entity;
+package com.ssafy.inmind.management.entity;
 
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.user.entity.User;
