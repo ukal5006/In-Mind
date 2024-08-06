@@ -4,7 +4,7 @@ import Container from '../../components/Container';
 const CounselorContainer = styled(Container)`
     flex-direction: column;
     width: 100vw;
-    min-width: 750px;
+    min-width: 700px;
     justify-content: start;
     box-sizing: border-box;
 `;
