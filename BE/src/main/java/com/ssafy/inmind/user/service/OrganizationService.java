@@ -3,14 +3,15 @@ package com.ssafy.inmind.user.service;
 
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.user.dto.OrgListResponseDto;
 import com.ssafy.inmind.user.dto.OrgRequestDto;
 import com.ssafy.inmind.user.dto.OrgSearchRequestDto;
 import com.ssafy.inmind.user.dto.OrgSearchResponseDto;
 import com.ssafy.inmind.user.entity.Organization;
 import com.ssafy.inmind.user.repository.OrganizationRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class OrganizationService {
 
     private final OrganizationRepository orgRepository;
 
+    @Transactional
     public void saveOrg(OrgRequestDto requestDto) {
 
         Organization org = Organization.builder()
@@ -54,5 +56,9 @@ public class OrganizationService {
         return result.stream()
                 .map(OrgSearchResponseDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public List<OrgListResponseDto> getOrgListByName(String name) {
+        return orgRepository.findOrgByName(name);
     }
 }
