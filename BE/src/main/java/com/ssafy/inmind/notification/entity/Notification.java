@@ -29,7 +29,7 @@ public class Notification extends BaseEntity {
     private String message;
 
     @Column(name = "is_read", nullable = false)
-    private boolean isRead = false;
+    private String isRead = "n";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "notification_type", nullable = false)
@@ -40,4 +40,7 @@ public class Notification extends BaseEntity {
 
     @Column(name = "scheduled_time", nullable = false)
     private String scheduledTime;
+
+    @Column(name = "alert_time", nullable = false)
+    private String alertTime;
 }

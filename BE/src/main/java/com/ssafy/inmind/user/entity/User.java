@@ -50,9 +50,6 @@ public class User extends BaseEntity {
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Like> likes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Notification> notifications = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
