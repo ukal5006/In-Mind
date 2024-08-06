@@ -3,6 +3,7 @@ version: "2.1"
 services:
     backend:
         image: backend:latest
+        network_mod: host
         build:
             context: ./BE
             dockerfile: Dockerfile
