@@ -29,7 +29,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final OrganizationRepository orgRepository;
-    private final SearchRepository searchRepository;
 
     private final Long expiredMs = 1000 * 60 * 60L;
 
@@ -104,6 +103,6 @@ public class UserService {
     }
 
     public List<CounselorListDto> getCounselorList(String name) {
-        return searchRepository.findCounselorsByName(name);
+        return userRepository.findCounselorsByName(name);
     }
 }
