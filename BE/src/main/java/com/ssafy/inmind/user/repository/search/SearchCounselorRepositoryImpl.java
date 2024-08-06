@@ -3,7 +3,9 @@ package com.ssafy.inmind.user.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.inmind.reservation.entity.QReservation;
 import com.ssafy.inmind.user.dto.CounselorListDto;
+import com.ssafy.inmind.user.dto.OrgListResponseDto;
 import com.ssafy.inmind.user.dto.QCounselorListDto;
+import com.ssafy.inmind.user.dto.QOrgListResponseDto;
 import com.ssafy.inmind.user.entity.*;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -55,6 +57,25 @@ public class SearchRepositoryImpl implements SearchRepository{
                         organization.name, organization.tel,
                         certificate.title, resume.info
                 )
+                .fetch();
+    }
+
+    @Override
+    public List<OrgListResponseDto> findOrgByName(String name) {
+        QOrganization organization = QOrganization.organization;
+        QUser user = QUser.user;
+
+        return queryFactory
+                .select(new QOrgListResponseDto(
+                        organization.name,
+                        organization.addr,
+                        organization.tel,
+                        user.id.count().intValue()
+                ))
+                .from(organization)
+                .leftJoin(user).on(organization.id.eq(user.organization.id))
+                .where(organization.name.contains(name))
+                .groupBy(organization.id)
                 .fetch();
     }
 }
