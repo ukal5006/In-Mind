@@ -98,6 +98,7 @@ public class NotificationService {
 
     }
 
+    @Transactional
     public void deleteNotification(Long id) {
         try {
             notificationRepository.deleteById(id);

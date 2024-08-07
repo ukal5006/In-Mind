@@ -10,6 +10,7 @@ import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -38,6 +39,7 @@ public class ManagementService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void saveDefaultTime(DefaultTimeResponseDto dto) {
         User user = userRepository.findById(dto.getUserIdx())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -54,6 +56,7 @@ public class ManagementService {
         managementRepository.save(defaultTime);
     }
 
+    @Transactional
     public void saveUnavailableTime(UnavailableTimeDto dto) {
         User user = userRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -79,6 +82,7 @@ public class ManagementService {
         }
     }
 
+    @Transactional
     public void deleteUnavailableTime(Long timeId) {
         unavailableTimeRepository.deleteById(timeId);
     }
