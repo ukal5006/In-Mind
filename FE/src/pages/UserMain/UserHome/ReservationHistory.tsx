@@ -48,7 +48,7 @@ function ReservationHistory() {
         <ReservationHistoryContainer>
             <ReservationHistoryWrapper>
                 <ContainerTop>
-                    <ContainerTopTitle>검사 내역</ContainerTopTitle>
+                    <ContainerTopTitle>상담 예약 내역</ContainerTopTitle>
                     <ContainerTopLink to="">
                         <FaPlus />
                     </ContainerTopLink>
