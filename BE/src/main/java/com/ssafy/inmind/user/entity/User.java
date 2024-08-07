@@ -2,13 +2,12 @@ package com.ssafy.inmind.user.entity;
 
 
 import com.ssafy.inmind.chat.entity.ChatRoom;
-import com.ssafy.inmind.chat.entity.Counsel;
 import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.management.entity.DefaultTime;
+import com.ssafy.inmind.management.entity.UnavailableTime;
 import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.reservation.entity.Reservation;
-import com.ssafy.inmind.management.entity.UnavailableTime;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -58,9 +57,6 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Counsel> counsels = new ArrayList<>();
 
     @Column(nullable = false)
     private String email;
