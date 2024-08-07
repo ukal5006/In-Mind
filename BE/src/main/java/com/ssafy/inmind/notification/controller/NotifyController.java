@@ -6,6 +6,7 @@ import com.ssafy.inmind.notification.repository.EmitterRepository;
 import com.ssafy.inmind.notification.service.NotificationService;
 import com.ssafy.inmind.notification.service.SseEmitterService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,28 +29,28 @@ public class NotifyController {
 
     @Operation(summary = "Sse 연결", description = "로그인 시 Sse 구독합니다.")
     @GetMapping(value = "/subscribe", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe(@RequestParam Long userId,
+    public SseEmitter subscribe(@RequestParam @Parameter(description = "유저번호") Long userId,
                                 @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         return sseEmitterService.subscribe(userId, lastEventId);
     }
 
     @Operation(summary = "읽지 않은 알림 조회", description = "유저가 읽지 않은 알림을 모두 조회합니다.")
     @GetMapping("/unread")
-    public ResponseEntity<List<NotificationDto>> getUnreadNotifications(@RequestParam Long userId) {
+    public ResponseEntity<List<NotificationDto>> getUnreadNotifications(@RequestParam @Parameter(description = "유저번호") Long userId) {
         List<NotificationDto> notificationDtoList = notificationService.getUnreadNotification(userId);
         return ResponseEntity.status(HttpStatus.OK).body(notificationDtoList);
     }
 
     @Operation(summary = "알림 조회", description = "유저가 특정 알림을 조회합니다.")
     @GetMapping
-    public ResponseEntity<NotificationDto> getNotification(@RequestParam Long id) {
+    public ResponseEntity<NotificationDto> getNotification(@RequestParam @Parameter(description = "유저번호") Long id) {
         NotificationDto notificationDto = notificationService.getNotification(id);
             return ResponseEntity.status(HttpStatus.OK).body(notificationDto);
     }
 
     @Operation(summary = "알림 삭제", description = "유저가 특정 알림을 삭제합니다.")
     @DeleteMapping
-    public ResponseEntity<Void> deleteNotification(@RequestParam Long id) {
+    public ResponseEntity<Void> deleteNotification(@RequestParam @Parameter(description = "알림번호") Long id) {
         notificationService.deleteNotification(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
