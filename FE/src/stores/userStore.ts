@@ -1,23 +1,29 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-// UserInfo 인터페이스 정의
 interface UserInfo {
-    userIdx: number; // Int는 TypeScript에서 number로 표현
-    userEmail: string;
-    userName: string;
-    userRole: string;
+  userEmail: string;
+  userIdx: number;
+  userIsLive: "Y" | "N";
+  userName: string;
+  userProfile: string;
+  userRole: "USER" | "COUNSELOR";
+  userTel: string;
 }
 
 // Zustand 스토어 인터페이스 정의
 interface Store {
-    user: UserInfo | null; // user는 UserInfo 타입이거나 null일 수 있음
-    setUser: (user: UserInfo | null) => void; // setUser 메소드는 UserInfo 또는 null을 인자로 받음
+  token: string | null;
+  userInfo: UserInfo | null; // userInfo는 UserInfo 또는 null일 수 있음
+  setToken: (token: string | null) => void;
+  setUserInfo: (userInfo: UserInfo | null) => void;
 }
 
 // Zustand 스토어 생성
-const useStore = create<Store>((set) => ({
-    user: null,
-    setUser: (user) => set({ user }),
+const userStore = create<Store>((set) => ({
+  token: null,
+  userInfo: null, // 수정된 부분
+  setToken: (token) => set({ token }),
+  setUserInfo: (userInfo) => set({ userInfo }),
 }));
 
-export default useStore;
+export default userStore;
