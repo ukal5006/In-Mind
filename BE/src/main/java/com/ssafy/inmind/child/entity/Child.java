@@ -1,7 +1,7 @@
 package com.ssafy.inmind.child.entity;
 
 import com.ssafy.inmind.common.BaseEntity;
-import com.ssafy.inmind.entity.Report;
+import com.ssafy.inmind.report.entity.Report;
 import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
