@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../theme/colors';
 import Btn from './Btn';
 import Wrapper from './Wrapper';
+import userStore from '../stores/userStore';
 
 const NavContainer = styled(Container)`
     width: 100vw;
@@ -63,7 +64,7 @@ function Nav() {
                 <MenuItem to="counselorSearch"> 상담사 예약하기</MenuItem>
             </MenuContainer>
             <UserInfoContainer>
-                <Link to="mypage">user님, 환영합니다!</Link>
+                <Link to="mypage">님, 환영합니다!</Link>
                 <LogoutBtn onClick={() => navigate('/')}>로그아웃</LogoutBtn>
             </UserInfoContainer>
         </NavContainer>

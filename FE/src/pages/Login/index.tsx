@@ -28,16 +28,15 @@ function Login() {
             });
 
             // 로그인 성공 시 JWT 저장 및 사용자 정보 설정
-            // const { token, userInfo } = response.data; // 서버에서 반환된 JWT 및 사용자 정보
-            const token = response.data; // 서버에서 반환된 JWT 및 사용자 정보
+            const { token, userInfo } = response.data; // 서버에서 반환된 JWT 및 사용자 정보
             localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
-            // setUser(userInfo); // Zustand에 사용자 정보 저장
+            setUser(userInfo); // Zustand에 사용자 정보 저장
 
-            // if (userInfo.role === 'user') {
-            navigate('/user');
-            // } else {
-            //     navigate('/counselor');
-            // }
+            if (userInfo.userRole === 'USER') {
+                navigate('/user');
+            } else {
+                navigate('/counselor');
+            }
             console.log(response);
         } catch (error) {
             // 오류 처리
