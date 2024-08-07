@@ -116,11 +116,11 @@ public class UserService {
         return UserResponseDto.fromEntity(user);
     }
 
-    @Transactional
     public CounselorResponseDto getCounselor(Long userIdx){
         User user = userRepository.findById(userIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
-        return CounselorResponseDto.fromEntity(user);
+
+        return userRepository.findCounselorById(userIdx);
     }
 
     @Transactional
@@ -137,8 +137,10 @@ public class UserService {
                 .name(userUpdateRequestDto.getUserName())
                 .tel(userUpdateRequestDto.getUserTel())
                 .role(userUpdateRequestDto.getUserRole())
+                .profile(userUpdateRequestDto.getUserProfile())
                 .isAuth("N")
                 .isAlive("Y")
+                .intro(userUpdateRequestDto.getIntro())
                 .build();
         userRepository.save(updateUser);
     }
