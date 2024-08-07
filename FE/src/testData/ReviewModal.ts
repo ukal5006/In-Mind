@@ -1,7 +1,7 @@
 export const reservations = 
 {
-  reserveIdx : 123,
-  coIdx: 456,
+  reserveIdx : 1,
+  coIdx: 5,
 }
 
 export const username =
