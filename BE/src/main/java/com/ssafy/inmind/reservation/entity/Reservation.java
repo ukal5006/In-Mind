@@ -2,6 +2,7 @@ package com.ssafy.inmind.reservation.entity;
 
 
 import com.ssafy.inmind.common.BaseEntity;
+import com.ssafy.inmind.consulting.entity.History;
 import com.ssafy.inmind.user.entity.Review;
 import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
@@ -31,6 +32,9 @@ public class Reservation extends BaseEntity {
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;
+
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private History history;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "co_idx", nullable = false)

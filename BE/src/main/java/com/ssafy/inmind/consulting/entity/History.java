@@ -1,8 +1,7 @@
-package com.ssafy.inmind.consulting;
+package com.ssafy.inmind.consulting.entity;
 
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.reservation.entity.Reservation;
-import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,7 @@ public class History extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "re_idx", nullable = false)
     private Reservation reservation;
 
