@@ -15,8 +15,7 @@ pipeline {
             steps {
                 echo 'Stopping and removing the Docker container named inmind-server...'
                 sh '''
-                docker stop inmind-server || true
-                docker rm inmind-server || true
+                docker rm -f inmind-server || true
                 '''
             }
         }
