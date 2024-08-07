@@ -4,7 +4,8 @@ import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
 import '../theme/class.css'
 
-const swaggerUrl = 'https://i11b301.p.ssafy.io/api'
+const apiUrl = 'https://i11b301.p.ssafy.io/api'
+// const apiUrl = 'http://localhost:5000'
 
 
 interface ModalProps {
@@ -69,7 +70,7 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
         score: selectedRating,
         content,
       });
-      await axios.post(swaggerUrl+'/reviews', {
+      await axios.post(apiUrl+'/reviews', {
         reserveIdx,
         coIdx,
         name,
