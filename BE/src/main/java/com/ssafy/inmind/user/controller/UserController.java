@@ -69,6 +69,13 @@ public class UserController {
         return ResponseEntity.ok(counselorList);
     }
 
+    @Operation(summary = "상담사상세조회", description = "상담사를 하나 조회합니다.")
+    @GetMapping("/counselor/{userId}")
+    public ResponseEntity<CounselorResponseDto> getCounselor(@PathVariable @Parameter(description = "상담사번호") Long userId) {
+        CounselorResponseDto counselor = userService.getCounselor(userId);
+        return ResponseEntity.ok(counselor);
+    }
+
     @Operation(summary = "이메일 중복 체크", description = "입력받은 이메일이 중복된 이메일인지 확인합니다.")
     @Parameter(name = "email", description = "이메일")
     @GetMapping("email-check")

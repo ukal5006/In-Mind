@@ -17,4 +17,6 @@ public class UserUpdateRequestDto {
     private String userProfile;
 
     private RoleStatus userRole;
+
+    private String intro;
 }
