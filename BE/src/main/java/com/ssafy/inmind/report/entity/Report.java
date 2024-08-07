@@ -1,13 +1,13 @@
-package com.ssafy.inmind.entity;
+package com.ssafy.inmind.report.entity;
 
 import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
+@Builder
+@AllArgsConstructor
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "report")
