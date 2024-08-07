@@ -31,7 +31,7 @@ public class ConsultingController {
     @Operation(summary = "화상 상담 기록 저장", description = "화상 상담이 끝나면 기록이 저장됩니다.")
     @GetMapping("/end")
     public ResponseEntity<Void> saveConsulting(@RequestBody ConsultingRequestDto consultingRequestDto) {
-
+        consultingService.saveConsulting(consultingRequestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
