@@ -44,9 +44,9 @@ public class UserController {
 
     @Operation(summary = "로그인", description = "로그인 기능")
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody UserLoginRequestDto loginDto) throws RestApiException {
-        String token = userService.login(loginDto);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto loginDto) throws RestApiException {
+        UserLoginResponseDto UserLoginResponseDto = userService.login(loginDto);
+        return ResponseEntity.ok(UserLoginResponseDto);
     }
 
     @Operation(summary = "JWT 테스트", description = "JWT 테스트 API")
