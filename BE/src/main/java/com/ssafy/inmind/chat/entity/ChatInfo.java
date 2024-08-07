@@ -4,15 +4,17 @@ package com.ssafy.inmind.chat.entity;
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "chat_info")
-public class ChatInfo extends BaseEntity {
+public class ChatInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +32,6 @@ public class ChatInfo extends BaseEntity {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }
