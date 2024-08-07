@@ -9,6 +9,7 @@
 //     userIdx: 1,
 // };
 
+
 const userInfo = {
     name: '오은영',
     email: 'counselor@naver.com',
@@ -19,5 +20,6 @@ const userInfo = {
     role: 'counselor',
     userIdx: 2,
 };
+
 
 export default userInfo;
