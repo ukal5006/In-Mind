@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import Container from '../../components/Container';
 import Wrapper from '../../components/Wrapper';
@@ -9,12 +9,16 @@ import { IoPersonAdd } from 'react-icons/io5';
 import ChildUpdate from '../ChildUpdate';
 import Slider from 'react-slick';
 import profileImage from './profile.png';
+import axios from 'axios';
+import { CHILDDEFAULT } from '../../apis/childApi';
 
 interface ChildData {
+    childId: number;
     name: string;
     birthday: string;
     createAt: string;
 }
+
 
 const ChildInfoContainer = styled(Container)``;
 
@@ -105,17 +109,43 @@ const BtnWrapper = styled(Wrapper)`
     }
 `;
 
-const UpdateBtn = styled(Btn)`
+interface UpdateBtnProps {
+    onClick: () => void;
+    childId: number;
+    children: React.ReactNode;
+  }
+  
+  const StyledUpdateBtn = styled(Btn)`
     background-color: ${colors.green};
-`;
+  `;
+  
+  const UpdateBtn: React.FC<UpdateBtnProps> = ({ onClick, childId, children }) => {
+    const handleClick = () => {
+      onClick();
+    };
+  
+    return (
+        <StyledUpdateBtn onClick={handleClick}>
+          {children}
+        </StyledUpdateBtn>
+      );
+    };
 
 const DeleteBtn = styled(Btn)`
     background-color: ${colors.red};
 `;
 
+
+
 function ChildInfo() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [type, setType] = useState<'create' | 'update'>('create');
+    const [childData, setChildData] = useState<ChildData>({
+        childId:1,
+        name: 'kim',
+        birthday: '20204.01.01',
+        createAt: '2024.08.07'
+    })
 
     const settings = {
         dots: true,
@@ -154,16 +184,33 @@ function ChildInfo() {
         setModalOpen(true);
     };
 
+    const deleteChild = async () => {
+        try{
+            console.log(`Deleting child with URL: ${CHILDDEFAULT}/${childData.childId}`);
+            await axios.delete(`${CHILDDEFAULT}/${childData.childId}`,{
+                headers: {
+                    'accept': '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                }
+            })
+        } catch (error) {
+            console.log('아이 정보 삭제 실패')
+            alert('아이정보 삭제 실패')
+        }
+    }
+
     const childInfo: ChildData[] = [
         {
             name: '이용원',
             birthday: '2017.03.02',
             createAt: '2024.08.05',
+            childId:11
         },
         {
             name: '이용훈',
             birthday: '2018.02.11',
             createAt: '2024.08.05',
+            childId:12
         },
     ];
 
@@ -189,8 +236,8 @@ function ChildInfo() {
                                 <ChildText>생일 : {e.birthday}</ChildText>
                                 <ChildText>등록일자 : {e.createAt}</ChildText>
                                 <BtnWrapper>
-                                    <UpdateBtn onClick={handleUpdateChild}>수정</UpdateBtn>
-                                    <DeleteBtn>삭제</DeleteBtn>
+                                    <UpdateBtn onClick={handleUpdateChild} childId={childData.childId}>수정</UpdateBtn>
+                                    <DeleteBtn onClick={deleteChild}>삭제</DeleteBtn>
                                 </BtnWrapper>
                             </Slide>
                         ))}
