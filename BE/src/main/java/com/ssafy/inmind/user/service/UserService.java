@@ -39,11 +39,14 @@ public class UserService {
     private String salt;
 
     @Transactional
-    public String login(UserLoginRequestDto loginDto) {
+    public UserLoginResponseDto login(UserLoginRequestDto loginDto) {
         String inputPassKey = sha256(loginDto.getPassword() + salt);
         userRepository.findByUserEmailAndPassword(loginDto.getEmail(), inputPassKey)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
-        return JwtUtil.createJwt(loginDto.getEmail(), secretKey, expiredMs);
+        User user  = userRepository.findByUserEmail(loginDto.getEmail())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+        UserResponseDto userResponseDto = UserResponseDto.fromEntity(user);
+        return UserLoginResponseDto.fromEntity(JwtUtil.createJwt(loginDto.getEmail(), secretKey, expiredMs), userResponseDto);
     }
 
     @Transactional
