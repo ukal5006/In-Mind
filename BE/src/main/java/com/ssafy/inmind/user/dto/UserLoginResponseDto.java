@@ -10,12 +10,12 @@ import lombok.*;
 public class UserLoginResponseDto {
     private String token;
 
-    private UserResponseDto userResponseDto;
+    private UserResponseDto userInfo;
 
     public static UserLoginResponseDto fromEntity(String token, UserResponseDto userResponseDto) {
         return UserLoginResponseDto.builder()
                 .token(token)
-                .userResponseDto(userResponseDto)
+                .userInfo(userResponseDto)
                 .build();
     }
 
