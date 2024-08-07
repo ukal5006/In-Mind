@@ -1,41 +1,48 @@
 package com.ssafy.inmind.user.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
 import lombok.*;
 
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CounselorResponseDto {
 
     private Long userIdx;
 
-    private String userEmail;
+    private String name;
 
-    private String userName;
+    private String tel;
 
-    private String userTel;
+    private String profile;
 
-    private String userProfile;
+    private String isAuth;
 
-    private String userIsAuth;
+    private String intro;
 
-    private RoleStatus userRole;
+    private String organizationName;
 
-    private String userIsLive;
+    private String organizationTel;
 
-    public static CounselorResponseDto fromEntity(User user) {
-        return CounselorResponseDto.builder()
-                .userIdx(user.getId())
-                .userEmail(user.getEmail())
-                .userName(user.getName())
-                .userTel(user.getTel())
-                .userProfile(user.getProfile())
-                .userIsAuth(user.getIsAuth())
-                .userRole(user.getRole())
-                .userIsLive(user.getIsAlive())
-                .build();
+    private String resumeInfo;
+
+    private Long reviewCount;
+
+    private Double reviewAverage;
+
+    @QueryProjection
+    public CounselorResponseDto(Long userIdx, String name, String tel, String profile, String isAuth, String intro, String organizationName, String organizationTel, String resumeInfo, Long reviewCount, Double  reviewAverage) {
+        this.userIdx = userIdx;
+        this.name = name;
+        this.tel = tel;
+        this.profile = profile;
+        this.isAuth = isAuth;
+        this.intro = intro;
+        this.organizationName = organizationName;
+        this.organizationTel = organizationTel;
+        this.resumeInfo = resumeInfo;
+        this.reviewCount = reviewCount;
+        this.reviewAverage = reviewAverage;
     }
 }
