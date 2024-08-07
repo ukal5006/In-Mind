@@ -9,7 +9,7 @@ import Wrapper from './Wrapper';
 const NavContainer = styled(Container)`
     width: 100vw;
     min-width: 700px;
-    height: 80px;
+    height: 60px;
     justify-content: space-between;
     padding: 0px 10px;
     box-sizing: border-box;
