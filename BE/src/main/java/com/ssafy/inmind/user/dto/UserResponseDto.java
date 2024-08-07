@@ -24,8 +24,6 @@ public class UserResponseDto {
 
     private String userIsLive;
 
-    private String intro;
-
     public static UserResponseDto fromEntity(User user) {
         return UserResponseDto.builder()
                 .userIdx(user.getId())
@@ -35,7 +33,6 @@ public class UserResponseDto {
                 .userProfile(user.getProfile())
                 .userRole(user.getRole())
                 .userIsLive(user.getIsAlive())
-                .intro(user.getIntro())
                 .build();
     }
 }
