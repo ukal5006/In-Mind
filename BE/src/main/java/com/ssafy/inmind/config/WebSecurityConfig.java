@@ -30,8 +30,8 @@ public class WebSecurityConfig {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
-            config.setAllowedOriginPatterns(Collections.singletonList("http://localhost:3000")); // ⭐️ 허용할 origin
-            config.setAllowCredentials(true);
+            config.setAllowedOriginPatterns(Collections.singletonList("*")); // ⭐️ 허용할 origin
+            config.setAllowCredentials(false);
             return config;
         };
     }
