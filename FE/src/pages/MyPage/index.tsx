@@ -5,7 +5,9 @@ import MyPageContent from './MyPageContent';
 import UserMyPageList from './UserMyPageList';
 import CounselorMyPageList from './CounselorMyPageList';
 import styled from 'styled-components';
-import userInfo from '../../testData/userInfo';
+import axios from 'axios';
+import { CHECKPW } from '../../apis/userApi';
+import userStore from '../../stores/userStore';
 
 const PasswordContainer = styled.div`
     display: flex;
@@ -23,24 +25,32 @@ const Button = styled.button`
 `;
 
 function MyPage() {
+    const { userInfo } = userStore((state) => state);
+
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = () => {
-        const correctPassword = 'ssafy'; // 실제 비밀번호로 변경하세요
-        if (password === correctPassword) {
-            setIsAuthenticated(true);
-            setError('');
-            if (userInfo.role === 'user') {
-                navigate('userInfo');
-            } else {
-                navigate('counselorInfo');
-            }
-        } else {
-            setError('비밀번호가 일치하지 않습니다.');
-        }
+        axios
+            .post(CHECKPW, {
+                email: userInfo?.userEmail,
+                password,
+            })
+            .then((response) => {
+                setIsAuthenticated(true);
+                setError('');
+                if (userInfo?.userRole === 'USER') {
+                    navigate('userInfo');
+                } else {
+                    navigate('counselorInfo');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                setError('비밀번호가 일치하지 않습니다.');
+            });
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,7 +61,7 @@ function MyPage() {
 
     return (
         <MyPageContainer>
-            {userInfo.role === 'user' ? <UserMyPageList /> : <CounselorMyPageList />}
+            {userInfo?.userRole === 'USER' ? <UserMyPageList /> : <CounselorMyPageList />}
             <MyPageContent>
                 {!isAuthenticated ? (
                     <PasswordContainer>

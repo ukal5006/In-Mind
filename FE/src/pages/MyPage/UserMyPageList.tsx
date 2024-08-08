@@ -3,6 +3,7 @@ import Container from '../../components/Container';
 import { Link } from 'react-router-dom';
 import Text from '../../components/Text';
 import defaultImage from './defaultImg.png';
+import userStore from '../../stores/userStore';
 
 const MyPageListContainer = styled(Container)`
     height: 95%;
@@ -43,11 +44,13 @@ const ListItem = styled(Link)`
 `;
 
 function MyPageList() {
+    const { userInfo } = userStore((state) => state);
+
     return (
         <MyPageListContainer>
             <ProfileContainer>
                 <ProfileImage src={defaultImage} />
-                <ProfileName>김싸피</ProfileName>
+                <ProfileName>{userInfo?.userName}</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
                 <ListItem to="userInfo">내 정보</ListItem>

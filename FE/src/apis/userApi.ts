@@ -9,4 +9,8 @@ export const JOINCOUNSELOR = `${USERDEFAULT}/counselor`; // 상담사 회원가�
 export const USERINFO = (userID: number) => `${USERDEFAULT}/${userID}`; // 회원정보 조회, 수정
 export const CHILDINFO = (userID: number) => `${USERDEFAULT}/${userID}/child`; // 회원정보 조회, 수정
 export const CHECKPW = `${USERDEFAULT}/check-pw`; // 비밀번호 확인
+export const CHANGEPW = (userId: number) => `${USERDEFAULT}/password/${userId}`;
 export const CHECKEMAIL = (email: string) => `${USERDEFAULT}/email-check?email=${email}`; // 비밀번호 확인
+export const DELETEUSER = (userId: number) => `${USERDEFAULT}/leave/${userId}`; // 회원탈퇴
+export const LOADUSERINFO = (userId: number) => `${USERDEFAULT}/${userId}`;
+export const UPDATEUSERINFO = (userId: number) => `${USERDEFAULT}/user/${userId}`;
