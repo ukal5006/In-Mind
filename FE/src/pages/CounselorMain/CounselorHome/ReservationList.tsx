@@ -5,6 +5,7 @@ import { colors } from "../../../theme/colors";
 import Wrapper from "../../../components/Wrapper";
 import Btn from "../../../components/Btn";
 import { ReservationInfo } from ".";
+import { useState } from "react";
 
 interface ScheduleCalendarProps {
   reservationList: ReservationInfo[] | undefined;
@@ -78,7 +79,50 @@ const RoomBtn = styled(Btn)`
   font-size: 15px;
 `;
 
+const ModalBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+`;
+
+const CancelBtn = styled(Btn)`
+  margin-top: 10px;
+`;
+
 function ReservationList({ reservationList }: ScheduleCalendarProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReservation, setSelectedReservation] =
+    useState<ReservationInfo | null>(null);
+
+  const handleDetailClick = (reservation: ReservationInfo) => {
+    setSelectedReservation(reservation);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedReservation(null);
+  };
+
+  const handleCancelReservation = () => {
+    // 예약 취소 로직 (예: API 호출 등)
+    console.log("예약이 취소되었습니다.");
+    handleCloseModal();
+  };
   return (
     <>
       <TitleContainer>
@@ -105,7 +149,35 @@ function ReservationList({ reservationList }: ScheduleCalendarProps) {
             <RoomBtn>방 만들기</RoomBtn>
           </BtnWrapper>
         </Item>
+        {/* {reservationList?.map((reservation) => (
+          <Item key={reservation.id}>
+            <Detail onClick={() => handleDetailClick(reservation)}>자세히 보기</Detail>
+            <Date>{reservation.date}</Date>
+            <ChildName>{reservation.childName}</ChildName>
+            <Time>{reservation.time}</Time>
+            <BtnWrapper>
+              <RoomBtn>방 만들기</RoomBtn>
+            </BtnWrapper>
+          </Item>
+        ))} */}
       </List>
+
+      {isModalOpen && (
+        <ModalBackground>
+          <ModalContent>
+            <h2>예약 내역</h2>
+            {/* {selectedReservation && (
+              <>
+                <p>어린이: {selectedReservation.childName}</p>
+                <p>날짜: {selectedReservation.date}</p>
+                <p>시간: {selectedReservation.time}</p>
+              </>
+            )}
+            <CancelBtn onClick={handleCancelReservation}>예약 취소</CancelBtn> */}
+            <Btn onClick={handleCloseModal}>닫기</Btn>
+          </ModalContent>
+        </ModalBackground>
+      )}
     </>
   );
 }
