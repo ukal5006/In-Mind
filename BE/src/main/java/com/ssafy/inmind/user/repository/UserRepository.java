@@ -1,13 +1,14 @@
 package com.ssafy.inmind.user.repository;
 
 
-import com.ssafy.inmind.user.entity.Resume;
+import com.ssafy.inmind.user.dto.CounselorListDto;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.search.SearchCounselorRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> , SearchCounselorRepository {
@@ -21,5 +22,4 @@ public interface UserRepository extends JpaRepository<User, Long> , SearchCounse
     @Query("SELECT u FROM User u WHERE u.id = :id AND u.isAlive = 'Y' AND u.role = 'USER'")
     Optional<User> findByUserId(@Param("id") Long id);
 
-    
 }
