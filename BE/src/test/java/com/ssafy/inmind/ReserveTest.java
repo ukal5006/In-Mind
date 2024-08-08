@@ -85,13 +85,18 @@ public class ReserveTest {
     @Test
     @DisplayName("사용자가 상담사와 예약 상담을 성공합니다.")
     void reserve() {
+
+        String startTime = LocalTime.now().toString();
+        String endTime = LocalTime.now().plusHours(1).toString();
+
+
         ReserveRequestDto reserveDto = ReserveRequestDto.builder()
                 .userIdx(user.getId())
                 .coIdx(counselor.getId())
                 .childIdx(2)
                 .reserveInfoDate(LocalDate.now())
-                .reserveInfoStartTime(LocalTime.now())
-                .reserveInfoEndTime(LocalTime.now().plusHours(1))
+                .reserveInfoStartTime(startTime)
+                .reserveInfoEndTime(endTime)
                 .build();
 
         reserveService.reserve(reserveDto);
