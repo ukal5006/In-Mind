@@ -18,7 +18,7 @@ pipeline {
 
         stage('Docker Compose Down') {
             steps {
-                echo 'Stopping and removing the Docker container named inmind-server...'
+                echo 'Stopping and removing the Docker container named inmind-nginx...'
                 sh '''
                 docker stop inmind-nginx || true
                 docker rm inmind-nginx || true
@@ -28,7 +28,15 @@ pipeline {
         
         stage('Docker Compose Up') {
             steps {
-                dir('FE'){
+                dir('FE') {
+                    script {
+                        def nginxConfPath = "${pwd()}/nginx.conf"
+                        if (fileExists(nginxConfPath)) {
+                            echo "nginx.conf found at ${nginxConfPath}"
+                        } else {
+                            error "nginx.conf not found at ${nginxConfPath}"
+                        }
+                    }
                     echo 'Deploying Docker containers...'
                     sh 'docker-compose up --build -d'
                 }
@@ -36,4 +44,3 @@ pipeline {
         }
     }
 }
-
