@@ -18,7 +18,7 @@ pipeline {
 
         stage('Docker Compose Down') {
             steps {
-                echo 'Stopping and removing the Docker container named inmind-server...'
+                echo 'Stopping and removing the Docker container named inmind-nginx...'
                 sh '''
                 docker stop inmind-nginx || true
                 docker rm inmind-nginx || true
@@ -28,7 +28,7 @@ pipeline {
         
         stage('Docker Compose Up') {
             steps {
-                dir('FE'){
+                dir('FE') {
                     echo 'Deploying Docker containers...'
                     sh 'docker-compose up --build -d'
                 }
@@ -36,4 +36,3 @@ pipeline {
         }
     }
 }
-

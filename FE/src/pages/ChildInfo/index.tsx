@@ -228,9 +228,17 @@ function ChildInfo() {
                                 </BtnWrapper>
                             </Slide>
                         ))}
+                        <ChildAddWrapper>
+                    <AddBtn onClick={handleAddChild}>
+                        <IoPersonAdd />
+                    </AddBtn>
+                    <AddText>등록된 아이가 없습니다.</AddText>
+                    <AddText>버튼을 눌러 아이를 등록해주세요.</AddText>
+                </ChildAddWrapper>
                     </CustomSlider>
                 </SliderContainer>
-            )}
+            )
+            }
 
 {isModalOpen && (
                 <ModalOverlay onClick={closeModal}>
