@@ -1,6 +1,8 @@
 package com.ssafy.inmind.reservation.service;
 
 
+import com.ssafy.inmind.child.entity.Child;
+import com.ssafy.inmind.child.repository.ChildRepository;
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
 import com.ssafy.inmind.notification.dto.NotificationDto;
@@ -38,6 +40,7 @@ public class ReserveService {
     private final UnavailableTimeRepository unavailableTimeRepository;
     private final NotificationRepository notificationRepository;
     private final SseEmitterService sseEmitterService;
+    private final ChildRepository childRepository;
 
     // 상담 예약 추가
     @Transactional
@@ -47,6 +50,9 @@ public class ReserveService {
 
         User counselor = userRepository.findById(request.getCoIdx())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
+
+        Child child = childRepository.findById(request.getChildIdx())
+                .orElseThrow(() -> new RuntimeException("Child not found"));
 
         LocalDate reservationDate = request.getReserveInfoDate();
         LocalTime startTime = request.getReserveInfoStartTime();
@@ -67,6 +73,7 @@ public class ReserveService {
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .counselor(counselor)
+                .child(child)
                 .localDate(reservationDate)
                 .startTime(startTime)
                 .endTime(endTime)
