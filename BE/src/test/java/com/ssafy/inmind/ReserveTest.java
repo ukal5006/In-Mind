@@ -1,5 +1,7 @@
 package com.ssafy.inmind;
 
+import com.ssafy.inmind.child.entity.Child;
+import com.ssafy.inmind.child.repository.ChildRepository;
 import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
 import com.ssafy.inmind.reservation.entity.Reservation;
 import com.ssafy.inmind.reservation.repository.ReserveRepository;
@@ -41,6 +43,9 @@ public class ReserveTest {
 
     private User user;
     private User counselor;
+    private Child child;
+    @Autowired
+    private ChildRepository childRepository;
 
     @BeforeEach
     void setUp() {
@@ -68,8 +73,16 @@ public class ReserveTest {
                 .isAlive("1")
                 .build();
 
+        child = Child.builder()
+            .id(1L)
+            .user(user)
+            .name("길동홍")
+            .birthday("2000000")
+            .build();
+
         userRepository.save(user);
         userRepository.save(counselor);
+        childRepository.save(child);
 
         Optional<User> savedUser = userRepository.findById(user.getId());
         assertTrue(savedUser.isPresent(), "User should be present in the database");
@@ -81,6 +94,7 @@ public class ReserveTest {
         ReserveRequestDto reserveDto = ReserveRequestDto.builder()
                 .userIdx(user.getId())
                 .coIdx(counselor.getId())
+                .childIdx(child.getId())
                 .reserveInfoDate(LocalDate.now())
                 .reserveInfoStartTime(LocalTime.now())
                 .reserveInfoEndTime(LocalTime.now().plusHours(1))
