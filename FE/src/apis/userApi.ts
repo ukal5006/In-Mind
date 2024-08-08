@@ -14,3 +14,4 @@ export const CHECKEMAIL = (email: string) => `${USERDEFAULT}/email-check?email=$
 export const DELETEUSER = (userId: number) => `${USERDEFAULT}/leave/${userId}`; // 회원탈퇴
 export const LOADUSERINFO = (userId: number) => `${USERDEFAULT}/${userId}`;
 export const UPDATEUSERINFO = (userId: number) => `${USERDEFAULT}/user/${userId}`;
+export const UPDATECOUNSELORINFO = (userId: number) => `${USERDEFAULT}/counselor/${userId}`;
