@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> , SearchCounse
     @Query("SELECT u FROM User u WHERE u.email = :email AND u.isAlive = 'Y'")
     Optional<User> findByUserEmail(@Param("email") String email);
 
-    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isAlive = 'Y' AND u.role = 'USER'")
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isAlive = 'Y'")
     Optional<User> findByUserId(@Param("id") Long id);
 
     
