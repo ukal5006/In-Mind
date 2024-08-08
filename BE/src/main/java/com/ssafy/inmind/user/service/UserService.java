@@ -5,10 +5,12 @@ import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.config.JwtUtil;
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
+import com.ssafy.inmind.management.entity.DefaultTime;
 import com.ssafy.inmind.user.dto.*;
 import com.ssafy.inmind.user.entity.Organization;
 import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
+import com.ssafy.inmind.user.repository.DefaultTimeRepository;
 import com.ssafy.inmind.user.repository.OrganizationRepository;
 import com.ssafy.inmind.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +34,7 @@ public class UserService {
     private final OrganizationRepository orgRepository;
 
     private final Long expiredMs = 1000 * 60 * 60L;
+    private final DefaultTimeRepository defaultTimeRepository;
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -92,6 +96,14 @@ public class UserService {
                 .isAlive("Y")
                 .build();
         userRepository.save(user);
+
+        DefaultTime defaultTime = DefaultTime.builder()
+                .user(user)
+                .startTime(LocalTime.of(0, 0))
+                .endTime(LocalTime.of(0, 0))
+                .build();
+
+        defaultTimeRepository.save(defaultTime);
     }
 
     public List<CounselorListDto> getCounselorList(String name) {
