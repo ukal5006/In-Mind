@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Btn from '../../components/Btn';
+import useChildStore from '../../stores/childStore';
+import userStore from '../../stores/userStore';
 
 interface ChildInfo {
-  childInfoUserIdx: number;
-  childInfoUserName: string;
-  childInfoUserBirthDate: string;
-  childInfoUserBackground: string;
+  childName: string;
+  childBirth: string;
 }
 
 interface ChildUpdateProps {
   type: 'create' | 'update';
+  childIdx?: number;
+  onClose: () => void;
 }
 
-const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
+const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }): JSX.Element => {
+  const { addChild, updateChild } = useChildStore();
+  const userInfo = userStore((state) => state.userInfo);
   const [childInfo, setChildInfo] = useState<ChildInfo>({
-    childInfoUserIdx: 0, // 초기값 설정, 실제 사용 시 적절한 값으로 초기화 필요
-    childInfoUserName: '',
-    childInfoUserBirthDate: '',
-    childInfoUserBackground: '',
+    childName: '',
+    childBirth: '',
   });
   const [error, setError] = useState<string>('');
 
@@ -29,10 +30,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     } else if (numbers.length <= 6) {
       return `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
     } else {
-      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(
-        6,
-        8
-      )}`;
+      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(6, 8)}`;
     }
   };
 
@@ -40,7 +38,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'childInfoUserBirthDate') {
+    if (name === 'childBirth') {
       const formattedDate = formatDate(value);
       setChildInfo((prevInfo) => ({
         ...prevInfo,
@@ -77,26 +75,39 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     e.preventDefault();
     setError('');
 
-    if (!childInfo.childInfoUserName.trim()) {
+    if (!childInfo.childName.trim()) {
       setError('이름을 입력해주세요.');
       return;
     }
 
-    if (!isValidDate(childInfo.childInfoUserBirthDate)) {
+    if (!isValidDate(childInfo.childBirth)) {
       setError('올바른 생년월일을 입력해주세요. (YYYY-MM-DD 형식)');
       return;
     }
 
     try {
-      const response = await axios.put(
-        `/api/children/{childInfoUserIdx}`,
-        childInfo
-      );
-      console.log('서버 응답:', response.data);
-      // 성공 메시지 표시 또는 다음 단계로 진행
+      if (!userInfo) {
+        throw new Error('사용자 정보를 찾을 수 없습니다.');
+      }
+
+      if (type === 'create') {
+        await addChild(userInfo.userIdx, childInfo);
+        console.log("자녀정보 생성 성공");
+        alert('자녀 정보 생성');
+      } else if (type === 'update' && childIdx) {
+        await updateChild(childIdx, childInfo);
+        console.log("자녀정보 수정 성공");
+        alert('자녀 정보 수정');
+      }
+      // 성공 후 추가 작업 (예: 폼 초기화, 페이지 이동 등)
     } catch (error) {
       console.error('API 요청 오류:', error);
       setError('정보 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      if (type === 'create') {
+        alert('자녀 정보 생성 실패');
+      } else {
+        alert('자녀 정보 수정 실패');
+      }
     }
   };
 
@@ -104,36 +115,27 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="childInfoUserName">이름</label>
+          <label htmlFor="childName">이름</label>
           <input
             type="text"
-            id="childInfoUserName"
-            name="childInfoUserName"
-            value={childInfo.childInfoUserName}
+            id="childName"
+            name="childName"
+            value={childInfo.childName}
             onChange={handleInputChange}
             required
           />
         </div>
         <div>
-          <label htmlFor="childInfoUserBirthDate">생년월일</label>
+          <label htmlFor="childBirth">생년월일</label>
           <input
             type="text"
-            id="childInfoUserBirthDate"
-            name="childInfoUserBirthDate"
-            value={childInfo.childInfoUserBirthDate}
+            id="childBirth"
+            name="childBirth"
+            value={childInfo.childBirth}
             onChange={handleInputChange}
             placeholder="YYYY-MM-DD"
             maxLength={10}
             required
-          />
-        </div>
-        <div>
-          <label htmlFor="childInfoUserBackground">히스토리</label>
-          <textarea
-            id="childInfoUserBackground"
-            name="childInfoUserBackground"
-            value={childInfo.childInfoUserBackground}
-            onChange={handleInputChange}
           />
         </div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
