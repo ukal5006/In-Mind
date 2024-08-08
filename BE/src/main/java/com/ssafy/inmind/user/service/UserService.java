@@ -70,11 +70,14 @@ public class UserService {
 
     @Transactional
     public void saveCounselor(CounselorRequestDto requestDto) {
+        if(checkUserEmail(requestDto.getEmail()).equals("duplicated")){
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
         String hashedString = sha256(requestDto.getPassword() + salt);
 
         // null 인 경우는 프리랜서
         Organization organization = null;
-        if (requestDto.getOrgIdx() != null) {
+        if (requestDto.getOrgIdx() != null && requestDto.getOrgIdx() != 0) {
             organization = orgRepository.findById(requestDto.getOrgIdx())
                     .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
         }
@@ -106,6 +109,28 @@ public class UserService {
     }
 
     @Transactional
+    public void updateUserPassword(Long userId, UserPasswordRequestDto requestDto) {
+        String inputPassKey = sha256(requestDto.getPassword() + salt);
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+        User updateUser = User.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(inputPassKey)
+                .name(user.getName())
+                .tel(user.getTel())
+                .role(user.getRole())
+                .profile(user.getProfile())
+                .isAuth(user.getIsAuth())
+                .isAlive(user.getIsAlive())
+                .intro(user.getIntro())
+                .build();
+        userRepository.save(updateUser);
+
+
+    }
+
+    @Transactional
     public String checkUserEmail(String email) {
         Optional<User> user = userRepository.findByUserEmail(email);
         System.out.println(user.isPresent());
@@ -117,7 +142,7 @@ public class UserService {
 
     @Transactional
     public UserResponseDto getUser(Long userIdx){
-        User user = userRepository.findById(userIdx)
+        User user = userRepository.findByUserId(userIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
         return UserResponseDto.fromEntity(user);
     }
@@ -126,29 +151,47 @@ public class UserService {
         User user = userRepository.findById(userIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
-        return userRepository.findCounselorById(userIdx);
+        return userRepository.findCounselorById(user.getId());
     }
 
     @Transactional
-    public void updateUser(Long userIdx, UserUpdateRequestDto userUpdateRequestDto) {
-        String hashedString = sha256(userUpdateRequestDto.getUserPassword() + salt); // 변경한 비밀번호로 변경
-
-        User user = userRepository.findById(userIdx)
+    public void updateUser(Long userId, UserUpdateRequestDto userUpdateRequestDto) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
         User updateUser = User.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .password(hashedString)
+                .password(user.getPassword())
                 .name(userUpdateRequestDto.getUserName())
                 .tel(userUpdateRequestDto.getUserTel())
                 .role(userUpdateRequestDto.getUserRole())
                 .profile(userUpdateRequestDto.getUserProfile())
                 .isAuth(user.getIsAuth())
                 .isAlive(user.getIsAlive())
-                .intro(userUpdateRequestDto.getIntro())
+                .intro(user.getIntro())
                 .build();
         userRepository.save(updateUser);
+    }
+
+    @Transactional
+    public void updateCounselor(Long userId, CounselorUpdateRequestDto counselorUpdateRequestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        User updateCounselor = User.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .name(counselorUpdateRequestDto.getUserName())
+                .tel(counselorUpdateRequestDto.getUserTel())
+                .role(counselorUpdateRequestDto.getUserRole())
+                .profile(counselorUpdateRequestDto.getUserProfile())
+                .isAuth(user.getIsAuth())
+                .isAlive(user.getIsAlive())
+                .intro(counselorUpdateRequestDto.getIntro())
+                .build();
+        userRepository.save(updateCounselor);
     }
 
     @Transactional

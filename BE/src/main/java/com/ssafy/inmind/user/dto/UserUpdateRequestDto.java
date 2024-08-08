@@ -8,8 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserUpdateRequestDto {
-    private String userPassword;
-
     private String userName;
 
     private String userTel;
@@ -17,6 +15,4 @@ public class UserUpdateRequestDto {
     private String userProfile;
 
     private RoleStatus userRole;
-
-    private String intro;
 }
