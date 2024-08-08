@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class ReserveResponseDto {
-    private int reserveInfoIdx;
+    private Long reserveInfoIdx;
     private String coName;
     private LocalDate reserveInfoDate;
     private LocalTime reserveInfoStartTime;
@@ -20,7 +20,7 @@ public class ReserveResponseDto {
 
     public static ReserveResponseDto fromEntity(Reservation reservation) {
         return ReserveResponseDto.builder()
-                .reserveInfoIdx((int) reservation.getId())
+                .reserveInfoIdx(reservation.getId())
                 .coName(reservation.getCounselor().getName())
                 .reserveInfoDate(reservation.getLocalDate())
                 .reserveInfoStartTime(reservation.getStartTime())

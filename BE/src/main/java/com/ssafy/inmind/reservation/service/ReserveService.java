@@ -91,13 +91,25 @@ public class ReserveService {
         sendNotification(counselor.getId());
     }
 
-    // 상담 예약 정보 조회
-    public List<ReserveResponseDto> getReservation(long userId) {
-        List<Reservation> reservations = reserveRepository.findByUserId(userId);
+    // 상담사 상담 예약 정보 조회
+    public List<ReserveResponseDto> getReservation(Long counselorId) {
+        List<Reservation> reservations = reserveRepository.findByCounselor_Id(counselorId);
 
         return reservations.stream()
                 .map(ReserveResponseDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    // 유저 상담 예약 정보 조회
+    public ReserveResponseDto getReserve(Long userId) {
+        Reservation reservation = reserveRepository.findByUserId(userId);
+        return ReserveResponseDto.builder()
+                .reserveInfoIdx(reservation.getId())
+                .coName(reservation.getCounselor().getName())
+                .reserveInfoDate(reservation.getLocalDate())
+                .reserveInfoStartTime(reservation.getStartTime())
+                .reserveInfoEndTime(reservation.getEndTime())
+                .build();
     }
 
     @Transactional

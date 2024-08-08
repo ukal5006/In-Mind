@@ -6,6 +6,7 @@ import com.ssafy.inmind.reservation.dto.ReserveDeleteDto;
 import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
 import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
 import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
+import com.ssafy.inmind.reservation.entity.Reservation;
 import com.ssafy.inmind.reservation.service.ReserveService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -34,10 +35,17 @@ public class ReserveController {
     }
 
     @Operation(summary = "상담 예약 조회", description = "상담사가 자신에 대한 예약을 조회합니다.")
-    @GetMapping
-    public ResponseEntity<List<ReserveResponseDto>> getReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
-        List<ReserveResponseDto> responseDtoList = reserveService.getReservation(userId);
+    @GetMapping("/all")
+    public ResponseEntity<List<ReserveResponseDto>> getReserve(@RequestParam("counselorId") @Parameter(description = "상담사번호") Long counselorId) {
+        List<ReserveResponseDto> responseDtoList = reserveService.getReservation(counselorId);
         return ResponseEntity.ok(responseDtoList);
+    }
+
+    @Operation(summary = "상담 예약 조회", description = "유저가 자신에 대한 예약을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<ReserveResponseDto> getUserReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
+        ReserveResponseDto responseDto = reserveService.getReserve(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @Operation(summary = "상담 예약 수정", description = "유저가 예약 내역을 수정합니다.")
