@@ -52,8 +52,8 @@ public class ReserveService {
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
 
         LocalDate reservationDate = request.getReserveInfoDate();
-        LocalTime startTime = request.getReserveInfoStartTime();
-        LocalTime endTime = request.getReserveInfoEndTime();
+        LocalTime startTime = LocalTime.parse(request.getReserveInfoStartTime());
+        LocalTime endTime = LocalTime.parse(request.getReserveInfoEndTime());
 
         // 불가능 시간 체크
         List<UnavailableTime> conflictingUnavailableTimes = unavailableTimeRepository.findConflictingUnavailableTimes(
@@ -82,8 +82,8 @@ public class ReserveService {
         UnavailableTime unavailableTime = UnavailableTime.builder()
                 .user(counselor)
                 .date(request.getReserveInfoDate())
-                .startTime(request.getReserveInfoStartTime())
-                .endTime(request.getReserveInfoEndTime())
+                .startTime(startTime)
+                .endTime(endTime)
                 .build();
 
         unavailableTimeRepository.save(unavailableTime);
