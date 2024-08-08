@@ -69,8 +69,12 @@ function Nav() {
         <SmallLogo />
       </LogoWrapper>
       <MenuContainer>
-        <MenuItem to="test">검사하기</MenuItem>
-        <MenuItem to="counselorSearch"> 상담사 예약하기</MenuItem>
+        {userInfo?.userRole === "USER" ? (
+          <>
+            <MenuItem to="test">검사하기</MenuItem>
+            <MenuItem to="counselorSearch"> 상담사 예약하기</MenuItem>
+          </>
+        ) : null}
       </MenuContainer>
       <UserInfoContainer>
         {userInfo !== null ? (
