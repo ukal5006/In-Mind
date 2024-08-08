@@ -1,16 +1,19 @@
 package com.ssafy.inmind;
 
+import com.ssafy.inmind.user.dto.CounselorRequestDto;
 import com.ssafy.inmind.user.dto.UserRequestDto;
 import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
 import com.ssafy.inmind.user.service.UserService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.BufferedReader;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +27,14 @@ public class UserTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach // 테스트 전에 필요한 초기화 작업 수행
+    public void setUp() {
+        // 유저, 상담사 등록
+        // 기관 등록
+
+
+    }
 
     @Test
     @DisplayName("사용자 등록 테스트")
