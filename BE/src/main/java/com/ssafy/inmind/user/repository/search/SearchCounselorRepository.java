@@ -9,5 +9,7 @@ import java.util.List;
 public interface SearchCounselorRepository {
     List<CounselorListDto> findCounselorsByName(String name);
 
+    List<CounselorListDto> findAllCounselors();
+
     CounselorResponseDto findCounselorById(Long id);
 }
