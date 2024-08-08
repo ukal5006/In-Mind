@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Btn from '../../components/Btn';
-import { CHILDDEFAULT } from '../../apis/childApi';
+import useChildStore from '../../stores/childStore';
+import userStore from '../../stores/userStore';
 
 interface ChildInfo {
-  userIdx: number;
   childName: string;
   childBirth: string;
-  childInfoUserBackground: string;
 }
 
 interface ChildUpdateProps {
   type: 'create' | 'update';
+  childIdx?: number;
+  onClose: () => void;
 }
 
-interface UpdateChildProps {
-  childId: number;
-}
-
-const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
+const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }): JSX.Element => {
+  const { addChild, updateChild } = useChildStore();
+  const userInfo = userStore((state) => state.userInfo);
   const [childInfo, setChildInfo] = useState<ChildInfo>({
-    userIdx: 1, // 초기값 설정, 실제 사용 시 적절한 값으로 초기화 필요
     childName: '',
     childBirth: '',
-    childInfoUserBackground: '',
   });
   const [error, setError] = useState<string>('');
 
@@ -34,56 +30,9 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     } else if (numbers.length <= 6) {
       return `${numbers.slice(0, 4)}-${numbers.slice(4)}`;
     } else {
-      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(
-        6,
-        8
-      )}`;
+      return `${numbers.slice(0, 4)}-${numbers.slice(4, 6)}-${numbers.slice(6, 8)}`;
     }
   };
-
-  const registerUpdateChild = async (props: UpdateChildProps) => {
-    if (type === "create") {
-      try{
-        await axios.post(CHILDDEFAULT,
-          {
-            userIdx:childInfo.userIdx,
-            childName:childInfo.childName,
-            childBirth:childInfo.childBirth
-          }, {
-            headers : {
-              'accept': '*/*',
-              'Content-Type': 'application/json;charset=UTF-8'
-            }
-          }
-        );
-        console.log("자녀정보 생성 성공");
-        alert('자녀 정보 생성')
-      } catch (error) {
-        console.log('자녀정보 생성 실패', error);
-        alert('자녀 정보 생성 실패')
-      }
-    } else if (type === 'update') {
-      try {
-        await axios.put(`${CHILDDEFAULT}/${props.childId}`,
-          {
-            childName: childInfo.childName,
-            childBirth: childInfo.childBirth
-          }, {
-            headers: {
-              'accept': '*/*',
-              'Content-Type': 'application/json;charset=UTF-8'
-            }
-          }
-        );
-        console.log("자녀정보 수정 성공");
-        alert('자녀 정보 수정');
-      } catch (error) {
-        console.log('자녀정보 수정 실패', error);
-        alert('자녀 정보 수정 실패');
-      }
-    }
-  };
-
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -137,18 +86,28 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     }
 
     try {
-      if (type === 'create') {
-        await registerUpdateChild({ childId: 0 }); // 생성 시 임의의 childId 사용
-      } else if (type === 'update') {
-        // 여기서 실제 childId를 전달해야 합니다. 
-        // 이 값은 props로 받아와야 할 수도 있습니다.
-        await registerUpdateChild({ childId:1 });
+      if (!userInfo) {
+        throw new Error('사용자 정보를 찾을 수 없습니다.');
       }
-      console.log('자녀 정보 처리 성공');
+
+      if (type === 'create') {
+        await addChild(userInfo.userIdx, childInfo);
+        console.log("자녀정보 생성 성공");
+        alert('자녀 정보 생성');
+      } else if (type === 'update' && childIdx) {
+        await updateChild(childIdx, childInfo);
+        console.log("자녀정보 수정 성공");
+        alert('자녀 정보 수정');
+      }
       // 성공 후 추가 작업 (예: 폼 초기화, 페이지 이동 등)
     } catch (error) {
       console.error('API 요청 오류:', error);
       setError('정보 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      if (type === 'create') {
+        alert('자녀 정보 생성 실패');
+      } else {
+        alert('자녀 정보 수정 실패');
+      }
     }
   };
 
@@ -179,16 +138,6 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
             required
           />
         </div>
-        {/* 히스토리는 안 받는 듯? 일단 주석처리 */}
-        {/* <div>
-          <label htmlFor="childInfoUserBackground">히스토리</label>
-          <textarea
-            id="childInfoUserBackground"
-            name="childInfoUserBackground"
-            value={childInfo.childInfoUserBackground}
-            onChange={handleInputChange}
-          />
-        </div> */}
         {error && <div style={{ color: 'red' }}>{error}</div>}
         <Btn type="submit">
           {type === 'create' ? '아이 등록' : '아이 정보 수정'}

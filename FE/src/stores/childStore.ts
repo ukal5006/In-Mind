@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { CHILDDEFAULT } from '../apis/childApi';
 import { CHILDINFO } from '../apis/userApi';
-import userStore from './userStore'
 
 interface ChildData {
   childIdx: number;
@@ -14,42 +13,42 @@ interface ChildState {
   children: ChildData[];
   isLoading: boolean;
   error: string | null;
-  readAllChildren:() => Promise<void>;
+  readAllChildren: (userIdx: number) => Promise<void>;
   fetchChildren: (childIdx: number) => Promise<void>;
-  addChild: (userIdx: number, childInfo: object) => Promise<void>;
+  addChild: (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>) => Promise<void>;
   updateChild: (childIdx: number, childInfo: Partial<ChildData>) => Promise<void>;
   deleteChild: (childIdx: number) => Promise<void>;
 }
-const { userInfo } = userStore((state) => state);
 
-const useChildStore = create<ChildState>((set, get) => ({
+const useChildStore = create<ChildState>((set) => ({
   children: [],
   isLoading: false,
   error: null,
 
-  fetchChildren: async (childIdx:number) => {
+  readAllChildren: async (userIdx: number) => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${CHILDDEFAULT}/${childIdx}`);
+      const response = await axios.get(`${CHILDINFO(userIdx)}`);
       set({ children: response.data, isLoading: false, error: null });
     } catch (error) {
       set({ isLoading: false, error: 'Failed to fetch children' });
     }
   },
-  readAllChildren: async () => {
-    set({ isLoading:true});
+
+  fetchChildren: async (childIdx: number) => {
+    set({ isLoading: true });
     try {
-        const response = axios.get(`${CHILDINFO(userInfo.userIdx)}`);
-        set({ children: response.data, isLoading: false, error: null });
+      const response = await axios.get(`${CHILDDEFAULT}/${childIdx}`);
+      set({ children: [response.data], isLoading: false, error: null });
     } catch (error) {
       set({ isLoading: false, error: 'Failed to fetch children' });
     }
   },
 
-  addChild: async (userIdx:number, childInfo:object) => {
+  addChild: async (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>) => {
     set({ isLoading: true });
     try {
-      const response = await axios.post(`${CHILDDEFAULT}/${userInfo.userIdx}`, childInfo, {
+      const response = await axios.post(`${CHILDDEFAULT}/${userIdx}`, childInfo, {
         headers: {
           'accept': '*/*',
           'Content-Type': 'application/json;charset=UTF-8'
@@ -65,7 +64,7 @@ const useChildStore = create<ChildState>((set, get) => ({
     }
   },
 
-  updateChild: async (childIdx, childInfo) => {
+  updateChild: async (childIdx: number, childInfo: Partial<ChildData>) => {
     set({ isLoading: true });
     try {
       const response = await axios.put(`${CHILDDEFAULT}/${childIdx}`, childInfo, {
@@ -86,7 +85,7 @@ const useChildStore = create<ChildState>((set, get) => ({
     }
   },
 
-  deleteChild: async (childIdx) => {
+  deleteChild: async (childIdx: number) => {
     set({ isLoading: true });
     try {
       await axios.delete(`${CHILDDEFAULT}/${childIdx}`, {
