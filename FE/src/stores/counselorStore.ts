@@ -59,13 +59,13 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
   },
   
 
-  setSearchType: (type) => set({ searchType: type }),
-  setSearchTerm: (term) => set({ searchTerm: term }),
-  setFilterOption: (option) => {
-    const sortedCounselors = sortCounselors(get().counselors, option);
-    set({ filterOption: option, filteredCounselors: sortedCounselors });
-  },
-  setCurrentPage: (page) => set({ currentPage: page }),
+    setSearchType: (type) => set({ searchType: type }),
+    setSearchTerm: (term) => set({ searchTerm: term }),
+    setFilterOption: (option) => {
+        const sortedCounselors = sortCounselors(get().counselors, option);
+        set({ filterOption: option, filteredCounselors: sortedCounselors });
+    },
+    setCurrentPage: (page) => set({ currentPage: page }),
 }));
 
 const sortCounselors = (counselors: Counselor[], option: string): Counselor[] => {

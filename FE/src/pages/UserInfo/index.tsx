@@ -159,11 +159,10 @@ function UserInfo() {
                     userProfile: userInfo.userProfile,
                     userRole: 'USER',
                 })
-                .then(() => {
-                    return axios.get(LOADUSERINFO(userInfo?.userIdx));
-                })
+                .then(() => axios.get(LOADUSERINFO(userInfo?.userIdx)))
                 .then((response) => {
                     setUserInfo(response.data);
+                    alert('정보가 수정되었습니다.');
                     setIsModalOpen(false); // 모달 닫기
                 })
                 .catch((error) => {

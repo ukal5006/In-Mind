@@ -6,6 +6,9 @@ import Wrapper from '../../components/Wrapper';
 import Btn from '../../components/Btn';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import userStore from '../../stores/userStore';
+import axios from 'axios';
+import { CHANGEPW, CHECKPW, LOADUSERINFO, UPDATECOUNSELORINFO } from '../../apis/userApi';
 
 const CounselorInfoContainer = styled(Container)`
     padding: 30px 20px;
@@ -21,6 +24,7 @@ const ProfileContainer = styled(Container)`
     justify-content: start;
     box-sizing: border-box;
     padding-left: 10px;
+    margin-bottom: 15px;
 `;
 
 const ProfileImage = styled.div`
@@ -46,7 +50,7 @@ const Line = styled.div`
     height: 1px;
     width: 100%;
     border-bottom: 2px solid ${colors.gray};
-    margin: 10px 0px;
+    margin: 7px;
 `;
 
 const ProfileEmail = styled(Text)``;
@@ -140,17 +144,65 @@ const ModalButton = styled(Btn)`
 `;
 
 function CounselorInfo() {
+    const { userInfo, setUserInfo } = userStore((state) => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [name, setName] = useState('오은영');
-    const [email, setEmail] = useState('counselor@naver.com');
-    const [phone, setPhone] = useState('010-5050-5050');
-    const [intro, setIntro] = useState('한국 최고의 심리상담가 오은영 입니다.');
+    const [type, setType] = useState('');
+    const [name, setName] = useState(userInfo?.userName);
+    const [email, setEmail] = useState(userInfo?.userEmail);
+    const [phone, setPhone] = useState(userInfo?.userTel);
+    const [intro, setIntro] = useState(userInfo?.userIntro);
+    const [profile, setProfile] = useState(userInfo?.userProfile);
     const [startTime, setStartTime] = useState('19');
     const [endTime, setEndTime] = useState('22');
-
+    const [beforePw, setbeforePw] = useState('');
+    const [changePw, setChangePw] = useState('');
+    const [changePwCheck, setChangePwCheck] = useState('');
+    // const [counTime, setCounTime] = useState();
     const handleUpdate = () => {
-        // 기본정보 업데이트 로직을 추가하세요.
-        setIsModalOpen(false);
+        if (userInfo?.userIdx) {
+            axios
+                .put(UPDATECOUNSELORINFO(userInfo?.userIdx), {
+                    userEmail: email,
+                    userName: name,
+                    userTel: phone,
+                    userProfile: profile,
+                    intro,
+                    userRole: 'COUNSELOR',
+                })
+                .then(() => axios.get(LOADUSERINFO(userInfo?.userIdx)))
+                .then((response) => {
+                    setUserInfo(response.data);
+                    alert('정보가 수정되었습니다.');
+                    setIsModalOpen(false); // 모달 닫기
+                })
+                .catch((error) => alert('에러발생'));
+        }
+    };
+
+    const handleUpdatePW = () => {
+        axios
+            .post(CHECKPW, {
+                email: userInfo?.userEmail,
+                password: beforePw,
+            })
+            .then((response) => {
+                if (userInfo?.userIdx) {
+                    axios.put(CHANGEPW(userInfo?.userIdx), {
+                        password: changePw,
+                    });
+                }
+            })
+            .then((response) => {
+                alert('비밀번호 수정 완료!');
+                setbeforePw('');
+                setChangePw('');
+                setChangePwCheck('');
+                setIsModalOpen(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert('비밀번호가 일치하지 않습니다.');
+            });
     };
 
     return (
@@ -158,28 +210,51 @@ function CounselorInfo() {
             <ProfileContainer>
                 <ProfileImage />
                 <ProfileInfoWrapper>
-                    <ProfileName>오은영</ProfileName>
-                    <ProfileEmail>counselor@naver.com</ProfileEmail>
+                    <ProfileName>{userInfo?.userName}</ProfileName>
+                    <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
                 </ProfileInfoWrapper>
             </ProfileContainer>
             <Line />
             <InfoContainer>
                 <InfoContainerHeader>기본정보</InfoContainerHeader>
                 <InfoList>
-                    <InfoListItem>이름 : {name}</InfoListItem>
+                    <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
                     <Line />
-                    <InfoListItem>이메일 : {email}</InfoListItem>
+                    <InfoListItem>이메일 : {userInfo?.userEmail}</InfoListItem>
                     <Line />
-                    <InfoListItem>전화번호 : {phone}</InfoListItem>
+                    <InfoListItem>전화번호 : {userInfo?.userTel}</InfoListItem>
                     <Line />
-                    <InfoListItem>한줄소개 : {intro}</InfoListItem>
+                    <InfoListItem>한줄소개 : {userInfo?.userIntro}</InfoListItem>
                     <Line />
+                    <InfoListItem>
+                        <UpdateBtn
+                            onClick={() => {
+                                setType('info');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
+                    </InfoListItem>
+                </InfoList>
+            </InfoContainer>
+            <Line />
+            <InfoContainer>
+                <InfoContainerHeader>상담시간</InfoContainerHeader>
+                <InfoList>
                     <InfoListItem>
                         상담 가능 시간 : {startTime}시 ~ {endTime}시
                     </InfoListItem>
                     <Line />
                     <InfoListItem>
-                        <UpdateBtn onClick={() => setIsModalOpen(true)}>수정하기</UpdateBtn>
+                        <UpdateBtn
+                            onClick={() => {
+                                setType('time');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
@@ -189,7 +264,14 @@ function CounselorInfo() {
                 <InfoList>
                     <InfoListItem>
                         비밀번호
-                        <UpdateBtn>수정하기</UpdateBtn>
+                        <UpdateBtn
+                            onClick={() => {
+                                setType('pw');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
                     </InfoListItem>
                     <Line />
                     <InfoListItem>
@@ -201,49 +283,106 @@ function CounselorInfo() {
             {isModalOpen && (
                 <ModalOverlay>
                     <ModalContainer>
-                        <ModalTitle>기본정보 수정</ModalTitle>
-                        <ModalInput
-                            type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="이름"
-                        />
-                        <ModalInput
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="이메일"
-                        />
-                        <ModalInput
-                            type="text"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            placeholder="전화번호"
-                        />
-                        <ModalInput
-                            type="text"
-                            value={intro}
-                            onChange={(e) => setIntro(e.target.value)}
-                            placeholder="한줄소개"
-                        />
-                        <ModalWrapper>
-                            <ModalInput
-                                type="text"
-                                value={startTime}
-                                onChange={(e) => setStartTime(e.target.value)}
-                                placeholder="시작시간"
-                            />
-                            시~
-                            <ModalInput
-                                type="text"
-                                value={endTime}
-                                onChange={(e) => setEndTime(e.target.value)}
-                                placeholder="종료시간"
-                            />
-                            시
-                        </ModalWrapper>
-                        <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
-                        <ModalButton onClick={() => setIsModalOpen(false)}>취소하기</ModalButton>
+                        {type === 'info' ? (
+                            <>
+                                <ModalTitle>기본정보 수정</ModalTitle>
+                                <ModalInput
+                                    type="text"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="이름"
+                                />
+                                <ModalInput
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="이메일"
+                                />
+                                <ModalInput
+                                    type="text"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    placeholder="전화번호"
+                                />
+                                <ModalInput
+                                    type="text"
+                                    value={intro}
+                                    onChange={(e) => setIntro(e.target.value)}
+                                    placeholder="한줄소개"
+                                />
+                                <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                                <ModalButton
+                                    onClick={() => {
+                                        setName(userInfo?.userName);
+                                        setEmail(userInfo?.userEmail);
+                                        setPhone(userInfo?.userTel);
+                                        setIntro(userInfo?.userIntro);
+                                        setIsModalOpen(false);
+                                    }}
+                                >
+                                    취소하기
+                                </ModalButton>
+                            </>
+                        ) : type === 'time' ? (
+                            <>
+                                <ModalWrapper>
+                                    <ModalTitle>상담 시간 수정</ModalTitle>
+                                    <ModalInput
+                                        type="text"
+                                        value={startTime}
+                                        onChange={(e) => setStartTime(e.target.value)}
+                                        placeholder="시작시간"
+                                    />
+                                    시~
+                                    <ModalInput
+                                        type="text"
+                                        value={endTime}
+                                        onChange={(e) => setEndTime(e.target.value)}
+                                        placeholder="종료시간"
+                                    />
+                                    시
+                                </ModalWrapper>
+                                <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                                <ModalButton
+                                    onClick={() => {
+                                        // setCounTime(userInfo?.userIntro);
+                                        setIsModalOpen(false);
+                                    }}
+                                >
+                                    취소하기
+                                </ModalButton>
+                            </>
+                        ) : (
+                            <>
+                                <ModalTitle>비밀번호 변경</ModalTitle>
+                                <ModalInput
+                                    type="password"
+                                    value={beforePw}
+                                    onChange={(e) => setbeforePw(e.target.value)}
+                                    placeholder="이전 비밀번호"
+                                />
+                                <ModalInput
+                                    type="password"
+                                    value={changePw}
+                                    onChange={(e) => setChangePw(e.target.value)}
+                                    placeholder="변경할 비밀번호"
+                                />
+                                <ModalInput
+                                    type="password"
+                                    value={changePwCheck}
+                                    onChange={(e) => setChangePwCheck(e.target.value)}
+                                    placeholder="변경할 비밀번호 확인"
+                                />
+                                <ModalButton onClick={handleUpdatePW}>저장하기</ModalButton>
+                                <ModalButton
+                                    onClick={() => {
+                                        setIsModalOpen(false);
+                                    }}
+                                >
+                                    취소하기
+                                </ModalButton>
+                            </>
+                        )}
                     </ModalContainer>
                 </ModalOverlay>
             )}
