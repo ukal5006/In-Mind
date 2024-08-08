@@ -110,4 +110,13 @@ public class UserController {
         userService.updateUser(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @Operation(summary = "회원 정보 탈퇴", description = "입력받은 유저번호로 회원 정보를 탈퇴합니다.")
+    @Parameter(name = "userId", description = "유저번호")
+    @PutMapping("leave/{userId}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId){
+        userService.deleteUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
