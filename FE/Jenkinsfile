@@ -33,6 +33,7 @@ pipeline {
                         def nginxConfPath = "${pwd()}/nginx.conf"
                         if (fileExists(nginxConfPath)) {
                             echo "nginx.conf found at ${nginxConfPath}"
+                            sh "file ${nginxConfPath}" // 파일 유형 확인
                         } else {
                             error "nginx.conf not found at ${nginxConfPath}"
                         }
