@@ -1,120 +1,325 @@
-// import UserInfoContainer from './UserInfoContainer';
-// import UserProfileContainer from './UserProfileContainer';
-// import UserProfileImage from './UserProfileImage';
-
-// const tempUserInfo = {
-//     name: '홍길동',
-//     email: 'thunder@naver.com',
-//     phone: '010-1234-5678',
-//     nickName: '삼성맨',
-//     region: '대전',
-// };
-
-// function UserInfo() {
-//     return (
-//         <UserInfoContainer>
-//             <UserProfileContainer>
-//                 <UserProfileImage></UserProfileImage>
-//             </UserProfileContainer>
-//         </UserInfoContainer>
-//     );
-// }
-
-// export default UserInfo;
-
 import styled from 'styled-components';
+import Container from '../../components/Container';
+import { colors } from '../../theme/colors';
+import Text from '../../components/Text';
+import Wrapper from '../../components/Wrapper';
+import Btn from '../../components/Btn';
+import { useState } from 'react';
+import userStore from '../../stores/userStore';
+import axios from 'axios';
+import { CHANGEPW, CHECKPW, DELETEUSER, LOADUSERINFO, UPDATEUSERINFO } from '../../apis/userApi';
+import { useNavigate } from 'react-router-dom';
 
-const Container = styled.div`
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`;
-
-const ProfilePicture = styled.div`
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #ccc;
-    margin: 0 auto;
-`;
-
-const Name = styled.div`
-    font-weight: bold;
-    margin: 10px 0;
-`;
-
-const Email = styled.div`
-    color: gray;
-    margin-bottom: 20px;
-`;
-
-const Section = styled.div`
-    margin-bottom: 20px;
+const UserInfoContainer = styled(Container)`
+    padding: 30px 20px;
+    box-sizing: border-box;
     width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: start;
 `;
 
-const SectionTitle = styled.div`
-    font-weight: bold;
+const ProfileContainer = styled(Container)`
+    width: 100%;
+    justify-content: start;
+    box-sizing: border-box;
+    padding-left: 10px;
+`;
+
+const ProfileImage = styled.div`
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: ${colors.gray};
+    margin-right: 30px;
+`;
+
+const ProfileInfoWrapper = styled(Wrapper)`
+    flex-direction: column;
+    align-items: start;
+`;
+
+const ProfileName = styled(Text)`
+    font-size: 28px;
+    font-weight: 700;
     margin-bottom: 10px;
 `;
 
-const Info = styled.div`
+const Line = styled.div`
+    height: 1px;
+    width: 100%;
+    border-bottom: 2px solid ${colors.gray};
+    margin: 10px 0px;
+`;
+
+const ProfileEmail = styled(Text)``;
+
+const InfoContainer = styled(Container)`
+    width: 90%;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    margin: 20px;
+`;
+
+const InfoContainerHeader = styled(Text)`
+    font-weight: 700;
+    color: ${colors.gray};
+`;
+
+const InfoList = styled.ul`
+    width: 100%;
+    margin-top: 25px;
     display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0px 10px;
+`;
+
+const InfoListItem = styled.li`
+    display: flex;
+    width: 100%;
     justify-content: space-between;
+    position: relative;
     align-items: center;
-    padding: 5px 0;
 `;
 
-const EditButton = styled.button`
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 12px;
-
-    &:hover {
-        background-color: #d0d0d0;
-    }
+const UpdateBtn = styled(Btn)`
+    background-color: ${colors.darkGreen};
+    color: ${colors.white};
+    font-size: 14px;
 `;
 
-const Logout = styled.div`
-    text-align: center;
-    color: blue;
-    cursor: pointer;
+const DeleteBtn = styled(Btn)`
+    background-color: ${colors.red};
 `;
 
-const UserInfo = () => {
+const ModalOverlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+const ModalContainer = styled.div`
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+`;
+
+const ModalTitle = styled(Text)`
+    font-weight: 700;
+    margin-bottom: 20px;
+`;
+
+const ModalInput = styled.input`
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid ${colors.gray};
+`;
+
+// const ModalWrapper = styled.div`
+//     display: flex;
+//     align-items: center;
+//     & > ${ModalInput} {
+//         width: 50px;
+//     }
+// `;
+
+const ModalButton = styled(Btn)`
+    background-color: ${colors.darkGreen};
+    color: ${colors.white};
+    width: 100%;
+`;
+
+function UserInfo() {
+    const { userInfo, setUserInfo } = userStore((state) => state);
+    const [modalType, setModalType] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [changePhone, setChangePhone] = useState(userInfo?.userTel);
+    const [beforePw, setbeforePw] = useState('');
+    const [changePw, setChangePw] = useState('');
+    const [changePwCheck, setChangePwCheck] = useState('');
+    const navigate = useNavigate();
+
+    const handleUpdate = () => {
+        if (userInfo?.userIdx) {
+            axios
+                .put(UPDATEUSERINFO(userInfo.userIdx), {
+                    userName: userInfo.userName,
+                    userTel: changePhone,
+                    userProfile: userInfo.userProfile,
+                    userRole: 'USER',
+                })
+                .then(() => {
+                    return axios.get(LOADUSERINFO(userInfo?.userIdx));
+                })
+                .then((response) => {
+                    setUserInfo(response.data);
+                    setIsModalOpen(false); // 모달 닫기
+                })
+                .catch((error) => {
+                    console.error('Error updating user info:', error);
+                });
+        }
+    };
+
+    const handleUpdatePW = () => {
+        axios
+            .post(CHECKPW, {
+                email: userInfo?.userEmail,
+                password: beforePw,
+            })
+            .then((response) => {
+                if (userInfo?.userIdx) {
+                    axios.put(CHANGEPW(userInfo?.userIdx), {
+                        password: changePw,
+                    });
+                }
+            })
+            .then((response) => {
+                alert('비밀번호 수정 완료!');
+                setbeforePw('');
+                setChangePw('');
+                setChangePwCheck('');
+                setIsModalOpen(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert('비밀번호가 일치하지 않습니다.');
+            });
+    };
+
+    const handleSignOut = () => {
+        const check = window.confirm('정말 회원탈퇴를 하시겠습니까?');
+        if (check === true && userInfo?.userIdx) {
+            axios
+                .put(DELETEUSER(userInfo?.userIdx))
+                .then()
+                .catch((error) => console.log(error));
+            alert('회원 탈퇴가 완료되었습니다.');
+            navigate('/');
+        }
+    };
     return (
-        <Container>
-            <ProfilePicture />
-            <Name>홍길동</Name>
-            <Email>thunder@naver.com</Email>
+        <UserInfoContainer>
+            <ProfileContainer>
+                <ProfileImage />
+                <ProfileInfoWrapper>
+                    <ProfileName>{userInfo?.userName}</ProfileName>
+                    <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
+                </ProfileInfoWrapper>
+            </ProfileContainer>
+            <Line />
+            <InfoContainer>
+                <InfoContainerHeader>기본정보</InfoContainerHeader>
+                <InfoList>
+                    <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
+                    <Line />
+                    <InfoListItem>이메일 : {userInfo?.userEmail}</InfoListItem>
+                    <Line />
+                    <InfoListItem>전화번호 : {userInfo?.userTel}</InfoListItem>
+                    <Line />
+                    <InfoListItem>
+                        <UpdateBtn
+                            onClick={() => {
+                                setModalType('info');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
+                    </InfoListItem>
+                </InfoList>
+            </InfoContainer>
+            <Line />
+            <InfoContainer>
+                <InfoContainerHeader>보안설정</InfoContainerHeader>
+                <InfoList>
+                    <InfoListItem>
+                        비밀번호
+                        <UpdateBtn
+                            onClick={() => {
+                                setModalType('password');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
+                    </InfoListItem>
+                    <Line />
+                    <InfoListItem>
+                        <DeleteBtn onClick={handleSignOut}>회원탈퇴</DeleteBtn>
+                    </InfoListItem>
+                </InfoList>
+            </InfoContainer>
 
-            <Section>
-                <SectionTitle>기본정보</SectionTitle>
-                <Info>
-                    <span>휴대전화 : 010-1234-5678</span>
-                    <EditButton>수정</EditButton>
-                </Info>
-            </Section>
-
-            <Section>
-                <SectionTitle>보안설정</SectionTitle>
-                <Info>
-                    <span>비밀번호</span>
-                    <EditButton>수정</EditButton>
-                </Info>
-            </Section>
-
-            <Logout>회원탈퇴</Logout>
-        </Container>
+            {isModalOpen && (
+                <ModalOverlay>
+                    {modalType === 'info' ? (
+                        <ModalContainer>
+                            <ModalTitle>기본정보 수정</ModalTitle>
+                            <ModalInput type="text" value={userInfo?.userName} placeholder="이름" disabled />
+                            <ModalInput type="text" value={userInfo?.userEmail} placeholder="이메일" disabled />
+                            <ModalInput
+                                type="text"
+                                value={changePhone}
+                                onChange={(e) => setChangePhone(e.target.value)}
+                                placeholder="전화번호"
+                            />
+                            <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                            <ModalButton
+                                onClick={() => {
+                                    setChangePhone(userInfo?.userTel);
+                                    setIsModalOpen(false);
+                                }}
+                            >
+                                취소하기
+                            </ModalButton>
+                        </ModalContainer>
+                    ) : (
+                        <ModalContainer>
+                            <ModalTitle>비밀번호 변경</ModalTitle>
+                            <ModalInput
+                                type="password"
+                                value={beforePw}
+                                onChange={(e) => setbeforePw(e.target.value)}
+                                placeholder="이전 비밀번호"
+                            />
+                            <ModalInput
+                                type="password"
+                                value={changePw}
+                                onChange={(e) => setChangePw(e.target.value)}
+                                placeholder="변경할 비밀번호"
+                            />
+                            <ModalInput
+                                type="password"
+                                value={changePwCheck}
+                                onChange={(e) => setChangePwCheck(e.target.value)}
+                                placeholder="변경할 비밀번호 확인"
+                            />
+                            <ModalButton onClick={handleUpdatePW}>저장하기</ModalButton>
+                            <ModalButton
+                                onClick={() => {
+                                    setIsModalOpen(false);
+                                }}
+                            >
+                                취소하기
+                            </ModalButton>
+                        </ModalContainer>
+                    )}
+                </ModalOverlay>
+            )}
+        </UserInfoContainer>
     );
-};
+}
 
 export default UserInfo;
