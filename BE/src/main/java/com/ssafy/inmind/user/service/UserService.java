@@ -51,6 +51,9 @@ public class UserService {
 
     @Transactional
     public void saveUser(UserRequestDto userRequestDto) {
+        if(checkUserEmail(userRequestDto.getEmail()).equals("duplicated")){
+            throw new RestApiException(ErrorCode.NOT_FOUND);
+        }
         String hashedString = sha256(userRequestDto.getPassword() + salt);
         User user = User.builder()
                 .email(userRequestDto.getEmail())
@@ -141,16 +144,16 @@ public class UserService {
                 .tel(userUpdateRequestDto.getUserTel())
                 .role(userUpdateRequestDto.getUserRole())
                 .profile(userUpdateRequestDto.getUserProfile())
-                .isAuth("N")
-                .isAlive("Y")
+                .isAuth(user.getIsAuth())
+                .isAlive(user.getIsAlive())
                 .intro(userUpdateRequestDto.getIntro())
                 .build();
         userRepository.save(updateUser);
     }
 
     @Transactional
-    public void deleteUser(Long userIdx) {
-        User user = userRepository.findById(userIdx)
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
         User updateUser = User.builder()
@@ -160,16 +163,11 @@ public class UserService {
                 .name(user.getName())
                 .tel(user.getTel())
                 .role(user.getRole())
-                .isAuth("N")
+                .isAuth(user.getIsAuth())
                 .isAlive("N")
                 .build();
         userRepository.save(updateUser);
     }
-
-
-
-
-
 
     /*
     SHA256 암호화
