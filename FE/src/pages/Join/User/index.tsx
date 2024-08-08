@@ -44,7 +44,8 @@ function User() {
 
     const signInSubmit = async () => {
         // 이메일 인증번호 확인 후 검증 제약조건 추가 필요
-        if (password === passwordCheck && Number(code) === codeCheck) {
+        // if (password === passwordCheck && Number(code) === codeCheck) {
+        if (password === passwordCheck) {
             try {
                 await axios.post(
                     apiUrl + '/users/user',
