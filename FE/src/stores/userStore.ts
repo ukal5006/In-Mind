@@ -8,6 +8,7 @@ interface UserInfo {
     userProfile: string;
     userRole: 'USER' | 'COUNSELOR';
     userTel: string;
+    userIntro: string | '';
 }
 
 // Zustand 스토어 인터페이스 정의

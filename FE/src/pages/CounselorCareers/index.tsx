@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Container from '../../components/Container';
 import { colors } from '../../theme/colors';
@@ -7,6 +7,9 @@ import Btn from '../../components/Btn';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import Wrapper from '../../components/Wrapper';
 import { MdDragHandle } from 'react-icons/md';
+import axios from 'axios';
+import { READRESUMES } from '../../apis/resumesApi';
+import userStore from '../../stores/userStore';
 
 const CounselorCareerContainer = styled(Container)`
     padding: 30px 20px;
@@ -29,7 +32,8 @@ const CareerContainer = styled(Container)`
     align-items: flex-start;
     box-sizing: border-box;
     margin: 20px;
-    height: 300px;
+    /* height: 300px; */
+    max-height: 350px;
     justify-content: start;
 `;
 
@@ -101,10 +105,29 @@ const DragIcon = styled(MdDragHandle)`
 `;
 
 function CounselorCareer() {
-    const [careers, setCareers] = useState<string[]>(['금쪽같은 내새끼 132회 출현']);
+    const { userInfo } = userStore((state) => state);
+    const [careers, setCareers] = useState<string[]>([]);
+
+    if (userInfo?.userIdx) {
+        axios
+            .get(READRESUMES(userInfo.userIdx))
+            .then((response) => {
+                console.log(response.data.info);
+            })
+            .catch((error) => {
+                if (error.response.status === 404) {
+                    console.log('이력없슴');
+                }
+            });
+    }
+
     const [newCareer, setNewCareer] = useState<string>('');
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingCareer, setEditingCareer] = useState<string>('');
+
+    useEffect(() => {
+        //
+    }, [careers]);
 
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) return;
