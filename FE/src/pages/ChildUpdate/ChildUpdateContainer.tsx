@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Btn from '../../components/Btn';
+import { CHILDDEFAULT } from '../../apis/childApi';
 
 interface ChildInfo {
-  childInfoUserIdx: number;
-  childInfoUserName: string;
-  childInfoUserBirthDate: string;
+  userIdx: number;
+  childName: string;
+  childBirth: string;
   childInfoUserBackground: string;
 }
 
@@ -13,11 +14,15 @@ interface ChildUpdateProps {
   type: 'create' | 'update';
 }
 
+interface UpdateChildProps {
+  childId: number;
+}
+
 const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
   const [childInfo, setChildInfo] = useState<ChildInfo>({
-    childInfoUserIdx: 0, // 초기값 설정, 실제 사용 시 적절한 값으로 초기화 필요
-    childInfoUserName: '',
-    childInfoUserBirthDate: '',
+    userIdx: 1, // 초기값 설정, 실제 사용 시 적절한 값으로 초기화 필요
+    childName: '',
+    childBirth: '',
     childInfoUserBackground: '',
   });
   const [error, setError] = useState<string>('');
@@ -36,11 +41,55 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     }
   };
 
+  const registerUpdateChild = async (props: UpdateChildProps) => {
+    if (type === "create") {
+      try{
+        await axios.post(CHILDDEFAULT,
+          {
+            userIdx:childInfo.userIdx,
+            childName:childInfo.childName,
+            childBirth:childInfo.childBirth
+          }, {
+            headers : {
+              'accept': '*/*',
+              'Content-Type': 'application/json;charset=UTF-8'
+            }
+          }
+        );
+        console.log("자녀정보 생성 성공");
+        alert('자녀 정보 생성')
+      } catch (error) {
+        console.log('자녀정보 생성 실패', error);
+        alert('자녀 정보 생성 실패')
+      }
+    } else if (type === 'update') {
+      try {
+        await axios.put(`${CHILDDEFAULT}/${props.childId}`,
+          {
+            childName: childInfo.childName,
+            childBirth: childInfo.childBirth
+          }, {
+            headers: {
+              'accept': '*/*',
+              'Content-Type': 'application/json;charset=UTF-8'
+            }
+          }
+        );
+        console.log("자녀정보 수정 성공");
+        alert('자녀 정보 수정');
+      } catch (error) {
+        console.log('자녀정보 수정 실패', error);
+        alert('자녀 정보 수정 실패');
+      }
+    }
+  };
+
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'childInfoUserBirthDate') {
+    if (name === 'childBirth') {
       const formattedDate = formatDate(value);
       setChildInfo((prevInfo) => ({
         ...prevInfo,
@@ -77,23 +126,26 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     e.preventDefault();
     setError('');
 
-    if (!childInfo.childInfoUserName.trim()) {
+    if (!childInfo.childName.trim()) {
       setError('이름을 입력해주세요.');
       return;
     }
 
-    if (!isValidDate(childInfo.childInfoUserBirthDate)) {
+    if (!isValidDate(childInfo.childBirth)) {
       setError('올바른 생년월일을 입력해주세요. (YYYY-MM-DD 형식)');
       return;
     }
 
     try {
-      const response = await axios.put(
-        `/api/children/{childInfoUserIdx}`,
-        childInfo
-      );
-      console.log('서버 응답:', response.data);
-      // 성공 메시지 표시 또는 다음 단계로 진행
+      if (type === 'create') {
+        await registerUpdateChild({ childId: 0 }); // 생성 시 임의의 childId 사용
+      } else if (type === 'update') {
+        // 여기서 실제 childId를 전달해야 합니다. 
+        // 이 값은 props로 받아와야 할 수도 있습니다.
+        await registerUpdateChild({ childId:1 });
+      }
+      console.log('자녀 정보 처리 성공');
+      // 성공 후 추가 작업 (예: 폼 초기화, 페이지 이동 등)
     } catch (error) {
       console.error('API 요청 오류:', error);
       setError('정보 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
@@ -104,30 +156,31 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
     <div>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="childInfoUserName">이름</label>
+          <label htmlFor="childName">이름</label>
           <input
             type="text"
-            id="childInfoUserName"
-            name="childInfoUserName"
-            value={childInfo.childInfoUserName}
+            id="childName"
+            name="childName"
+            value={childInfo.childName}
             onChange={handleInputChange}
             required
           />
         </div>
         <div>
-          <label htmlFor="childInfoUserBirthDate">생년월일</label>
+          <label htmlFor="childBirth">생년월일</label>
           <input
             type="text"
-            id="childInfoUserBirthDate"
-            name="childInfoUserBirthDate"
-            value={childInfo.childInfoUserBirthDate}
+            id="childBirth"
+            name="childBirth"
+            value={childInfo.childBirth}
             onChange={handleInputChange}
             placeholder="YYYY-MM-DD"
             maxLength={10}
             required
           />
         </div>
-        <div>
+        {/* 히스토리는 안 받는 듯? 일단 주석처리 */}
+        {/* <div>
           <label htmlFor="childInfoUserBackground">히스토리</label>
           <textarea
             id="childInfoUserBackground"
@@ -135,7 +188,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type }): JSX.Element => {
             value={childInfo.childInfoUserBackground}
             onChange={handleInputChange}
           />
-        </div>
+        </div> */}
         {error && <div style={{ color: 'red' }}>{error}</div>}
         <Btn type="submit">
           {type === 'create' ? '아이 등록' : '아이 정보 수정'}

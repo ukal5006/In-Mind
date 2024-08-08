@@ -104,6 +104,7 @@ function CounselorForm() {
 
 
             <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <button onClick={emailCheckSubmit}>이메일 중복체크</button>
             <JoinBtn>인증번호 받기</JoinBtn>
             <JoinInput placeholder="인증번호" value={code} onChange={(e) => setCode(e.target.value)} />
             <JoinInput placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
