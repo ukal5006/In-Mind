@@ -22,7 +22,9 @@ public class UserResponseDto {
 
     private RoleStatus userRole;
 
-    private String userIsLive;
+    private String userIsAuth;
+
+    private String userIntro;
 
     public static UserResponseDto fromEntity(User user) {
         return UserResponseDto.builder()
@@ -32,7 +34,8 @@ public class UserResponseDto {
                 .userTel(user.getTel())
                 .userProfile(user.getProfile())
                 .userRole(user.getRole())
-                .userIsLive(user.getIsAlive())
+                .userIsAuth(user.getIsAuth())
+                .userIntro(user.getIntro())
                 .build();
     }
 }
