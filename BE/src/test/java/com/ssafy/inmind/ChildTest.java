@@ -72,7 +72,7 @@ class ChildTest {
     }
 
     @Test
-    @DisplayName("아이목록test")
+    @DisplayName("아이 목록test")
     public void getChildList() {
         //given
         Optional<User> user = userRepository.findByUserEmail("test@naver.com");
@@ -122,7 +122,7 @@ class ChildTest {
     }
 
     @Test
-    @DisplayName("아이정보 수정 test")
+    @DisplayName("아이정보 삭제 test")
     public void deleteChild() {
         //given
         Optional<User> user = userRepository.findByUserEmail("test@naver.com");
