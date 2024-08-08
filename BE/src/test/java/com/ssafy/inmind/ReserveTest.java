@@ -30,9 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ReserveTest {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -41,16 +38,16 @@ public class ReserveTest {
     @Autowired
     private ReserveRepository reserveRepository;
 
+    @Autowired
+    private ChildRepository childRepository;
+
     private User user;
     private User counselor;
     private Child child;
-    @Autowired
-    private ChildRepository childRepository;
 
     @BeforeEach
     void setUp() {
         user = User.builder()
-                .id(1L)
                 .email("testuser1@naver.com")
                 .password("1234")
                 .tel("01012345678")
@@ -62,7 +59,6 @@ public class ReserveTest {
                 .build();
 
         counselor = User.builder()
-                .id(2L)
                 .email("testuser2@naver.com")
                 .password("1234")
                 .tel("01091252521")
@@ -100,6 +96,7 @@ public class ReserveTest {
                 .reserveInfoEndTime(LocalTime.now().plusHours(1))
                 .build();
 
+        System.out.println(reserveDto.getUserIdx() + " , " + reserveDto.getChildIdx());
         reserveService.reserve(reserveDto);
         List<Reservation> reservation = reserveRepository.findByUserId(user.getId());
 
