@@ -21,7 +21,7 @@ const CounselorList: React.FC = () => {
             <p>상담 가능 시간: {counselor.availableTime}</p>
             <p>거리: {counselor.distance}km</p>
             <p>리뷰 수: {counselor.reviewCount}</p>
-            <p>평점: {counselor.rating}</p>
+            <p>평점: {counselor.reviewAverage}</p>
           </div>
         </Link>
       ))}
