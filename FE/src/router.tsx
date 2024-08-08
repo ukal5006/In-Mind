@@ -18,6 +18,7 @@ import CounselorCareers from './pages/CounselorCareers';
 import MyReviews from './pages/MyReviews';
 import CounselorSearch from './pages/CounselorSearch';
 import Test from './pages/Test';
+import FacialMeeting from './pages/FacialMeeting/App'
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
     {
         path: '/findId',
         element: <FindId />,
+    },
+    {
+        path: '/facial',
+        element:<FacialMeeting />
     },
     {
         path: '/join',

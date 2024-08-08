@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
-
+import {USERDEFAULT} from '../apis/userApi'
+import { useEffect } from 'react';
 interface Counselor {
   idx: number;
   name: string;
@@ -10,7 +11,7 @@ interface Counselor {
   availableTime: string;
   distance: number;
   reviewCount: number;
-  rating: number;
+  reviewAverage: number;
 }
 
 interface CounselorState {
@@ -21,13 +22,16 @@ interface CounselorState {
   currentPage: number;
   searchType: 'name' | 'organization';
   searchTerm: string;
-  filterOption: 'review' | 'rating' | 'distance';
-  fetchCounselors: () => Promise<void>;
+  filterOption: 'review' | 'reviewAverage' | 'distance';
+  fetchCounselors: (name:string|null) => Promise<void>;
   setSearchType: (type: 'name' | 'organization') => void;
   setSearchTerm: (term: string) => void;
-  setFilterOption: (option: 'review' | 'rating' | 'distance') => void;
+  setFilterOption: (option: 'review' | 'reviewAverage' | 'distance') => void;
   setCurrentPage: (page: number) => void;
 }
+
+
+
 
 const useCounselorStore = create<CounselorState>((set, get) => ({
   counselors: [],
@@ -38,18 +42,22 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
   searchType: 'name',
   searchTerm: '',
   filterOption: 'review',
+  
 
-  fetchCounselors: async () => {
-    const { searchType, searchTerm, filterOption } = get();
+  fetchCounselors: async (searchTerm:string|null) => {
+    // const { searchType, searchTerm, filterOption } = get();
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(`/api/counselors?${searchType}=${searchTerm}`);
-      const sortedCounselors = sortCounselors(response.data, filterOption);
-      set({ counselors: response.data, filteredCounselors: sortedCounselors, isLoading: false });
+      const response = await axios.get(USERDEFAULT, {
+        params: searchTerm ? { searchTerm } : {}
+      });
+      set({ counselors: response.data, isLoading: false });
+      await console.log(response.data)
     } catch (error) {
       set({ error: 'Failed to fetch counselors', isLoading: false });
     }
   },
+  
 
   setSearchType: (type) => set({ searchType: type }),
   setSearchTerm: (term) => set({ searchTerm: term }),
@@ -64,8 +72,8 @@ const sortCounselors = (counselors: Counselor[], option: string): Counselor[] =>
   switch (option) {
     case 'review':
       return [...counselors].sort((a, b) => b.reviewCount - a.reviewCount);
-    case 'rating':
-      return [...counselors].sort((a, b) => b.rating - a.rating);
+    case 'reviewAverage':
+      return [...counselors].sort((a, b) => b.reviewAverage - a.reviewAverage);
     case 'distance':
       return [...counselors].sort((a, b) => a.distance - b.distance);
     default:
