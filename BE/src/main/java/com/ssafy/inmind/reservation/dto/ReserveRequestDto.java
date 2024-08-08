@@ -15,10 +15,13 @@ import java.time.LocalTime;
 public class ReserveRequestDto {
 
     @NotNull(message = "User ID는 필수입니다.")
-    private long userIdx;
+    private Long userIdx;
 
     @NotNull(message = "Counselor ID는 필수입니다.")
-    private long coIdx;
+    private Long coIdx;
+
+    @NotNull(message = "Child ID는 필수입니다.")
+    private Long childIdx;
 
     @NotNull(message = "예약 날짜는 필수입니다.")
     @Future(message = "예약 날짜는 현재 시점 이후여야 합니다.")

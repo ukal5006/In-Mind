@@ -1,6 +1,7 @@
 package com.ssafy.inmind.reservation.entity;
 
 
+import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.common.BaseEntity;
 import com.ssafy.inmind.consulting.entity.History;
 import com.ssafy.inmind.user.entity.Review;
@@ -29,6 +30,10 @@ public class Reservation extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "child_idx", nullable = false)
+    private Child child;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;
