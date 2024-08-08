@@ -1,10 +1,10 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  nginx:
-    image: nginx:latest
-    network_mode: host
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./build:/usr/share/nginx/html:ro
-    container_name: inmind-nginx
+    nginx:
+        image: nginx:latest
+        network_mode: host
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: inmind-nginx

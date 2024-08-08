@@ -6,26 +6,18 @@ pipeline {
     }
 
     stages {
-        stage('FE Build') {
+        stage('Docker Compose Down') {
             steps {
-                sh 'chmod -R 777 .'
+                echo 'Stopping and removing the Docker container named inmind-nginx...'
                 dir('FE') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    sh '''
+                    docker stop inmind-nginx || true
+                    docker rm inmind-nginx || true
+                    '''
                 }
             }
         }
 
-        stage('Docker Compose Down') {
-            steps {
-                echo 'Stopping and removing the Docker container named inmind-nginx...'
-                sh '''
-                docker stop inmind-nginx || true
-                docker rm inmind-nginx || true
-                '''
-            }
-        }
-        
         stage('Docker Compose Up') {
             steps {
                 dir('FE') {
