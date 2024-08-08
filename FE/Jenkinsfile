@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJs 18'
+    }
+
+    stages {
+        stage('FE Build') {
+            steps {
+                sh 'chmod -R 777 .'
+                dir('FE') {
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Docker Compose Down') {
+            steps {
+                echo 'Stopping and removing the Docker container named inmind-server...'
+                sh '''
+                docker stop inmind-nginx || true
+                docker rm inmind-nginx || true
+                '''
+            }
+        }
+        
+        stage('Docker Compose Up') {
+            steps {
+                dir('FE'){
+                    echo 'Deploying Docker containers...'
+                    sh 'docker-compose up --build -d'
+                }
+            }
+        }
+    }
+}
+

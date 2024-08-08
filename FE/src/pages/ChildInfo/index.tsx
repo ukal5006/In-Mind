@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import Container from '../../components/Container';
 import Wrapper from '../../components/Wrapper';
@@ -6,15 +6,19 @@ import Text from '../../components/Text';
 import Btn from '../../components/Btn';
 import { colors } from '../../theme/colors';
 import { IoPersonAdd } from 'react-icons/io5';
-import ChildUpdate from '../ChildUpdate';
+import ChildUpdate, { ChildUpdateProps } from '../ChildUpdate';
 import Slider from 'react-slick';
 import profileImage from './profile.png';
+import useChildStore from '../../stores/childStore';
+import userStore from '../../stores/userStore';
+
 
 interface ChildData {
-    name: string;
-    birthday: string;
-    createAt: string;
+    childIdx: number;
+    childName: string;
+    childBirth: string;
 }
+
 
 const ChildInfoContainer = styled(Container)``;
 
@@ -105,17 +109,59 @@ const BtnWrapper = styled(Wrapper)`
     }
 `;
 
-const UpdateBtn = styled(Btn)`
+interface UpdateBtnProps {
+    onClick: () => void;
+    childId: number;
+    children: React.ReactNode;
+  }
+  
+  const StyledUpdateBtn = styled(Btn)`
     background-color: ${colors.green};
-`;
+  `;
+  
+  const UpdateBtn: React.FC<UpdateBtnProps> = ({ onClick, childId, children }) => {
+    const handleClick = () => {
+      onClick();
+    };
+  
+    return (
+        <StyledUpdateBtn onClick={handleClick}>
+          {children}
+        </StyledUpdateBtn>
+      );
+    };
 
 const DeleteBtn = styled(Btn)`
     background-color: ${colors.red};
 `;
 
+
+
+interface ChildData {
+    childIdx: number;
+    childName: string;
+    childBirth: string;
+}
+
+// ... (styled components remain the same)
+
+
 function ChildInfo() {
+    const { children, readAllChildren, deleteChild } = useChildStore();
+    const userInfo = userStore((state) => state.userInfo);
     const [isModalOpen, setModalOpen] = useState(false);
     const [type, setType] = useState<'create' | 'update'>('create');
+    const [selectedChildIdx, setSelectedChildIdx] = useState<number | undefined>(undefined);
+
+    const fetchChildren = useCallback(() => {
+        if (userInfo) {
+            readAllChildren(userInfo.userIdx);
+        }
+    }, [userInfo, readAllChildren]);
+
+    useEffect(() => {
+        fetchChildren();
+    }, [fetchChildren]);
 
     const settings = {
         dots: true,
@@ -123,53 +169,40 @@ function ChildInfo() {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        // appendDots: (dots: any) => (
-        //     <div
-        //         style={{
-        //             width: '100%',
-        //             position: 'absolute',
-        //             bottom: '-10px',
-        //             display: 'flex',
-        //             alignItems: 'center',
-        //             justifyContent: 'center',
-        //         }}
-        //     >
-        //         <ul> {dots} </ul>
-        //     </div>
-        // ),
-        // dotsClass: 'dots_custom',
     };
 
     const handleAddChild = () => {
         setType('create');
+        setSelectedChildIdx(undefined);
         setModalOpen(true);
+    };
+
+    const handleUpdateChild = (childIdx: number) => {
+        setType('update');
+        setSelectedChildIdx(childIdx);
+        setModalOpen(true);
+    };
+
+    const handleDeleteChild = async (childIdx: number) => {
+        try {
+            await deleteChild(childIdx);
+            alert('아이 정보가 삭제되었습니다.');
+            fetchChildren(); // 삭제 후 목록 갱신
+        } catch (error) {
+            console.log('아이 정보 삭제 실패', error);
+            alert('아이 정보 삭제 실패');
+        }
     };
 
     const closeModal = () => {
         setModalOpen(false);
+        setSelectedChildIdx(undefined);
+        fetchChildren(); // 모달 닫을 때 목록 갱신
     };
-
-    const handleUpdateChild = () => {
-        setType('update');
-        setModalOpen(true);
-    };
-
-    const childInfo: ChildData[] = [
-        {
-            name: '이용원',
-            birthday: '2017.03.02',
-            createAt: '2024.08.05',
-        },
-        {
-            name: '이용훈',
-            birthday: '2018.02.11',
-            createAt: '2024.08.05',
-        },
-    ];
 
     return (
         <ChildInfoContainer>
-            {childInfo.length === 0 ? (
+            {children.length === 0 ? (
                 <ChildAddWrapper>
                     <AddBtn onClick={handleAddChild}>
                         <IoPersonAdd />
@@ -180,17 +213,18 @@ function ChildInfo() {
             ) : (
                 <SliderContainer>
                     <CustomSlider {...settings}>
-                        {childInfo.map((e: ChildData, index: number) => (
-                            <Slide key={index}>
+                        {children.map((child: ChildData) => (
+                            <Slide key={child.childIdx}>
                                 <ChildImage src={profileImage} alt="" />
                                 <ChildText>
-                                    <ChildName>{e.name}</ChildName>어린이
+                                    <ChildName>{child.childName}</ChildName>어린이
                                 </ChildText>
-                                <ChildText>생일 : {e.birthday}</ChildText>
-                                <ChildText>등록일자 : {e.createAt}</ChildText>
+                                <ChildText>생일 : {child.childBirth}</ChildText>
                                 <BtnWrapper>
-                                    <UpdateBtn onClick={handleUpdateChild}>수정</UpdateBtn>
-                                    <DeleteBtn>삭제</DeleteBtn>
+                                    <UpdateBtn onClick={() => handleUpdateChild(child.childIdx)} childId={child.childIdx}>
+                                        수정
+                                    </UpdateBtn>
+                                    <DeleteBtn onClick={() => handleDeleteChild(child.childIdx)}>삭제</DeleteBtn>
                                 </BtnWrapper>
                             </Slide>
                         ))}
@@ -198,10 +232,15 @@ function ChildInfo() {
                 </SliderContainer>
             )}
 
-            {isModalOpen && (
+{isModalOpen && (
                 <ModalOverlay onClick={closeModal}>
                     <ModalContent onClick={(e) => e.stopPropagation()}>
-                        <ChildUpdate type={type} />
+                        <ChildUpdate 
+                            type={type} 
+                            childIdx={selectedChildIdx}
+                            onClose={closeModal}
+                            onSuccess={fetchChildren}
+                        />
                         <Btn onClick={closeModal}>닫기</Btn>
                     </ModalContent>
                 </ModalOverlay>
