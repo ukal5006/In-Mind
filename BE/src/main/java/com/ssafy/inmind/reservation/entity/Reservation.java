@@ -31,9 +31,8 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_idx", nullable = false)
-    private Child child;
+    @Column(name = "child_idx", nullable = false)
+    private int child;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;

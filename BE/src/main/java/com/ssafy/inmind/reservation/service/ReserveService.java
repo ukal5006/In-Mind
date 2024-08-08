@@ -51,9 +51,6 @@ public class ReserveService {
         User counselor = userRepository.findById(request.getCoIdx())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
 
-        Child child = childRepository.findById(request.getChildIdx())
-                .orElseThrow(() -> new RuntimeException("Child not found"));
-
         LocalDate reservationDate = request.getReserveInfoDate();
         LocalTime startTime = request.getReserveInfoStartTime();
         LocalTime endTime = request.getReserveInfoEndTime();
@@ -73,7 +70,7 @@ public class ReserveService {
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .counselor(counselor)
-                .child(child)
+                .child(request.getChildIdx())
                 .localDate(reservationDate)
                 .startTime(startTime)
                 .endTime(endTime)
