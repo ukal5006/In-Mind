@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
-
+import {USERDEFAULT} from '../apis/userApi'
+import { useEffect } from 'react';
 interface Counselor {
   idx: number;
   name: string;
@@ -22,12 +23,15 @@ interface CounselorState {
   searchType: 'name' | 'organization';
   searchTerm: string;
   filterOption: 'review' | 'rating' | 'distance';
-  fetchCounselors: () => Promise<void>;
+  fetchCounselors: (name:string|null) => Promise<void>;
   setSearchType: (type: 'name' | 'organization') => void;
   setSearchTerm: (term: string) => void;
   setFilterOption: (option: 'review' | 'rating' | 'distance') => void;
   setCurrentPage: (page: number) => void;
 }
+
+
+
 
 const useCounselorStore = create<CounselorState>((set, get) => ({
   counselors: [],
@@ -38,18 +42,23 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
   searchType: 'name',
   searchTerm: '',
   filterOption: 'review',
+  
 
-  fetchCounselors: async () => {
-    const { searchType, searchTerm, filterOption } = get();
+  fetchCounselors: async (searchTerm:string|null) => {
+    // const { searchType, searchTerm, filterOption } = get();
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(`/api/counselors?${searchType}=${searchTerm}`);
-      const sortedCounselors = sortCounselors(response.data, filterOption);
-      set({ counselors: response.data, filteredCounselors: sortedCounselors, isLoading: false });
+      const response = await axios.get(USERDEFAULT, {
+        params: searchTerm ? { searchTerm } : {}
+      });
+      // const sortedCounselors = sortCounselors(response.data, filterOption);
+      set({ counselors: response.data, isLoading: false });
+      await console.log(response.data)
     } catch (error) {
       set({ error: 'Failed to fetch counselors', isLoading: false });
     }
   },
+  
 
   setSearchType: (type) => set({ searchType: type }),
   setSearchTerm: (term) => set({ searchTerm: term }),

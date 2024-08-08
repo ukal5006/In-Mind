@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 import { CHECKPW } from '../../apis/userApi';
 import userStore from '../../stores/userStore';
+import useCounselorStore from '../../stores/counselorStore';
 
 const PasswordContainer = styled.div`
     display: flex;
@@ -26,11 +27,16 @@ const Button = styled.button`
 
 function MyPage() {
     const { userInfo } = userStore((state) => state);
+    
 
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+
+    const {fetchCounselors} = useCounselorStore()
+    const anything = () => {fetchCounselors(null)}
 
     const handleSubmit = () => {
         axios
@@ -61,6 +67,7 @@ function MyPage() {
 
     return (
         <MyPageContainer>
+            <button onClick={anything}>상담사 상세조회 콘솔로 보여주기</button>
             {userInfo?.userRole === 'USER' ? <UserMyPageList /> : <CounselorMyPageList />}
             <MyPageContent>
                 {!isAuthenticated ? (

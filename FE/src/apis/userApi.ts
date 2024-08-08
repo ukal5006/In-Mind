@@ -1,6 +1,6 @@
 import ENDPOINT from './endpoint';
 
-const USERDEFAULT = `${ENDPOINT}/users`; // 유저 api 기본
+export const USERDEFAULT = `${ENDPOINT}/users`; // 유저 api 기본
 
 export const LOGIN = `${USERDEFAULT}`; // 로그인
 export const SEARCHCOUNSELOR = (name: string) => `${USERDEFAULT}?name=${name}`; // 상담사목록조회
