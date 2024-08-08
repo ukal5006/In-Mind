@@ -20,7 +20,7 @@ interface ChildState {
   deleteChild: (childIdx: number) => Promise<void>;
 }
 
-const useChildStore = create<ChildState>((set) => ({
+const useChildStore = create<ChildState>((set, get) => ({
   children: [],
   isLoading: false,
   error: null,
@@ -28,8 +28,11 @@ const useChildStore = create<ChildState>((set) => ({
   readAllChildren: async (userIdx: number) => {
     set({ isLoading: true });
     try {
-      const response = await axios.get(`${CHILDINFO(userIdx)}`);
-      set({ children: response.data, isLoading: false, error: null });
+      const response = await axios.get<ChildData[]>(`${CHILDINFO(userIdx)}`);
+      const uniqueChildren: ChildData[] = Array.from(
+        new Map<number, ChildData>(response.data.map((child) => [child.childIdx, child])).values()
+      );
+      set({ children: uniqueChildren, isLoading: false, error: null });
     } catch (error) {
       set({ isLoading: false, error: 'Failed to fetch children' });
     }
@@ -48,17 +51,24 @@ const useChildStore = create<ChildState>((set) => ({
   addChild: async (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>) => {
     set({ isLoading: true });
     try {
-      const response = await axios.post(`${CHILDDEFAULT}/${userIdx}`, childInfo, {
+      const response = await axios.post(`${CHILDDEFAULT}`, {userIdx, ...childInfo}, {
         headers: {
           'accept': '*/*',
           'Content-Type': 'application/json;charset=UTF-8'
         }
       });
-      set((state) => ({
-        children: [...state.children, response.data],
-        isLoading: false,
-        error: null
-      }));
+      set((state) => {
+        const newChild = response.data;
+        const existingChild = state.children.find(child => child.childIdx === newChild.childIdx);
+        if (!existingChild) {
+          return {
+            children: [...state.children, newChild],
+            isLoading: false,
+            error: null
+          };
+        }
+        return { ...state, isLoading: false, error: null };
+      });
     } catch (error) {
       set({ isLoading: false, error: 'Failed to add child' });
     }
