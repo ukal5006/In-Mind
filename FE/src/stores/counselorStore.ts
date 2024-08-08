@@ -11,7 +11,7 @@ interface Counselor {
   availableTime: string;
   distance: number;
   reviewCount: number;
-  rating: number;
+  reviewAverage: number;
 }
 
 interface CounselorState {
@@ -22,11 +22,11 @@ interface CounselorState {
   currentPage: number;
   searchType: 'name' | 'organization';
   searchTerm: string;
-  filterOption: 'review' | 'rating' | 'distance';
+  filterOption: 'review' | 'reviewAverage' | 'distance';
   fetchCounselors: (name:string|null) => Promise<void>;
   setSearchType: (type: 'name' | 'organization') => void;
   setSearchTerm: (term: string) => void;
-  setFilterOption: (option: 'review' | 'rating' | 'distance') => void;
+  setFilterOption: (option: 'review' | 'reviewAverage' | 'distance') => void;
   setCurrentPage: (page: number) => void;
 }
 
@@ -51,7 +51,6 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
       const response = await axios.get(USERDEFAULT, {
         params: searchTerm ? { searchTerm } : {}
       });
-      // const sortedCounselors = sortCounselors(response.data, filterOption);
       set({ counselors: response.data, isLoading: false });
       await console.log(response.data)
     } catch (error) {
@@ -73,8 +72,8 @@ const sortCounselors = (counselors: Counselor[], option: string): Counselor[] =>
   switch (option) {
     case 'review':
       return [...counselors].sort((a, b) => b.reviewCount - a.reviewCount);
-    case 'rating':
-      return [...counselors].sort((a, b) => b.rating - a.rating);
+    case 'reviewAverage':
+      return [...counselors].sort((a, b) => b.reviewAverage - a.reviewAverage);
     case 'distance':
       return [...counselors].sort((a, b) => a.distance - b.distance);
     default:
