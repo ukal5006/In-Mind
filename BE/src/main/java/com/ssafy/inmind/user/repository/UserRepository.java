@@ -12,11 +12,14 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> , SearchCounselorRepository {
 
-    @Query("SELECT u FROM User u WHERE u.email = :email AND u.password = :password")
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.password = :password AND u.isAlive = 'Y'")
     Optional<User> findByUserEmailAndPassword(@Param("email") String email, @Param("password") String password);
 
-    @Query("SELECT u FROM User u WHERE u.email = :email")
+    @Query("SELECT u FROM User u WHERE u.email = :email AND u.isAlive = 'Y'")
     Optional<User> findByUserEmail(@Param("email") String email);
+
+    @Query("SELECT u FROM User u WHERE u.id = :id AND u.isAlive = 'Y' AND u.role = 'USER'")
+    Optional<User> findByUserId(@Param("id") Long id);
 
     
 }

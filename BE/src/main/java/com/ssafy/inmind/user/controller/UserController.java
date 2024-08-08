@@ -49,6 +49,13 @@ public class UserController {
         return ResponseEntity.ok().body(UserLoginResponseDto);
     }
 
+    @Operation(summary = "비밀번호 변경", description = "사용자의 비밀번호를 변경합니다.")
+    @PutMapping("/password/{userId}")
+    public ResponseEntity<Void> savePassword(@PathVariable Long userId, @RequestBody UserPasswordRequestDto requestDto) throws RestApiException {
+        userService.updateUserPassword(userId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @Operation(summary = "JWT 테스트", description = "JWT 테스트 API")
     @GetMapping("JwtTest")
     public ResponseEntity<String> jwtTest() throws RestApiException {
@@ -103,18 +110,26 @@ public class UserController {
         return ResponseEntity.ok(userResponseDto);
     }
 
-    @Operation(summary = "회원 정보 수정", description = "입력받은 유저번호로 회원 정보를 수정합니다.")
+    @Operation(summary = "유저 회원 정보 수정", description = "입력받은 유저번호로 유저의 회원 정보를 수정합니다.")
     @Parameter(name = "userId", description = "유저번호")
-    @PutMapping("/{userId}")
+    @PutMapping("/user/{userId}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId, @RequestBody UserUpdateRequestDto requestDto){
         userService.updateUser(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @Operation(summary = "상담사 회원 정보 수정", description = "입력받은 유저번호로 삼담사의 회원 정보를 수정합니다.")
+    @Parameter(name = "userId", description = "유저번호")
+    @PutMapping("/counselor/{userId}")
+    public ResponseEntity<UserResponseDto> updateCounselor(@PathVariable Long userId, @RequestBody CounselorUpdateRequestDto requestDto){
+        userService.updateCounselor(userId, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
     @Operation(summary = "회원 정보 탈퇴", description = "입력받은 유저번호로 회원 정보를 탈퇴합니다.")
     @Parameter(name = "userId", description = "유저번호")
-    @PutMapping("leave/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long userId){
+    @PutMapping("/leave/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long userId){
         userService.deleteUser(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
