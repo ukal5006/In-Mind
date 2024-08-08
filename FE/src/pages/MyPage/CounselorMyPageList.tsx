@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Container from '../../components/Container';
 import { Link } from 'react-router-dom';
 import Text from '../../components/Text';
+import userStore from '../../stores/userStore';
 
 const CounselorMyPageListContainer = styled(Container)`
     height: 95%;
@@ -43,11 +44,13 @@ const ListItem = styled(Link)`
 `;
 
 function CounselorMyPageList() {
+    const { userInfo } = userStore((state) => state);
+
     return (
         <CounselorMyPageListContainer>
             <ProfileContainer>
                 <ProfileImage />
-                <ProfileName>오은영</ProfileName>
+                <ProfileName>{userInfo?.userName}</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
                 <ListItem to="counselorInfo">상담사 정보</ListItem>
