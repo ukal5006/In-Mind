@@ -30,9 +30,6 @@ public class Child extends BaseEntity {
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Report> reports = new ArrayList<>();
 
-    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
-    private List<Reservation> reservations = new ArrayList<>();
-
     @Column(nullable = false)
     private String name;
 
