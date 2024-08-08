@@ -1,108 +1,34 @@
-import ScheduleCalendar from './ScheduleCalendar';
-import CalendarContainer from './CalendarContainer';
-import CounselorHomeContainer from './CounselorHomeContainer';
-import ReservationListContainer from './ReservationListContainer';
-import styled from 'styled-components';
-import Text from '../../../components/Text';
-import Container from '../../../components/Container';
-import Btn from '../../../components/Btn';
-import { colors } from '../../../theme/colors';
-import Wrapper from '../../../components/Wrapper';
+import ScheduleCalendar from "./ScheduleCalendar";
+import CalendarContainer from "./CalendarContainer";
+import CounselorHomeContainer from "./CounselorHomeContainer";
+import ReservationListContainer from "./ReservationListContainer";
+import { useState } from "react";
+import axios from "axios";
+import ReservationList from "./ReservationList";
 
-const TitleContainer = styled(Container)`
-    padding: 10px 0px;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    position: fixed;
-    height: 40px;
-    background-color: white;
-    width: 299px;
-    border-bottom: 1px solid black;
-`;
-const Title = styled(Text)`
-    height: 100%;
-    margin: 0px 20px;
-    font-weight: 700;
-`;
-const TitleBtn = styled(Text)`
-    height: 100%;
-    font-size: 14px;
-    font-weight: 700;
-`;
-const ReservationList = styled.ul`
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-`;
-const ReservationItem = styled.li`
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
-    width: 280px;
-    height: 150px;
-    margin-bottom: 10px;
-    padding: 10px 15px;
-    box-sizing: border-box;
-`;
-
-const ReservationDetail = styled(Text)`
-    justify-content: flex-end;
-    font-size: 14px;
-    color: ${colors.gray};
-    margin-bottom: 10px;
-`;
-const ReservationDate = styled(Text)`
-    font-weight: 700;
-    margin-bottom: 10px;
-    justify-content: flex-start;
-`;
-const ReservationChildName = styled(Text)`
-    font-weight: 700;
-    margin-bottom: 10px;
-    justify-content: flex-start;
-`;
-const ReservationTime = styled(Text)`
-    margin-bottom: 10px;
-    color: ${colors.darkGray};
-    justify-content: flex-start;
-`;
-const BtnWrapper = styled(Wrapper)`
-    width: 100%;
-    justify-content: flex-end;
-    padding: 0px;
-`;
-const RoomBtn = styled(Btn)`
-    height: 30px;
-    background-color: ${colors.green};
-    color: ${colors.white};
-    font-size: 15px;
-`;
+export interface ReservationInfo {
+  name: string;
+}
 
 function CounselorHome() {
-    return (
-        <CounselorHomeContainer>
-            <CalendarContainer>
-                <ScheduleCalendar />
-            </CalendarContainer>
-            <ReservationListContainer>
-                <TitleContainer>
-                    <TitleBtn>오늘</TitleBtn>
-                    <Title>상담 예약 내역</Title>
-                    <TitleBtn>전체</TitleBtn>
-                </TitleContainer>
-                <ReservationList>
-                    <ReservationItem>
-                        <ReservationDetail>자세히 보기</ReservationDetail>
-                        <ReservationDate>2024년8월17일</ReservationDate>
-                        <ReservationChildName>김종원 어린이</ReservationChildName>
-                        <ReservationTime>18:00 ~ 19:00</ReservationTime>
-                        <BtnWrapper>
-                            <RoomBtn>방 만들기</RoomBtn>
-                        </BtnWrapper>
-                    </ReservationItem>
-                </ReservationList>
-            </ReservationListContainer>
-        </CounselorHomeContainer>
-    );
+  const [reservationList, setReservationList] = useState<ReservationInfo[]>();
+  //여기서 axios로 예약 데이터 호출
+  // axios.get().then(response => setReservation(response.data));
+  //받아온 데이터 달력에 건수로 표시
+  //받아온 데이터 오른쪽 상담내역 div에 표시
+  // 전체는 상담날짜 빠른순으로 전부 보여주기
+  // 날짜 선택되면 선택된 날짜꺼만 보여주기
+  // 이전 날짜의 예약 내역은 조회 안되고 클릭해도 안나오게
+  return (
+    <CounselorHomeContainer>
+      <CalendarContainer>
+        <ScheduleCalendar reservationList={reservationList} />
+      </CalendarContainer>
+      <ReservationListContainer>
+        <ReservationList reservationList={reservationList} />
+      </ReservationListContainer>
+    </CounselorHomeContainer>
+  );
 }
 
 export default CounselorHome;
