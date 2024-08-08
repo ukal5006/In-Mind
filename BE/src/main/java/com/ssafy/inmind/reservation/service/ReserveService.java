@@ -123,7 +123,6 @@ public class ReserveService {
     }
 
     // 알림 생성 및 저장 메서드
-    @Transactional
     private void createAndSaveNotifications(User user, User counselor, LocalDate reservationDate, LocalTime startTime) {
         String startTimeString = startTime.toString();
         String reminderTimeString = startTime.minusMinutes(30).toString();

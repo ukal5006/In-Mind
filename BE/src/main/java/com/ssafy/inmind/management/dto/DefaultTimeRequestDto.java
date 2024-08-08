@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class DefaultTimeResponseDto {
-
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class DefaultTimeRequestDto {
     private Long userIdx;
     private LocalTime availableTimeStartTime;
     private LocalTime availableTimeEndTime;

@@ -8,6 +8,7 @@ import com.ssafy.inmind.management.entity.UnavailableTime;
 import com.ssafy.inmind.management.repository.UnavailableTimeRepository;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +27,42 @@ public class ManagementService {
     private final UserRepository userRepository;
 
 
-    public List<UnavailableTimeDto> getUnavailableTime(long coIdx){
+    public DefaultTimeResponseDto getDefaultTime(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        DefaultTime defaultTime = managementRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Time not found"));
+
+        return DefaultTimeResponseDto.builder()
+                .userIdx(user.getId())
+                .availableTimeStartTime(defaultTime.getStartTime())
+                .availableTimeEndTime(defaultTime.getEndTime())
+                .build();
+    }
+
+    @Transactional
+    public void updateDefaultTime(DefaultTimeResponseDto dto) {
+        User user = userRepository.findById(dto.getUserIdx())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        LocalTime startTime = dto.getAvailableTimeStartTime();
+        LocalTime endTime = dto.getAvailableTimeEndTime();
+
+        DefaultTime defaultTime = managementRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Time not found"));
+
+        DefaultTime updateTime = DefaultTime.builder()
+                .id(defaultTime.getId())
+                .user(user)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
+
+        managementRepository.save(updateTime);
+    }
+
+    public List<UnavailableTimeDto> getUnavailableTime(Long coIdx){
         List<UnavailableTime> unavailableTimes = unavailableTimeRepository.findByUserId(coIdx);
 
         return unavailableTimes.stream()
@@ -40,20 +76,11 @@ public class ManagementService {
     }
 
     @Transactional
-    public void saveDefaultTime(DefaultTimeResponseDto dto) {
-        User user = userRepository.findById(dto.getUserIdx())
+    public void deleteDefaultTime(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        LocalTime startTime = dto.getAvailableTimeStartTime();
-        LocalTime endTime = dto.getAvailableTimeEndTime();
-
-
-        DefaultTime defaultTime = DefaultTime.builder()
-                .user(user)
-                .startTime(startTime)
-                .endTime(endTime)
-                .build();
-        managementRepository.save(defaultTime);
+        managementRepository.deleteByUser(user);
     }
 
     @Transactional

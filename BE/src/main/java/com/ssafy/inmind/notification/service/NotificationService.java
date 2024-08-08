@@ -112,6 +112,7 @@ public class NotificationService {
         notificationRepository.markAsRead(ids);
     }
 
+    @Transactional
     public void deleteNotifications(List<Long> ids) {
         try {
             notificationRepository.deleteAllById(ids);
