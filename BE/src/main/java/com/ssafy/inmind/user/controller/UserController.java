@@ -71,7 +71,7 @@ public class UserController {
 
     @Operation(summary = "상담사목록조회", description = "상담사 이름으로 상담사를 검색합니다.")
     @GetMapping()
-    public ResponseEntity<List<CounselorListDto>> getCounselorList(@RequestParam @Parameter(description = "상담사 이름") String name) {
+    public ResponseEntity<List<CounselorListDto>> getCounselorList(@RequestParam(required = false) @Parameter(description = "상담사 이름") String name) {
         List<CounselorListDto> counselorList = userService.getCounselorList(name);
         return ResponseEntity.ok(counselorList);
     }

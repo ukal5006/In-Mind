@@ -107,7 +107,11 @@ public class UserService {
     }
 
     public List<CounselorListDto> getCounselorList(String name) {
-        return userRepository.findCounselorsByName(name);
+        if (name == null || name.isEmpty()) {
+            return userRepository.findAllCounselors();
+        } else {
+            return userRepository.findCounselorsByName(name);
+        }
     }
 
     @Transactional
