@@ -1,29 +1,179 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import useCounselorStore from '../../stores/counselorStore';
+import React, { useState } from 'react';
+import useCounselorStore, { Counselor } from '../../stores/counselorStore';
+import styled from 'styled-components';
+import Text from '../../components/Text';
+import Btn from '../../components/Btn';
+import Container from '../../components/Container';
+import Calendar from 'react-calendar';
+
+const ModalBackground = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const CounselorDetail = styled.div`
+    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
+    border-radius: 10px;
+    width: 700px;
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: white;
+`;
+
+const CounselorLeft = styled.div``;
+const CounselorRight = styled.div``;
+
+const Title = styled(Text)`
+    padding: 10px 0;
+    width: 100%;
+    font-size: 20px;
+    font-weight: 700;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
+    /* background-color: tomato; */
+    /* background-color: white; */
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+`;
+
+const ReviewContainer = styled(Container)`
+    background-color: turquoise;
+    width: 600px;
+    height: 300px;
+`;
+
+const CloseBtn = styled.div`
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: tomato;
+`;
+
+const Reservation = styled.div`
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    width: 450px;
+    height: 700px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: aqua;
+`;
+
+// const ListContainer = styled(Container)`
+//     overflow-y: scroll;
+//     flex-direction: column;
+//     height: 400px;
+// `;
+
+const Card = styled.div`
+    margin-top: 10px;
+    width: 600px;
+    height: 200px;
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+`;
+
+const ItemWrapper = styled.div`
+    width: 400px;
+`;
+
+// const Item = styled.div``;
+
+const Profile = styled.div`
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: tomato;
+`;
+
+const Name = styled(Text)`
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 10px;
+`;
 
 const CounselorList: React.FC = () => {
-  const { counselors} = useCounselorStore();
+    const { counselors } = useCounselorStore();
+    const { filteredCounselors, currentPage } = useCounselorStore();
+    const [detail, setDetail] = useState<Counselor>();
+    const counselorsPerPage = 5;
+    const startIndex = (currentPage - 1) * counselorsPerPage;
+    const endIndex = startIndex + counselorsPerPage;
+    const displayedCounselors = filteredCounselors.slice(startIndex, endIndex);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isReserve, setIsReserve] = useState(false);
+    const [date, setDate] = useState();
+    const [time, setTime] = useState();
 
+    const handleDetail = (counselor: Counselor) => {
+        setDetail(counselor);
+        setIsModalOpen(true);
+    };
 
-  return (
-    <div>
-      {counselors.map((counselor) => (
-        <Link to={`/counselor/${counselor.idx}`} key={counselor.idx}>
-          <div>
-            <h3>{counselor.name}</h3>
-            <p>전화번호: {counselor.tel}</p>
-            <p>프로필이미지: {counselor.profile}</p>
-            <p>소속: {counselor.organizationName}</p>
-            <p>소개: {counselor.intro}</p>
-            <p>자격인증여부: {counselor.IsAuth}</p>
-            <p>리뷰 수: {counselor.reviewCount}</p>
-            <p>평점: {counselor.reviewAverage}</p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  );
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setIsReserve(false);
+    };
+
+    return (
+        <div>
+            {counselors.map((counselor) => (
+                <Card onClick={() => handleDetail(counselor)}>
+                    <Profile />
+                    <ItemWrapper>
+                        <Name>{counselor.name}</Name>
+                        <Text>{counselor.intro}</Text>
+                        <Text>{counselor.tel}</Text>
+                        <Text>{counselor.organizationName} 소속</Text>
+                        <Text>{counselor.organizationTel}</Text>
+                        <Text>리뷰 평점 : {counselor.reviewAverage}/5</Text>
+                        <Text>{counselor.reviewCount}개의 리뷰</Text>
+                    </ItemWrapper>
+                </Card>
+            ))}
+            {isModalOpen && (
+                <ModalBackground>
+                    <CounselorDetail>
+                        <Title>상담사 자세히 보기</Title>
+                        <Profile />
+                        <Name>{detail?.name}</Name>
+                        <Text>{detail?.intro}</Text>
+                        <Text>{detail?.tel}</Text>
+                        <Text>{detail?.organizationName} 기관소속</Text>
+                        <Text>{detail?.organizationTel} 기관번호</Text>
+                        <Text>리뷰 평점 : {detail?.reviewAverage}/5</Text>
+                        <Text>{detail?.reviewCount}개의 리뷰</Text>
+                        <Text>{detail?.userIdx}</Text>
+                        <ReviewContainer>리뷰 칸</ReviewContainer>
+                        <Btn onClick={() => setIsReserve(true)}>예약하기</Btn>
+                    </CounselorDetail>
+
+                    {isReserve && (
+                        <Reservation>
+                            <Calendar />
+                        </Reservation>
+                    )}
+                    <Btn onClick={handleCloseModal}>닫기</Btn>
+                </ModalBackground>
+            )}
+        </div>
+    );
 };
 
 export default CounselorList;
