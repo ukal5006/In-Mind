@@ -3,6 +3,7 @@ import { Star } from 'lucide-react';
 import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
 import '../theme/class.css'
+import styled from 'styled-components';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api'
 // const apiUrl = 'http://localhost:5000'
@@ -49,6 +50,24 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 interface ReviewModalButtonProps {
   children: ReactNode;
 }
+
+interface GreenHeaderProps {
+  className?: string;
+}
+
+const GreenHeader: React.FC<GreenHeaderProps> = ({ className }) => (
+  <div id="greenHeader" className={className} />
+);
+
+const StyledInput = styled(GreenHeader)`
+    background-color: #10c263;
+    width: 100%;
+    font-size: 45px;
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
 const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -131,7 +150,7 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
       <button onClick={openModal}>{children}</button>
       <Modal isOpen={isOpen} onClose={closeModal} >
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
-          <div className='greenHeader rounded'>
+          <div id='greenHeader' className='greenHeader rounded'>
             <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
           </div>
           <div className='PD20FS30'>
