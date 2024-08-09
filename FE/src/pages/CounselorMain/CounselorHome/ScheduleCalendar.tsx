@@ -1,12 +1,12 @@
-import moment from "moment";
-import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "./Calendar.css";
-import styled from "styled-components";
-import { colors } from "../../../theme/colors";
-import { ReservationInfo } from ".";
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import Calendar from 'react-calendar';
+import './Calendar.css';
+import styled from 'styled-components';
+import { colors } from '../../../theme/colors';
+import { ReservationInfo } from '.';
 
-export type DatePiece = Date | null;
+export type DatePiece = any | null;
 export type SelectedDate = DatePiece | [DatePiece, DatePiece];
 
 interface ScheduleCalendarProps {
@@ -71,13 +71,13 @@ function ScheduleCalendar({ reservationList }: ScheduleCalendarProps) {
     if (Array.isArray(selectedDate)) {
       // 선택된 날짜가 배열인 경우
       formattedDate = selectedDate.map((date) =>
-        date ? moment(date).format("YYYY-MM-DD") : null
+        date ? moment(date).format('YYYY-MM-DD') : null
       );
       console.log(formattedDate); // 배열로 출력
     } else {
       // 선택된 날짜가 단일 날짜인 경우
       formattedDate = selectedDate
-        ? moment(selectedDate).format("YYYY-MM-DD")
+        ? moment(selectedDate).format('YYYY-MM-DD')
         : null;
       console.log(formattedDate); // 단일 날짜 출력
     }
@@ -93,9 +93,9 @@ function ScheduleCalendar({ reservationList }: ScheduleCalendarProps) {
         next2Label={null} // +1년 & +10년 이동 버튼 숨기기
         prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
         minDetail="year" // 10년단위 년도 숨기기
-        formatDay={(locale, date) => moment(date).format("D")}
-        formatMonthYear={(locale, date) => moment(date).format("YYYY. MM")} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
-        formatYear={(locale, date) => moment(date).format("YYYY")} // 네비게이션 눌렀을때 숫자 년도만 보이게
+        formatDay={(locale, date) => moment(date).format('D')}
+        formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
+        formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
         locale="kr"
         tileContent={({ date, view }) => {
           return <ReservationDiv>n건의 예약이 있습니다.</ReservationDiv>;
