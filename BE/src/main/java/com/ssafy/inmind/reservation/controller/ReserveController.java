@@ -2,10 +2,7 @@ package com.ssafy.inmind.reservation.controller;
 
 
 
-import com.ssafy.inmind.reservation.dto.ReserveDeleteDto;
-import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
-import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
-import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
+import com.ssafy.inmind.reservation.dto.*;
 import com.ssafy.inmind.reservation.service.ReserveService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,10 +30,17 @@ public class ReserveController {
     }
 
     @Operation(summary = "상담 예약 조회", description = "상담사가 자신에 대한 예약을 조회합니다.")
-    @GetMapping
-    public ResponseEntity<List<ReserveResponseDto>> getReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
-        List<ReserveResponseDto> responseDtoList = reserveService.getReservation(userId);
+    @GetMapping("/all")
+    public ResponseEntity<List<ReserveCoResponseDto>> getReserve(@RequestParam("counselorId") @Parameter(description = "상담사번호") Long counselorId) {
+        List<ReserveCoResponseDto> responseDtoList = reserveService.getReservation(counselorId);
         return ResponseEntity.ok(responseDtoList);
+    }
+
+    @Operation(summary = "상담 예약 조회", description = "유저가 자신에 대한 예약을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<ReserveUserResponseDto> getUserReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
+        ReserveUserResponseDto responseDto = reserveService.getReserve(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @Operation(summary = "상담 예약 수정", description = "유저가 예약 내역을 수정합니다.")

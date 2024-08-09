@@ -25,14 +25,14 @@ public class Reservation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     @Column(name = "child_idx", nullable = false)
-    private int child;
+    private Long child;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;

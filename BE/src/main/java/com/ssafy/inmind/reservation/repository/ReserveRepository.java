@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ReserveRepository extends JpaRepository<Reservation, Long> {
-    List<Reservation> findByUserId(long userId);
+    List<Reservation> findAllByCounselor_Id(Long counselorId);
+    Reservation findByUserId(Long userId);
 }
