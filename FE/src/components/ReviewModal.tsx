@@ -59,11 +59,11 @@ const GreenHeader: React.FC<GreenHeaderProps> = ({ className }) => (
   <div id="greenHeader" className={className} />
 );
 
-const StyledInput = styled(GreenHeader)`
+const StyledGreenHeader = styled.div`
     background-color: #10c263;
     width: 100%;
     font-size: 45px;
-    height:10vh;
+    height: 10vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -150,9 +150,9 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
       <button onClick={openModal}>{children}</button>
       <Modal isOpen={isOpen} onClose={closeModal} >
         <div className="bg-white p-6 rounded-lg max-w-md w-full">
-          <div id='greenHeader' className='greenHeader rounded'>
+          <StyledGreenHeader id='greenHeader' className='rounded'>
             <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
-          </div>
+          </StyledGreenHeader>
           <div className='PD20FS30'>
             <p className="mb-4">상담은 만족하셨나요?</p>
             <br />
