@@ -21,7 +21,7 @@ public class ReserveRequestDto {
     private Long coIdx;
 
     @NotNull(message = "Child ID는 필수입니다.")
-    private int childIdx;
+    private Long childIdx;
 
     @NotNull(message = "예약 날짜는 필수입니다.")
     @Future(message = "예약 날짜는 현재 시점 이후여야 합니다.")
