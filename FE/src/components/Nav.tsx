@@ -6,6 +6,8 @@ import { colors } from "../theme/colors";
 import Btn from "./Btn";
 import Wrapper from "./Wrapper";
 import userStore from "../stores/userStore";
+import useNotificationStore from "../stores/notificationStore";
+import { useSSE } from "../stores/useSSE";
 
 const NavContainer = styled(Container)`
   width: 100vw;
@@ -59,9 +61,22 @@ const LoginBtn = styled(Btn)`
   color: ${colors.white};
 `;
 
+const NotificationBadge = styled.span`
+  background-color: ${colors.red};
+  color: ${colors.white};
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-left: 5px;
+`;
+
 function Nav() {
   const navigate = useNavigate();
   const { userInfo } = userStore((state) => state);
+  const { unreadCount } = useNotificationStore();
+
+  useSSE();
+  console.log("Nav component rendering");
 
   return (
     <NavContainer>
@@ -79,7 +94,10 @@ function Nav() {
       <UserInfoContainer>
         {userInfo !== null ? (
           <>
+                <NotificationBadge>{unreadCount}</NotificationBadge>
             <Link to="mypage">{userInfo.userName}님, 환영합니다!</Link>
+            
+              
             <LogoutBtn onClick={() => navigate("/")}>로그아웃</LogoutBtn>
           </>
         ) : (
