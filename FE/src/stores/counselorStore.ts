@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 interface Counselor {
   idx: number;
   name: string;
-  organization: string;
-  education: string;
-  experience: string;
-  availableTime: string;
-  distance: number;
+  tel:string;
+  profile:string;
+  IsAuth:string;
+  intro:string;
+  organizationName: string;
+  organizationTel: string;
   reviewCount: number;
   reviewAverage: number;
 }
@@ -49,7 +50,7 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get(USERDEFAULT, {
-        params: searchTerm ? { searchTerm } : {}
+        params: searchTerm ? { name:searchTerm } : {}
       });
       set({ counselors: response.data, isLoading: false });
       await console.log(response.data)
@@ -74,8 +75,8 @@ const sortCounselors = (counselors: Counselor[], option: string): Counselor[] =>
       return [...counselors].sort((a, b) => b.reviewCount - a.reviewCount);
     case 'reviewAverage':
       return [...counselors].sort((a, b) => b.reviewAverage - a.reviewAverage);
-    case 'distance':
-      return [...counselors].sort((a, b) => a.distance - b.distance);
+    // case 'distance':
+    //   return [...counselors].sort((a, b) => a.distance - b.distance);
     default:
       return counselors;
   }
