@@ -11,8 +11,9 @@ import com.ssafy.inmind.notification.entity.NotificationType;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
 import com.ssafy.inmind.notification.service.SseEmitterService;
 import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
-import com.ssafy.inmind.reservation.dto.ReserveResponseDto;
+import com.ssafy.inmind.reservation.dto.ReserveCoResponseDto;
 import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
+import com.ssafy.inmind.reservation.dto.ReserveUserResponseDto;
 import com.ssafy.inmind.reservation.entity.Reservation;
 import com.ssafy.inmind.management.entity.UnavailableTime;
 import com.ssafy.inmind.reservation.repository.ReserveRepository;
@@ -91,13 +92,42 @@ public class ReserveService {
         sendNotification(counselor.getId());
     }
 
-    // 상담 예약 정보 조회
-    public List<ReserveResponseDto> getReservation(long userId) {
-        List<Reservation> reservations = reserveRepository.findByUserId(userId);
+    // 상담사 상담 예약 정보 조회
+    public List<ReserveCoResponseDto> getReservation(Long counselorId) {
+        List<Reservation> reservations = reserveRepository.findAllByCounselor_Id(counselorId);
 
         return reservations.stream()
-                .map(ReserveResponseDto::fromEntity)
+                .map(reservation -> {
+                    Child child = childRepository.findById(reservation.getChild())
+                            .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
+
+                    return ReserveCoResponseDto.builder()
+                            .reserveInfoIdx(reservation.getId())
+                            .coName(reservation.getCounselor().getName())
+                            .childName(child.getName())
+                            .reserveInfoDate(reservation.getLocalDate())
+                            .reserveInfoStartTime(reservation.getStartTime())
+                            .reserveInfoEndTime(reservation.getEndTime())
+                            .reserveInfoCreateTime(reservation.getCreatedAt())
+                            .build();
+                })
                 .collect(Collectors.toList());
+    }
+
+    // 유저 상담 예약 정보 조회
+    public ReserveUserResponseDto getReserve(Long userId) {
+        Reservation reservation = reserveRepository.findByUserId(userId);
+        Child child = childRepository.findById(reservation.getChild()).
+                orElseThrow(() -> new RuntimeException("Child not found"));
+
+        return ReserveUserResponseDto.builder()
+                .reserveInfoIdx(reservation.getId())
+                .childName(child.getName())
+                .reserveInfoDate(reservation.getLocalDate())
+                .reserveInfoStartTime(reservation.getStartTime())
+                .reserveInfoEndTime(reservation.getEndTime())
+                .reserveInfoCreateTime(reservation.getCreatedAt())
+                .build();
     }
 
     @Transactional
