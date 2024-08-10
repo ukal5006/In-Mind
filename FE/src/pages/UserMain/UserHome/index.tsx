@@ -6,17 +6,17 @@ import UserHomeLeftWrapper from './UserHomeLeftWrapper';
 import UserHomeRightWrapper from './UserHomeRightWrapper';
 
 function UserHome() {
-    return (
-        <UserHomeContainer>
-            <UserHomeLeftWrapper>
-                <ChildTestResult />
-            </UserHomeLeftWrapper>
-            <UserHomeRightWrapper>
-                <TestHistory />
-                <ReservationHistory />
-            </UserHomeRightWrapper>
-        </UserHomeContainer>
-    );
+  return (
+    <UserHomeContainer>
+      <UserHomeLeftWrapper>
+        <ChildTestResult />
+      </UserHomeLeftWrapper>
+      <UserHomeRightWrapper>
+        <TestHistory />
+        <ReservationHistory />
+      </UserHomeRightWrapper>
+    </UserHomeContainer>
+  );
 }
 
 export default UserHome;

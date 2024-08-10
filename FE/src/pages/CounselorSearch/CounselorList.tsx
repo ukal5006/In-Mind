@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useCounselorStore, { Counselor } from '../../stores/counselorStore';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Text from '../../components/Text';
 import Btn from '../../components/Btn';
 import Container from '../../components/Container';
@@ -8,6 +8,9 @@ import Calendar from 'react-calendar';
 import './Calendar.css';
 import { SelectedDate } from '../CounselorMain/CounselorHome/ScheduleCalendar';
 import moment from 'moment';
+import axios from 'axios';
+import { RDDEFAULTTIME, READUNAVAILABLETIME } from '../../apis/managementApi';
+import ReservationTime from './ReservationTime';
 
 const ModalBackground = styled.div`
   position: fixed;
@@ -53,12 +56,12 @@ const ReviewContainer = styled(Container)`
   height: 300px;
 `;
 
-const CloseBtn = styled.div`
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: tomato;
-`;
+// const CloseBtn = styled.div`
+//   width: 10px;
+//   height: 10px;
+//   border-radius: 50%;
+//   background-color: tomato;
+// `;
 
 const Reservation = styled.div`
   box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
@@ -69,7 +72,7 @@ const Reservation = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  background-color: aqua;
+  background-color: white;
 `;
 
 // const ListContainer = styled(Container)`
@@ -77,8 +80,6 @@ const Reservation = styled.div`
 //     flex-direction: column;
 //     height: 400px;
 // `;
-
-const TimeTable = styled.div``;
 
 const Card = styled.div`
   margin-top: 10px;
@@ -111,16 +112,16 @@ const Name = styled(Text)`
 
 const CounselorList: React.FC = () => {
   const { counselors } = useCounselorStore();
-  const { filteredCounselors, currentPage } = useCounselorStore();
+  // const { filteredCounselors, currentPage } = useCounselorStore();
   const [detail, setDetail] = useState<Counselor>();
-  const counselorsPerPage = 5;
-  const startIndex = (currentPage - 1) * counselorsPerPage;
-  const endIndex = startIndex + counselorsPerPage;
-  const displayedCounselors = filteredCounselors.slice(startIndex, endIndex);
+  // const counselorsPerPage = 5;
+  // const startIndex = (currentPage - 1) * counselorsPerPage;
+  // const endIndex = startIndex + counselorsPerPage;
+  // const displayedCounselors = filteredCounselors.slice(startIndex, endIndex);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isReserve, setIsReserve] = useState(false);
-  const [date, setDate] = useState();
-  const [time, setTime] = useState();
+  const [availableTimes, setAvailableTimes] = useState();
+  const [ableTime, setAbleTime] = useState();
 
   const handleDetail = (counselor: Counselor) => {
     setDetail(counselor);
@@ -134,10 +135,30 @@ const CounselorList: React.FC = () => {
 
   const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
 
+  useEffect(() => {
+    if (detail !== undefined && selectedDate) {
+      axios
+        .get(
+          READUNAVAILABLETIME(
+            detail?.userIdx,
+            moment(selectedDate).format('YYYY-MM-DD')
+          )
+        )
+        .then((response) => setAvailableTimes(response.data));
+    }
+  }, [selectedDate, detail]);
+
   return (
     <div>
       {counselors.map((counselor) => (
-        <Card onClick={() => handleDetail(counselor)}>
+        <Card
+          onClick={() => {
+            handleDetail(counselor);
+            axios
+              .get(RDDEFAULTTIME(counselor.userIdx))
+              .then((response) => setAbleTime(response.data));
+          }}
+        >
           <Profile />
           <ItemWrapper>
             <Name>{counselor.name}</Name>
@@ -184,7 +205,12 @@ const CounselorList: React.FC = () => {
                 formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
                 locale="kr"
               />
-              <>{moment(selectedDate).format('YYYY-MM-DD')}</>
+              {/* {ableTime.availableTimeStartTime} */}
+              <ReservationTime
+                date={moment(selectedDate).format('YYYY-MM-DD')}
+                ableTime={ableTime}
+                unableTime={availableTimes}
+              />
             </Reservation>
           )}
           <Btn onClick={handleCloseModal}>닫기</Btn>
