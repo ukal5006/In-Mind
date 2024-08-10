@@ -56,9 +56,9 @@ public class ManagementController {
 
     @Operation(summary = "상담 불가능 시간 생성", description = "상담사가 상담 불가능 시간을 생성합니다.")
     @PostMapping("/unavailable-time")
-    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@RequestBody UnavailableTimeDto dto) {
-        managementService.saveUnavailableTime(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@RequestParam Long counselorId, @RequestBody @Parameter(description = "상담사 번호") UnavailableTimeDto dto) {
+        managementService.saveUnavailableTime(counselorId, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "상담 불가능 시간 삭제", description = "상담사가 상담 불가능 시간을 삭제합니다.")

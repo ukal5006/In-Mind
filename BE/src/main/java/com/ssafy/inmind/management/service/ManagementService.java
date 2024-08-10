@@ -1,21 +1,19 @@
 package com.ssafy.inmind.management.service;
 
 import com.ssafy.inmind.management.dto.DefaultTimeResponseDto;
-import com.ssafy.inmind.management.entity.DefaultTime;
-import com.ssafy.inmind.management.repository.ManagementRepository;
 import com.ssafy.inmind.management.dto.UnavailableTimeDto;
+import com.ssafy.inmind.management.entity.DefaultTime;
 import com.ssafy.inmind.management.entity.UnavailableTime;
+import com.ssafy.inmind.management.repository.ManagementRepository;
 import com.ssafy.inmind.management.repository.UnavailableTimeRepository;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +66,6 @@ public class ManagementService {
 
         return unavailableTimes.stream()
                 .map(unavailableTime -> UnavailableTimeDto.builder()
-                        .id(unavailableTime.getId())
                         .date(unavailableTime.getDate())
                         .startTime(unavailableTime.getStartTime())
                         .endTime(unavailableTime.getEndTime())
@@ -85,8 +82,8 @@ public class ManagementService {
     }
 
     @Transactional
-    public void saveUnavailableTime(UnavailableTimeDto dto) {
-        User user = userRepository.findById(dto.getId())
+    public void saveUnavailableTime(Long counselorId, UnavailableTimeDto dto) {
+        User user = userRepository.findById(counselorId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         LocalTime startTime = dto.getStartTime();
