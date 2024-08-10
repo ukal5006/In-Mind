@@ -61,6 +61,13 @@ const LoginBtn = styled(Btn)`
   color: ${colors.white};
 `;
 
+const NotificationLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+`;
+
 const NotificationBadge = styled.span`
   background-color: ${colors.red};
   color: ${colors.white};
@@ -68,6 +75,11 @@ const NotificationBadge = styled.span`
   padding: 2px 6px;
   font-size: 12px;
   margin-left: 5px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: ${colors.darkGray};
+  }
 `;
 
 function Nav() {
@@ -94,7 +106,9 @@ function Nav() {
       <UserInfoContainer>
         {userInfo !== null ? (
           <>
+            <NotificationLink to="/notifications">
                 <NotificationBadge>{unreadCount}</NotificationBadge>
+              </NotificationLink>
             <Link to="mypage">{userInfo.userName}님, 환영합니다!</Link>
             
               

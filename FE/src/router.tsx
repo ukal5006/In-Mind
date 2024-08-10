@@ -21,6 +21,7 @@ import Test from './pages/Test';
 import FacialMeeting from './pages/FacialMeeting/App';
 import TestHistory from './pages/TestHistory';
 import ReservationHistory from './pages/ReservationHistory';
+import Notification from './pages/Notification'
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
     {
         path: '/findId',
         element: <FindId />,
+    },
+    {
+        path:'/notifications',
+        element:<Notification />,
     },
     {
         path: '/facial',
