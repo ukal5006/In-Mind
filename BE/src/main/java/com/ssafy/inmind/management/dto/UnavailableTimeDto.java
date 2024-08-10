@@ -14,6 +14,6 @@ import java.time.LocalTime;
 public class UnavailableTimeDto {
 
     private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
 }
