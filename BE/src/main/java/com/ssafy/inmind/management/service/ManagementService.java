@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,8 @@ public class ManagementService {
         return unavailableTimes.stream()
                 .map(unavailableTime -> UnavailableTimeDto.builder()
                         .date(unavailableTime.getDate())
-                        .startTime(unavailableTime.getStartTime())
-                        .endTime(unavailableTime.getEndTime())
+                        .startTime(unavailableTime.getStartTime().toString())
+                        .endTime(unavailableTime.getEndTime().toString())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -86,8 +87,8 @@ public class ManagementService {
         User user = userRepository.findById(counselorId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        LocalTime startTime = dto.getStartTime();
-        LocalTime endTime = dto.getEndTime();
+        LocalTime startTime = LocalTime.parse(dto.getStartTime(), DateTimeFormatter.ofPattern("HH:mm:ss"));
+        LocalTime endTime = LocalTime.parse(dto.getEndTime(), DateTimeFormatter.ofPattern("HH:mm:ss"));
         LocalDate date = dto.getDate();
 
         for (LocalTime time = startTime; time.isBefore(endTime); time = time.plusHours(1)) {
