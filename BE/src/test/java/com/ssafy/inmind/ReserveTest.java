@@ -100,7 +100,7 @@ public class ReserveTest {
                 .build();
 
         reserveService.reserve(reserveDto);
-        List<Reservation> reservation = reserveRepository.findAllByCounselor_Id(user.getId());
+        List<Reservation> reservation = reserveRepository.findAllByCounselor_Id(counselor.getId());
 
         assertThat(reservation).isNotEmpty();
 
