@@ -93,14 +93,14 @@ public class ReserveTest {
         ReserveRequestDto reserveDto = ReserveRequestDto.builder()
                 .userIdx(user.getId())
                 .coIdx(counselor.getId())
-                .childIdx(2)
+                .childIdx(2L)
                 .reserveInfoDate(LocalDate.now())
                 .reserveInfoStartTime(startTime)
                 .reserveInfoEndTime(endTime)
                 .build();
 
         reserveService.reserve(reserveDto);
-        List<Reservation> reservation = reserveRepository.findByUserId(user.getId());
+        List<Reservation> reservation = reserveRepository.findAllByCounselor_Id(user.getId());
 
         assertThat(reservation).isNotEmpty();
 
