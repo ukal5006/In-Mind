@@ -19,4 +19,5 @@ public interface UnavailableTimeRepository extends JpaRepository<UnavailableTime
                                                           @Param("startTime") LocalTime startTime);
 
     List<UnavailableTime> findByUserId(long counselorId);
+    List<UnavailableTime> findByUserIdAndDate(Long userId, LocalDate date);
 }

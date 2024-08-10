@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,8 +63,8 @@ public class ManagementService {
         managementRepository.save(updateTime);
     }
 
-    public List<UnavailableTimeDto> getUnavailableTime(Long coIdx){
-        List<UnavailableTime> unavailableTimes = unavailableTimeRepository.findByUserId(coIdx);
+    public List<UnavailableTimeDto> getUnavailableTime(Long coIdx, LocalDate date){
+        List<UnavailableTime> unavailableTimes = unavailableTimeRepository.findByUserIdAndDate(coIdx, date);
 
         return unavailableTimes.stream()
                 .map(unavailableTime -> UnavailableTimeDto.builder()
