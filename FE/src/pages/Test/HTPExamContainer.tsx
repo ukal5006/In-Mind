@@ -14,6 +14,7 @@ const HTPExamContainer = (): JSX.Element => {
 
   const childStore = useChildStore()
   const userInfo = userStore().userInfo
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     // userStore에서 userId가져오고
@@ -23,12 +24,25 @@ const HTPExamContainer = (): JSX.Element => {
     
     const childSet =  async () => {
       if(userInfo){
-        await childStore.readAllChildren(userInfo.userIdx)
-        setChildren(childStore.children)
-      }
+        try{
+          await childStore.readAllChildren(userInfo.userIdx)
+          setChildren(childStore.children)
+        } catch (error) {
+          console.error('Failed to fetch children:', error);
+        }
+      } 
     }
-    childSet()
+    try {
+      childSet()
+    } catch (error) {
+      console.log('failed to load children', error)
+    } finally {
+      setIsLoading(false)
+    }
+    console.log(children)
 }, [setChildren]);
+  if (isLoading) 
+    return <div>...is Loading</div>
 
   const handleChildSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const child = children.find(c => c.childIdx === parseInt(e.target.value));
