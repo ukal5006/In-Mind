@@ -7,3 +7,5 @@ export const READRESERVE = (userId: number) =>
 export const RUDRESERVE = `${RESERVEDEFAULT}`; //예약 등록, 수정, 삭제
 export const COREADRESERVE = (userId: any) =>
   `${RESERVEDEFAULT}/all?counselorId=${userId}`;
+export const DELETERESERVE = (reserveId: any) =>
+  `${RESERVEDEFAULT}?reserveId=${reserveId}`;

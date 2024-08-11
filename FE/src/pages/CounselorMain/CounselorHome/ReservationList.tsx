@@ -7,7 +7,8 @@ import Btn from '../../../components/Btn';
 import { ReservationInfo } from '.';
 import { useState } from 'react';
 import axios from 'axios';
-import { RUDRESERVE } from '../../../apis/reserveApi';
+import { DELETERESERVE, RUDRESERVE } from '../../../apis/reserveApi';
+import { useNavigate } from 'react-router-dom';
 
 interface ScheduleCalendarProps {
   reservationList: ReservationInfo[] | undefined;
@@ -109,6 +110,7 @@ const CancelBtn = styled(Btn)`
 function ReservationList({ reservationList }: ScheduleCalendarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReservation, setSelectedReservation] = useState<any>(null);
+  const navigate = useNavigate();
 
   const handleDetailClick = (reservation: ReservationInfo) => {
     setSelectedReservation(reservation);
@@ -121,10 +123,11 @@ function ReservationList({ reservationList }: ScheduleCalendarProps) {
   };
 
   const handleCancelReservation = (id: any) => {
-    // axios.delete(`https://i11b301.p.ssafy.io/api/reserve?reserveInfoIdx=${}`, {
-    // });
-    alert('예약이 취소되었습니다.');
-    handleCloseModal();
+    axios.delete(`${DELETERESERVE(id)}`).then(() => {
+      alert('예약이 취소되었습니다.');
+      handleCloseModal();
+      navigate('/counselor');
+    });
   };
 
   const currentDateTime = new Date();
@@ -150,22 +153,26 @@ function ReservationList({ reservationList }: ScheduleCalendarProps) {
         <TitleBtn>전체</TitleBtn>
       </TitleContainer>
       <List>
-        {filteredReservations?.map((reservation: any) => (
-          <Item key={reservation.id}>
-            <Detail onClick={() => handleDetailClick(reservation)}>
-              자세히 보기
-            </Detail>
-            <DateText>{reservation.reserveInfoDate}</DateText>
-            <ChildName>{reservation.childName}</ChildName>
-            <Time>
-              {reservation.reserveInfoStartTime} ~{' '}
-              {reservation.reserveInfoEndTime}
-            </Time>
-            <BtnWrapper>
-              <RoomBtn>방 만들기</RoomBtn>
-            </BtnWrapper>
-          </Item>
-        ))}
+        {filteredReservations?.length === 0 ? (
+          <>예약내역이 없습니다</>
+        ) : (
+          filteredReservations?.map((reservation: any) => (
+            <Item key={reservation.id}>
+              <Detail onClick={() => handleDetailClick(reservation)}>
+                자세히 보기
+              </Detail>
+              <DateText>{reservation.reserveInfoDate}</DateText>
+              <ChildName>{reservation.childName}</ChildName>
+              <Time>
+                {reservation.reserveInfoStartTime} ~{' '}
+                {reservation.reserveInfoEndTime}
+              </Time>
+              <BtnWrapper>
+                <RoomBtn>방 만들기</RoomBtn>
+              </BtnWrapper>
+            </Item>
+          ))
+        )}
       </List>
 
       {isModalOpen && (
