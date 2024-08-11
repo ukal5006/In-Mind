@@ -18,4 +18,6 @@ public class ReportRequestDto {
 
     private String drawingFlow;
 
+    private String result;
+
 }
