@@ -37,7 +37,7 @@ public class UserService {
     private final OrganizationRepository orgRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final Long accessTokenExpiredMs = 1000 * 60 * 60L; //
+    private final Long accessTokenExpiredMs = 1000 * 60L; // * 60
     private final Long refreshTokenExpiredMs = 7 * 24 * 1000 * 60 * 60L; //
     private final DefaultTimeRepository defaultTimeRepository;
 
@@ -86,6 +86,7 @@ public class UserService {
         UserResponseDto userResponseDto = UserResponseDto.fromEntity(user);
         return UserLoginResponseDto.fromEntity(JwtUtil.createAccessTokenJwt(getRefreshToken.get().getRefreshToken(), secretKey, accessTokenExpiredMs), userResponseDto);
     }
+
 
     @Transactional
     public void saveUser(UserRequestDto userRequestDto) {
