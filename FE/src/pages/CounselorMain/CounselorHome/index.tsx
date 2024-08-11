@@ -1,19 +1,29 @@
-import ScheduleCalendar from "./ScheduleCalendar";
-import CalendarContainer from "./CalendarContainer";
-import CounselorHomeContainer from "./CounselorHomeContainer";
-import ReservationListContainer from "./ReservationListContainer";
-import { useState } from "react";
-import axios from "axios";
-import ReservationList from "./ReservationList";
+import ScheduleCalendar from './ScheduleCalendar';
+import CalendarContainer from './CalendarContainer';
+import CounselorHomeContainer from './CounselorHomeContainer';
+import ReservationListContainer from './ReservationListContainer';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import ReservationList from './ReservationList';
+import { COREADRESERVE } from '../../../apis/reserveApi';
+import userStore from '../../../stores/userStore';
 
 export interface ReservationInfo {
   name: string;
 }
 
 function CounselorHome() {
+  const { userInfo } = userStore();
   const [reservationList, setReservationList] = useState<ReservationInfo[]>();
-  //여기서 axios로 예약 데이터 호출
-  // axios.get().then(response => setReservation(response.data));
+  useEffect(() => {
+    if (userInfo) {
+      axios
+        .get(COREADRESERVE(userInfo?.userIdx))
+        .then((response) => setReservationList(response.data));
+    }
+    console.log(reservationList);
+  }, [userInfo]);
+
   //받아온 데이터 달력에 건수로 표시
   //받아온 데이터 오른쪽 상담내역 div에 표시
   // 전체는 상담날짜 빠른순으로 전부 보여주기
