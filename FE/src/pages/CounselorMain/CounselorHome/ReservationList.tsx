@@ -1,11 +1,13 @@
-import styled from "styled-components";
-import Container from "../../../components/Container";
-import Text from "../../../components/Text";
-import { colors } from "../../../theme/colors";
-import Wrapper from "../../../components/Wrapper";
-import Btn from "../../../components/Btn";
-import { ReservationInfo } from ".";
-import { useState } from "react";
+import styled from 'styled-components';
+import Container from '../../../components/Container';
+import Text from '../../../components/Text';
+import { colors } from '../../../theme/colors';
+import Wrapper from '../../../components/Wrapper';
+import Btn from '../../../components/Btn';
+import { ReservationInfo } from '.';
+import { useState } from 'react';
+import axios from 'axios';
+import { RUDRESERVE } from '../../../apis/reserveApi';
 
 interface ScheduleCalendarProps {
   reservationList: ReservationInfo[] | undefined;
@@ -51,8 +53,9 @@ const Detail = styled(Text)`
   font-size: 14px;
   color: ${colors.gray};
   margin-bottom: 10px;
+  cursor: pointer;
 `;
-const Date = styled(Text)`
+const DateText = styled(Text)`
   font-weight: 700;
   margin-bottom: 10px;
   justify-content: flex-start;
@@ -105,8 +108,7 @@ const CancelBtn = styled(Btn)`
 
 function ReservationList({ reservationList }: ScheduleCalendarProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedReservation, setSelectedReservation] =
-    useState<ReservationInfo | null>(null);
+  const [selectedReservation, setSelectedReservation] = useState<any>(null);
 
   const handleDetailClick = (reservation: ReservationInfo) => {
     setSelectedReservation(reservation);
@@ -118,11 +120,28 @@ function ReservationList({ reservationList }: ScheduleCalendarProps) {
     setSelectedReservation(null);
   };
 
-  const handleCancelReservation = () => {
-    // 예약 취소 로직 (예: API 호출 등)
-    console.log("예약이 취소되었습니다.");
+  const handleCancelReservation = (id: any) => {
+    // axios.delete(`https://i11b301.p.ssafy.io/api/reserve?reserveInfoIdx=${}`, {
+    // });
+    alert('예약이 취소되었습니다.');
     handleCloseModal();
   };
+
+  const currentDateTime = new Date();
+
+  // 현재 날짜와 시간 이후의 예약만 필터링하고 시간순으로 정렬
+  const filteredReservations = reservationList
+    ?.filter((reservation: any) => {
+      const reservationDateTime = new Date(
+        reservation.reserveInfoDate + ' ' + reservation.reserveInfoStartTime
+      );
+      return reservationDateTime > currentDateTime;
+    })
+    .sort((a: any, b: any) => {
+      const dateA = new Date(a.reserveInfoDate + ' ' + a.reserveInfoStartTime);
+      const dateB = new Date(b.reserveInfoDate + ' ' + b.reserveInfoStartTime);
+      return dateA.getTime() - dateB.getTime();
+    });
   return (
     <>
       <TitleContainer>
@@ -131,49 +150,46 @@ function ReservationList({ reservationList }: ScheduleCalendarProps) {
         <TitleBtn>전체</TitleBtn>
       </TitleContainer>
       <List>
-        <Item>
-          <Detail>자세히 보기</Detail>
-          <Date>2024년8월17일</Date>
-          <ChildName>김종원 어린이</ChildName>
-          <Time>18:00 ~ 19:00</Time>
-          <BtnWrapper>
-            <RoomBtn>방 만들기</RoomBtn>
-          </BtnWrapper>
-        </Item>
-        <Item>
-          <Detail>자세히 보기</Detail>
-          <Date>2024년8월17일</Date>
-          <ChildName>김종원 어린이</ChildName>
-          <Time>18:00 ~ 19:00</Time>
-          <BtnWrapper>
-            <RoomBtn>방 만들기</RoomBtn>
-          </BtnWrapper>
-        </Item>
-        {/* {reservationList?.map((reservation) => (
+        {filteredReservations?.map((reservation: any) => (
           <Item key={reservation.id}>
-            <Detail onClick={() => handleDetailClick(reservation)}>자세히 보기</Detail>
-            <Date>{reservation.date}</Date>
+            <Detail onClick={() => handleDetailClick(reservation)}>
+              자세히 보기
+            </Detail>
+            <DateText>{reservation.reserveInfoDate}</DateText>
             <ChildName>{reservation.childName}</ChildName>
-            <Time>{reservation.time}</Time>
+            <Time>
+              {reservation.reserveInfoStartTime} ~{' '}
+              {reservation.reserveInfoEndTime}
+            </Time>
             <BtnWrapper>
               <RoomBtn>방 만들기</RoomBtn>
             </BtnWrapper>
           </Item>
-        ))} */}
+        ))}
       </List>
 
       {isModalOpen && (
         <ModalBackground>
           <ModalContent>
-            <h2>예약 내역</h2>
-            {/* {selectedReservation && (
+            <Title>예약 내역</Title>
+            {selectedReservation && (
               <>
-                <p>어린이: {selectedReservation.childName}</p>
-                <p>날짜: {selectedReservation.date}</p>
-                <p>시간: {selectedReservation.time}</p>
+                <p>예약번호: {selectedReservation?.reserveInfoIdx}</p>
+                <p>어린이: {selectedReservation?.childName}</p>
+                <p>날짜: {selectedReservation?.reserveInfoDate}</p>
+                <p>
+                  시간: {selectedReservation.reserveInfoStartTime} ~{' '}
+                  {selectedReservation.reserveInfoEndTime}
+                </p>
               </>
             )}
-            <CancelBtn onClick={handleCancelReservation}>예약 취소</CancelBtn> */}
+            <CancelBtn
+              onClick={() =>
+                handleCancelReservation(selectedReservation?.reserveInfoIdx)
+              }
+            >
+              예약 취소
+            </CancelBtn>
             <Btn onClick={handleCloseModal}>닫기</Btn>
           </ModalContent>
         </ModalBackground>
