@@ -4,10 +4,7 @@ import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.child.repository.ChildRepository;
 import com.ssafy.inmind.exception.ErrorCode;
 import com.ssafy.inmind.exception.RestApiException;
-import com.ssafy.inmind.report.dto.ChildDto;
-import com.ssafy.inmind.report.dto.ReportDto;
-import com.ssafy.inmind.report.dto.ReportListResponseDto;
-import com.ssafy.inmind.report.dto.ReportResponseDto;
+import com.ssafy.inmind.report.dto.*;
 import com.ssafy.inmind.report.entity.Report;
 import com.ssafy.inmind.report.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +19,21 @@ public class ReportService {
 
     private final ReportRepository reportRepository;
     private final ChildRepository childRepository;
+
+    public void addReport(ReportRequestDto requestDto) {
+        Child child = childRepository.findById(requestDto.getChildIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        Report report = Report.builder()
+                .child(child)
+                .result(requestDto.getResult())
+                .image(requestDto.getImg())
+                .background(requestDto.getBackground())
+                .drawingFlow(requestDto.getDrawingFlow())
+                .build();
+
+        reportRepository.save(report);
+    }
 
     public ReportResponseDto getReport(Long reportId) {
 
