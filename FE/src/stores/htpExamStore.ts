@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
 interface Child {
-  id: number;
-  name: string;
+  childIdx: number;
+  childName: string;
+  childBirth: string;
 }
 
 interface HTPExamStore {
