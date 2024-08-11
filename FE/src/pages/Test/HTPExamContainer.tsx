@@ -137,8 +137,6 @@ const HTPExamContainer = (): JSX.Element => {
     <div className="htp-exam">
       <h1>HTP 검사</h1>
       <div>
-        <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg" />
-        <img src="https://in-mind-image.s3.ap-northeast-2.amazonaws.com/upload/img.jpg" />
         <label>자녀 선택:</label>
         <select onChange={handleChildSelect}>
           <option value="">선택하세요</option>
