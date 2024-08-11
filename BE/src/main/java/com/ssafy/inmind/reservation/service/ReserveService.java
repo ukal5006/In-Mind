@@ -122,6 +122,7 @@ public class ReserveService {
 
         return ReserveUserResponseDto.builder()
                 .reserveInfoIdx(reservation.getId())
+                .coName(reservation.getCounselor().getName())
                 .childName(child.getName())
                 .reserveInfoDate(reservation.getLocalDate())
                 .reserveInfoStartTime(reservation.getStartTime())
