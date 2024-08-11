@@ -1,92 +1,122 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHTPExamStore } from '../../stores/htpExamStore';
 import axios from 'axios';
 import useChildStore from '../../stores/childStore';
 import userStore from '../../stores/userStore';
+import AWS from 'aws-sdk';
 
 const HTPExamContainer = (): JSX.Element => {
-  const { 
-    children, selectedChild, imageUrl, drawingOrder, background,
-    setChildren, setSelectedChild, setImageUrl, setDrawingOrder, setBackground 
+  const {
+    children,
+    selectedChild,
+    imageUrl,
+    drawingOrder,
+    background,
+    setChildren,
+    setSelectedChild,
+    setImageUrl,
+    setDrawingOrder,
+    setBackground,
   } = useHTPExamStore();
 
   const [file, setFile] = useState<File | null>(null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const inputRef = useRef<HTMLInputElement[]>([]);
 
-  const childStore = useChildStore()
-  const userInfo = userStore().userInfo
-  const [isLoading, setIsLoading] = useState(true)
+  const childStore = useChildStore();
+  const userInfo = userStore().userInfo;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // userStore에서 userId가져오고
-    // userId로 api 요청해서 다시 자녀목록 받아오는 방법,
-
-    // childStore에서 자녀 받아오기
-    
-    const childSet =  async () => {
-      if(userInfo){
-        try{
-          await childStore.readAllChildren(userInfo.userIdx)
-          setChildren(childStore.children)
+    const childSet = async () => {
+      if (userInfo) {
+        try {
+          await childStore.readAllChildren(userInfo.userIdx);
+          setChildren(childStore.children);
         } catch (error) {
           console.error('Failed to fetch children:', error);
         }
-      } 
-    }
+      }
+    };
+
     try {
-      childSet()
+      childSet();
     } catch (error) {
-      console.log('failed to load children', error)
+      console.log('failed to load children', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-    console.log(children)
-}, [setChildren]);
-  if (isLoading) 
-    return <div>...is Loading</div>
+  }, [userInfo]);
 
   const handleChildSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const child = children.find(c => c.childIdx === parseInt(e.target.value));
+    const child = children.find((c) => c.childIdx === parseInt(e.target.value));
     if (child) setSelectedChild(child);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
+    const file = e.target.files ? e.target.files[0] : null;
+    const fileExt = file?.name.split('.').pop() || '';
+
+    if (
+      file &&
+      ['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)
+    ) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setImageSrc(reader.result as string);
+        setFile(file);
+      };
+    } else {
+      alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
     }
   };
 
-  const handleDrawingOrderChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleDrawingOrderChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     const newOrder = [...drawingOrder];
     newOrder[index] = parseInt(e.target.value);
     setDrawingOrder(newOrder);
   };
 
-  const uploadImage = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('image', file);
+  const uploadS3 = async (): Promise<string> => {
+    const REGION = 'ap-northeast-2';
+    const ACCESS_KEY_ID = 'AKIAZ3MGNEZEQYW7NK73';
+    const SECRET_ACCESS_KEY_ID = 'vk21BsRBSgjmYpye4vmgogiAxd15AUu7eXSlZsbo';
 
-    try {
-      const response = await axios.post('/api/upload-image', formData, {  //api 확정 후 이미지 업로드하는 api 정확하게 연결 필요
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data.imageUrl;
-    } catch (error) {
-      console.error('Failed to upload image:', error);
-      throw error;
-    }
+    AWS.config.update({
+      region: REGION,
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY_ID,
+    });
+
+    if (!file) throw new Error('No file to upload');
+
+    const upload = new AWS.S3.ManagedUpload({
+      params: {
+        ACL: 'public-read',
+        Bucket: 'in-mind-image',
+        Key: `upload/${file.name}`,
+        Body: file,
+      },
+    });
+
+    const data = await upload.promise();
+    return data.Location;
   };
 
   const handleSubmit = async () => {
-    if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {  //현재 플로우를 제공받는게 1번부터 7번까지 모두 입력되는걸 전제로 하지만, 수정필요할듯 6개까지만 쓰거나 숫자 7이 포함되어 있을 경우 개수 검사를 안 하는 식으로
+    if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {
       alert('모든 필드를 입력해주세요.');
-      return;                                               // 플로우 입력을 체크박스를 통한 순서입력으로 바꿀지 고민중, 추후에 개발진행
+      return;
     }
 
     try {
-      const uploadedImageUrl = await uploadImage(file);
+      const uploadedImageUrl = await uploadS3();
       setImageUrl(uploadedImageUrl);
+      console.log('Uploaded Image URL:', uploadedImageUrl);
 
       await axios.post('/api/htp-exam', {
         childId: selectedChild.childIdx,
@@ -101,55 +131,72 @@ const HTPExamContainer = (): JSX.Element => {
     }
   };
 
+  if (isLoading) return <div>...is Loading</div>;
+
   return (
     <div className="htp-exam">
-      <h1>HTP 검사</h1>     
+      <h1>HTP 검사</h1>
       <div>
-      <label>자녀 선택:</label>
-      <select onChange={handleChildSelect}>
-        <option value="">선택하세요</option>
-        {children.length > 0 ? (
-          children.map(child => (
-            <option key={child.childIdx} value={child.childIdx}>
-              {child.childName}
+        <img src="https://health.chosun.com/site/data/img_dir/2023/07/17/2023071701753_0.jpg" />
+        <img src="https://in-mind-image.s3.ap-northeast-2.amazonaws.com/upload/img.jpg" />
+        <label>자녀 선택:</label>
+        <select onChange={handleChildSelect}>
+          <option value="">선택하세요</option>
+          {children.length > 0 ? (
+            children.map((child) => (
+              <option key={child.childIdx} value={child.childIdx}>
+                {child.childName}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              자녀 정보가 없습니다
             </option>
-          ))
-        ) : (
-          <option value="" disabled>자녀 정보가 없습니다</option>
-        )}
-      </select>
-    </div>
+          )}
+        </select>
+      </div>
 
       <div>
         <label>나무 그림 업로드:</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input
+          hidden
+          accept="image/*"
+          multiple
+          type="file"
+          ref={(el) => (inputRef.current[0] = el!)}
+          onChange={handleFileChange}
+        />
+        <button onClick={() => inputRef.current[0]?.click()}>
+          이미지 선택
+        </button>
+        {imageSrc && <img src={imageSrc} alt="uploaded" />}
       </div>
 
       <div>
         <p>그림을 그리는 순서는 어땠나요? 순서대로 번호를 입력해주세요.</p>
         <p>1)뿌리 2)줄기 3)가지 4)수관 5)열매 6)지면 7)알 수 없음</p>
-        {['뿌리', '줄기', '가지', '수관', '열매', '지면', '알 수 없음'].map((item, index) => (
-          <input
-            key={index}
-            type="number"
-            min="1"
-            max="7"
-            onChange={(e) => handleDrawingOrderChange(e, index)}
-          />
-        ))}
+        {['뿌리', '줄기', '가지', '수관', '열매', '지면', '알 수 없음'].map(
+          (item, index) => (
+            <input
+              key={index}
+              type="number"
+              min="1"
+              max="7"
+              onChange={(e) => handleDrawingOrderChange(e, index)}
+            />
+          )
+        )}
       </div>
 
       <div>
         <label>검사 배경 및 이유:</label>
-        <textarea 
+        <textarea
           value={background}
           onChange={(e) => setBackground(e.target.value)}
         />
       </div>
 
-      <button onClick={handleSubmit}>검사 시작</button>  
-      {/* 검사 시작 버튼 누르고 라우팅 필요, 검사이력 페이지나, 예약페이지로 이동이라던지 이동할 페이지 만들면 이동해야함 */}
-      {/* 검사가 끝나면 reportListStore에 지금 검사한 결과를 삽입하여 최신화해야할지도. */}
+      <button onClick={handleSubmit}>검사 시작</button>
     </div>
   );
 };
