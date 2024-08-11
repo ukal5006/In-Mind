@@ -52,8 +52,8 @@ public class ReserveController {
 
     @Operation(summary = "상담 예약 취소", description = "예약된 상담을 취소합니다.")
     @DeleteMapping()
-    public ResponseEntity<Void> deleteReservation(@RequestBody ReserveDeleteDto request){
-        reserveService.deleteReserve(request.getReserveInfoIdx());
+    public ResponseEntity<Void> deleteReservation(@RequestParam("reserveId") @Parameter(description = "예약 번호") Long reserveId){
+        reserveService.deleteReserve(reserveId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
