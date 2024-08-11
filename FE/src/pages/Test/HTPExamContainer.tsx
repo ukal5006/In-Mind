@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useHTPExamStore } from '../../stores/htpExamStore';
 import axios from 'axios';
+import useChildStore from '../../stores/childStore';
+import userStore from '../../stores/userStore';
 
 const HTPExamContainer = (): JSX.Element => {
   const { 
@@ -10,21 +12,26 @@ const HTPExamContainer = (): JSX.Element => {
 
   const [file, setFile] = useState<File | null>(null);
 
-  useEffect(() => {
-    const fetchChildren = async () => {
-      try {
-        const response = await axios.get('/api/children'); //자녀 목록 받아오는 api 주소 수정 필요 , api request와 스토어 항목 일치하는지 확인필요
-        setChildren(response.data);
-      } catch (error) {
-        console.error('Failed to fetch children:', error);
-      }
-    };
+  const childStore = useChildStore()
+  const userInfo = userStore().userInfo
 
-    fetchChildren();
-  }, [setChildren]); //setchildren은 useEffect로 컨트롤됨
+  useEffect(() => {
+    // userStore에서 userId가져오고
+    // userId로 api 요청해서 다시 자녀목록 받아오는 방법,
+
+    // childStore에서 자녀 받아오기
+    
+    const childSet =  async () => {
+      if(userInfo){
+        await childStore.readAllChildren(userInfo.userIdx)
+        setChildren(childStore.children)
+      }
+    }
+    childSet()
+}, [setChildren]);
 
   const handleChildSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const child = children.find(c => c.id === parseInt(e.target.value));
+    const child = children.find(c => c.childIdx === parseInt(e.target.value));
     if (child) setSelectedChild(child);
   };
 
@@ -68,7 +75,7 @@ const HTPExamContainer = (): JSX.Element => {
       setImageUrl(uploadedImageUrl);
 
       await axios.post('/api/htp-exam', {
-        childId: selectedChild.id,
+        childId: selectedChild.childIdx,
         imageUrl: uploadedImageUrl,
         drawingOrder,
         background,
@@ -82,17 +89,22 @@ const HTPExamContainer = (): JSX.Element => {
 
   return (
     <div className="htp-exam">
-      <h1>HTP 검사</h1>
-      
+      <h1>HTP 검사</h1>     
       <div>
-        <label>자녀 선택:</label>
-        <select onChange={handleChildSelect}>
-          <option value="">선택하세요</option>
-          {children.map(child => (
-            <option key={child.id} value={child.id}>{child.name}</option>
-          ))}
-        </select>
-      </div>
+      <label>자녀 선택:</label>
+      <select onChange={handleChildSelect}>
+        <option value="">선택하세요</option>
+        {children.length > 0 ? (
+          children.map(child => (
+            <option key={child.childIdx} value={child.childIdx}>
+              {child.childName}
+            </option>
+          ))
+        ) : (
+          <option value="" disabled>자녀 정보가 없습니다</option>
+        )}
+      </select>
+    </div>
 
       <div>
         <label>나무 그림 업로드:</label>
