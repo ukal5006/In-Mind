@@ -60,7 +60,7 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   const availableEndTime = timeToNumber(ableTime.availableTimeEndTime);
 
   // 가능한 시간 버튼 생성
-  for (let i = availableStartTime; i <= availableEndTime; i++) {
+  for (let i = availableStartTime; i < availableEndTime; i++) {
     timeButtons.push(i);
   }
 
@@ -69,7 +69,7 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
     (acc: Set<number>, range: TimeRange) => {
       const start = timeToNumber(range.startTime);
       const end = timeToNumber(range.endTime);
-      for (let i = start; i <= end; i++) {
+      for (let i = start; i < end; i++) {
         acc.add(i);
       }
       return acc;
@@ -105,7 +105,7 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
         reserveInfoStartTime: `${selectedTime.toString().padStart(2, '0')}:00`,
         reserveInfoEndTime: `${(selectedTime + 1)
           .toString()
-          .padStart(2, '0')}:00`,
+          .padStart(2, '0')}:00`, // 예약 시간의 끝
       })
       .then((response) => {
         // 예약 성공 시 처리
