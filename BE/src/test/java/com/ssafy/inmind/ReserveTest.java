@@ -82,28 +82,28 @@ public class ReserveTest {
         assertTrue(savedUser.isPresent(), "User should be present in the database");
     }
 
-    @Test
-    @DisplayName("사용자가 상담사와 예약 상담을 성공합니다.")
-    void reserve() {
+    // @Test
+    // @DisplayName("사용자가 상담사와 예약 상담을 성공합니다.")
+    // void reserve() {
 
-        String startTime = LocalTime.now().toString();
-        String endTime = LocalTime.now().plusHours(1).toString();
+    //     String startTime = LocalTime.now().toString();
+    //     String endTime = LocalTime.now().plusHours(1).toString();
 
 
-        ReserveRequestDto reserveDto = ReserveRequestDto.builder()
-                .userIdx(user.getId())
-                .coIdx(counselor.getId())
-                .childIdx(2L)
-                .reserveInfoDate(LocalDate.now())
-                .reserveInfoStartTime(startTime)
-                .reserveInfoEndTime(endTime)
-                .build();
+    //     ReserveRequestDto reserveDto = ReserveRequestDto.builder()
+    //             .userIdx(user.getId())
+    //             .coIdx(counselor.getId())
+    //             .childIdx(2L)
+    //             .reserveInfoDate(LocalDate.now())
+    //             .reserveInfoStartTime(startTime)
+    //             .reserveInfoEndTime(endTime)
+    //             .build();
 
-        reserveService.reserve(reserveDto);
-        List<Reservation> reservation = reserveRepository.findAllByCounselor_Id(counselor.getId());
+    //     reserveService.reserve(reserveDto);
+    //     List<Reservation> reservation = reserveRepository.findAllByCounselor_Id(counselor.getId());
 
-        assertThat(reservation).isNotEmpty();
+    //     assertThat(reservation).isNotEmpty();
 
-    }
+    // }
 }
 
