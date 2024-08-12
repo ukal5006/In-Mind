@@ -115,7 +115,13 @@ function CounselorCareer() {
     useEffect(() => {
         if (userInfo?.userIdx) {
             axios
-                .get(READRESUMES(userInfo.userIdx))
+                .get(READRESUMES(userInfo.userIdx), {
+                    headers: {
+                        Authorization: `Bearer ${userStore().token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                })
                 .then((response) => {
                     setResumeIdx(response.data.resumeIdx);
                     const formattedString = response.data.info.replace(/`/g, '"');
@@ -125,16 +131,34 @@ function CounselorCareer() {
                     if (error.response && error.response.status === 404) {
                         console.log('이력없슴');
                         axios
-                            .post(CREATERESUMES, {
-                                userIdx: userInfo.userIdx,
-                                info: '[]',
-                            })
+                            .post(
+                                CREATERESUMES,
+                                {
+                                    userIdx: userInfo.userIdx,
+                                    info: '[]',
+                                },
+                                {
+                                    headers: {
+                                        Authorization: `Bearer ${userStore().token}`,
+                                        accept: '*/*',
+                                        'Content-Type': 'application/json;charset=UTF-8',
+                                    },
+                                }
+                            )
                             .then((response) => {
-                                axios.get(READRESUMES(userInfo.userIdx)).then((response) => {
-                                    setResumeIdx(response.data.resumeIdx);
-                                    const formattedString = response.data.info.replace(/`/g, '"');
-                                    setCareers(JSON.parse(formattedString));
-                                });
+                                axios
+                                    .get(READRESUMES(userInfo.userIdx), {
+                                        headers: {
+                                            Authorization: `Bearer ${userStore().token}`,
+                                            accept: '*/*',
+                                            'Content-Type': 'application/json;charset=UTF-8',
+                                        },
+                                    })
+                                    .then((response) => {
+                                        setResumeIdx(response.data.resumeIdx);
+                                        const formattedString = response.data.info.replace(/`/g, '"');
+                                        setCareers(JSON.parse(formattedString));
+                                    });
                             });
                     } else {
                         console.error('API 호출 실패:', error);
@@ -150,9 +174,19 @@ function CounselorCareer() {
     useEffect(() => {
         if (resumeIdx !== '-1') {
             axios
-                .put(UDRESUMES(resumeIdx), {
-                    info: JSON.stringify(careers),
-                })
+                .put(
+                    UDRESUMES(resumeIdx),
+                    {
+                        info: JSON.stringify(careers),
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userStore().token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    }
+                )
                 .then((response) => {
                     console.log('이력서 업데이트 성공:', response.data);
                 })

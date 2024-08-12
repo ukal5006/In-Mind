@@ -20,7 +20,15 @@ function CounselorHome() {
 
     useEffect(() => {
         if (userInfo) {
-            axios.get(COREADRESERVE(userInfo?.userIdx)).then((response) => setReservationList(response.data));
+            axios
+                .get(COREADRESERVE(userInfo?.userIdx), {
+                    headers: {
+                        Authorization: `Bearer ${userStore().token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                })
+                .then((response) => setReservationList(response.data));
         }
     }, [userInfo]);
 
