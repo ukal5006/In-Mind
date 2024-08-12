@@ -44,10 +44,16 @@ public class WebSecurityConfig {
                 .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(request -> {
                     request.requestMatchers("/orgs").permitAll(); // 인증 없이 가능
-                    request.requestMatchers("/users/JwtTest").authenticated();
+                    request.requestMatchers("/users").permitAll();
+                    request.requestMatchers("/users/user").permitAll();
+                    request.requestMatchers("/users/counselor").permitAll();
+                    request.requestMatchers("/swagger-ui/**").permitAll();
+                    request.requestMatchers("/orgs/**").permitAll();
+                    request.requestMatchers("/notify").permitAll();
 //                    request.requestMatchers("/reserve").authenticated(); // 인증 받은 뒤 가능
 //                    request.requestMatchers("/reserve").hasRole("COUNSELOR"); // 사용자 롤을 지정
-                    request.anyRequest().permitAll(); // 인증 없이 가능
+//                    request.anyRequest().permitAll(); // 인증 없이 가능
+                    request.anyRequest().authenticated();
                 })
                 .sessionManagement(
                         sessionManagement ->

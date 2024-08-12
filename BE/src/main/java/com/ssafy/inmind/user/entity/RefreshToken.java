@@ -3,14 +3,15 @@ package com.ssafy.inmind.user.entity;
 
 import com.ssafy.inmind.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "refresh_token")
 public class RefreshToken extends BaseEntity {
@@ -28,7 +29,7 @@ public class RefreshToken extends BaseEntity {
     private String refreshToken;
 
     @Column(nullable = false)
-    private LocalDateTime expired;
+    private Date expired;
 
     @Column(name = "is_login", nullable = false)
     private boolean isLogin;
