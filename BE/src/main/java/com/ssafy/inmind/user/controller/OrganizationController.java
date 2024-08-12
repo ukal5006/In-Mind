@@ -42,9 +42,14 @@ public class OrganizationController {
 
     @Operation(summary = "기관 목록 조회", description = "기관 이름으로 기관 또는 목록을 조회합니다.")
     @GetMapping("/list")
-    public ResponseEntity<List<OrgListResponseDto>> searchOrgList(@RequestParam @Parameter(description = "기관 이름") String name) {
-        List<OrgListResponseDto> list = orgService.getOrgListByName(name);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<OrgListResponseDto>> searchOrgList(@RequestParam(required = false) @Parameter(description = "기관 이름") String name) {
+        if(name == null || name.isEmpty()) {
+            return ResponseEntity.ok(orgService.getOrgListAll());
+        }
+        else {
+            List<OrgListResponseDto> list = orgService.getOrgListByName(name);
+            return ResponseEntity.ok(list);
+        }
     }
 
 

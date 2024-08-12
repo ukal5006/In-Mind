@@ -38,4 +38,22 @@ public class SearchOrgRepositoryImpl implements SearchOrgRepository{
                 .groupBy(organization.id)
                 .fetch();
     }
+
+    @Override
+    public List<OrgListResponseDto> findAllOrgs() {
+        QOrganization organization = QOrganization.organization;
+        QUser user = QUser.user;
+
+        return queryFactory
+                .select(new QOrgListResponseDto(
+                        organization.name,
+                        organization.addr,
+                        organization.tel,
+                        user.id.count().intValue()
+                ))
+                .from(organization)
+                .leftJoin(user).on(organization.id.eq(user.organization.id))
+                .groupBy(organization.id)
+                .fetch();
+    }
 }

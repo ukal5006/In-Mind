@@ -61,4 +61,8 @@ public class OrganizationService {
     public List<OrgListResponseDto> getOrgListByName(String name) {
         return orgRepository.findOrgByName(name);
     }
+
+    public List<OrgListResponseDto> getOrgListAll() {
+        return orgRepository.findAllOrgs();
+    }
 }
