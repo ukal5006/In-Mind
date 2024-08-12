@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface ReserveRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findAllByCounselor_Id(Long counselorId);
-    Reservation findByUserId(Long userId);
+    List<Reservation> findAllByUser_Id(Long userId);
+//    Reservation findByUserId(Long userId);
 }
