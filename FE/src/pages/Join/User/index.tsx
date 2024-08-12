@@ -3,8 +3,37 @@ import JoinBtn from '../JoinBtn';
 import JoinInput from '../JoinInput';
 import axios from 'axios';
 import emailVerification from '../../../apis/emailVerification';
+import styled from 'styled-components';
+import { colors } from '../../../theme/colors';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api';
+
+const UserJoin= styled.div`
+    display: flex;
+    flex-direction: column;
+    /* height: auto; */
+    align-items: center;  
+    margin-top: 60px;
+    margin-bottom:20px;
+`;
+const EmailWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    &>input{
+        width: calc(100% - 110px);
+        margin-right: 10px;
+    }
+    &>button{
+        width: 110px;
+        height: 45px;
+        padding: 0px;
+        font-weight: 500;
+        font-size: 15px;
+        color:${colors.white};
+        border-radius: 10px;
+        background-color: ${colors.okGreen};
+    }
+`;
 
 function User() {
     const [email, setEmail] = useState('');
@@ -75,9 +104,11 @@ function User() {
     };
 
     return (
-        <>
-            <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
-            <button onClick={emailCheckSubmit}>이메일 중복체크</button>
+        <UserJoin>
+        <EmailWrapper>
+        <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <button onClick={emailCheckSubmit}>중복확인</button>
+        </EmailWrapper>
             <JoinBtn onClick={handleEmailVerification}>인증번호 받기</JoinBtn>
             <JoinInput placeholder="인증번호" value={code} onChange={(e) => setCode(e.target.value)} />
             <JoinInput placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
@@ -90,7 +121,7 @@ function User() {
             <JoinInput placeholder="전화번호" value={tel} onChange={(e) => setTel(e.target.value)} />
 
             <JoinBtn onClick={signInSubmit}>회원가입</JoinBtn>
-        </>
+        </UserJoin>
     );
 }
 
