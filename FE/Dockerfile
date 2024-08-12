@@ -10,7 +10,7 @@ RUN npm install && \
     npm install openvidu-browser && \
     npm install -g serve
 
-CMD ["serve", "-s", "build;"]
+CMD ["serve", "-s", "build"]
 
 # Copy the rest of the application code
 # COPY . .
