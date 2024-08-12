@@ -109,7 +109,7 @@ const ResultText = styled(Text)`
 `;
 
 function ChildTestResult() {
-    const { userInfo } = userStore((state) => state);
+    const { userInfo, token } = userStore((state) => state);
     const { children } = useChildStore();
     const [result, setResult] = useState('');
 
@@ -137,7 +137,15 @@ function ChildTestResult() {
         // dotsClass: 'dots_custom',
     };
     if (userInfo?.userIdx) {
-        axios.get(READREPORTSLIST(userInfo?.userIdx)).then((response) => setResult(response.data.children));
+        axios
+            .get(READREPORTSLIST(userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setResult(response.data.children));
     }
     return (
         <ChildTestContainer>

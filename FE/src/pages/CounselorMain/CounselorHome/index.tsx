@@ -17,13 +17,14 @@ function CounselorHome() {
     const { userInfo } = userStore();
     const [reservationList, setReservationList] = useState<ReservationInfo[]>();
     const [selectedDate, setSelectedDate] = useState<string | null>(null); // 선택된 날짜 상태 추가
+    const { token } = userStore();
 
     useEffect(() => {
         if (userInfo) {
             axios
                 .get(COREADRESERVE(userInfo?.userIdx), {
                     headers: {
-                        Authorization: `Bearer ${userStore().token}`,
+                        Authorization: `Bearer ${token}`,
                         accept: '*/*',
                         'Content-Type': 'application/json;charset=UTF-8',
                     },

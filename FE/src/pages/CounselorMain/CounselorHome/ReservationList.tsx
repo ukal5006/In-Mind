@@ -9,6 +9,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { DELETERESERVE, RUDRESERVE } from '../../../apis/reserveApi';
 import { useNavigate } from 'react-router-dom';
+import userStore from '../../../stores/userStore';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -113,6 +114,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<any>(null);
     const navigate = useNavigate();
+    const { token } = userStore((state) => state);
 
     const handleDetailClick = (reservation: ReservationInfo) => {
         setSelectedReservation(reservation);
@@ -125,11 +127,19 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
     };
 
     const handleCancelReservation = (id: any) => {
-        axios.delete(`${DELETERESERVE(id)}`).then(() => {
-            alert('예약이 취소되었습니다.');
-            handleCloseModal();
-            navigate('/counselor');
-        });
+        axios
+            .delete(`${DELETERESERVE(id)}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then(() => {
+                alert('예약이 취소되었습니다.');
+                handleCloseModal();
+                navigate('/counselor');
+            });
     };
 
     const currentDateTime = new Date();

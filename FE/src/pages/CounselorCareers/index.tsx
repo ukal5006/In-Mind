@@ -105,7 +105,7 @@ const DragIcon = styled(MdDragHandle)`
 `;
 
 function CounselorCareer() {
-    const { userInfo } = userStore((state) => state);
+    const { userInfo, token } = userStore((state) => state);
     const [careers, setCareers] = useState<string[]>([]);
     const [resumeIdx, setResumeIdx] = useState('-1');
     //   const array = [`밥먹기`, `청소하기`, `공부하기`];
@@ -117,7 +117,7 @@ function CounselorCareer() {
             axios
                 .get(READRESUMES(userInfo.userIdx), {
                     headers: {
-                        Authorization: `Bearer ${userStore().token}`,
+                        Authorization: `Bearer ${token}`,
                         accept: '*/*',
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
@@ -139,7 +139,7 @@ function CounselorCareer() {
                                 },
                                 {
                                     headers: {
-                                        Authorization: `Bearer ${userStore().token}`,
+                                        Authorization: `Bearer ${token}`,
                                         accept: '*/*',
                                         'Content-Type': 'application/json;charset=UTF-8',
                                     },
@@ -149,7 +149,7 @@ function CounselorCareer() {
                                 axios
                                     .get(READRESUMES(userInfo.userIdx), {
                                         headers: {
-                                            Authorization: `Bearer ${userStore().token}`,
+                                            Authorization: `Bearer ${token}`,
                                             accept: '*/*',
                                             'Content-Type': 'application/json;charset=UTF-8',
                                         },
@@ -181,7 +181,7 @@ function CounselorCareer() {
                     },
                     {
                         headers: {
-                            Authorization: `Bearer ${userStore().token}`,
+                            Authorization: `Bearer ${token}`,
                             accept: '*/*',
                             'Content-Type': 'application/json;charset=UTF-8',
                         },
