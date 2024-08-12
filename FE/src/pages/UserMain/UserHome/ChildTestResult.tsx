@@ -10,7 +10,7 @@ import testResult from './testresult.png';
 import axios from 'axios';
 import { READREPORTSLIST } from '../../../apis/reportsApi';
 import userStore from '../../../stores/userStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useChildStore from '../../../stores/childStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -110,7 +110,7 @@ const ResultText = styled(Text)`
 function ChildTestResult() {
     const { userInfo, token } = userStore((state) => state);
     const { children } = useChildStore();
-    const [result, setResult] = useState('');
+    const [result, setResult] = useState([]);
 
     const navigate = useNavigate();
     const settings = {
@@ -119,57 +119,51 @@ function ChildTestResult() {
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-        // appendDots: (dots: any) => (
-        //     <div
-        //         style={{
-        //             width: '100%',
-        //             position: 'absolute',
-        //             bottom: '-10px',
-        //             display: 'flex',
-        //             alignItems: 'center',
-        //             justifyContent: 'center',
-        //         }}
-        //     >
-        //         <ul> {dots} </ul>
-        //     </div>
-        // ),
-        // dotsClass: 'dots_custom',
     };
-    if (userInfo?.userIdx) {
-        axios
-            .get(READREPORTSLIST(userInfo?.userIdx), {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    accept: '*/*',
-                    'Content-Type': 'application/json;charset=UTF-8',
-                },
-            })
-            .then((response) => setResult(response.data.children));
-    }
+
+    useEffect(() => {
+        if (userInfo?.userIdx) {
+            axios
+                .get(READREPORTSLIST(userInfo?.userIdx), {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                })
+                .then((response) => setResult(response.data.children || []));
+        }
+    }, [userInfo, token]);
+
     return (
         <ChildTestContainer>
-            {/* <CustomSlider {...settings}>
-                {children.map((c: any, index: number) => (
-                    <Slide key={index}>
-                        <ChildTestResultContainer>
-                            <ChildInfoContainer>
-                                <ChildImage src={profileImage} alt="" />
-                                <ChildInfo>
-                                    <NameText>
-                                        <ChildName>{c.name}</ChildName>
-                                        어린이 ({c.birthday})
-                                    </NameText>
-                                    <TestDate>검사 일시 : {result[index]}</TestDate>
-                                </ChildInfo>
-                            </ChildInfoContainer>
-                            <TestGraph>
-                                <img src={testResult} alt="" />
-                            </TestGraph> */}
-            {/* <ResultContainer><ResultText>{e.updated_at}</ResultText></ResultContainer> */}
-            {/* </ChildTestResultContainer> */}
-            {/* </Slide> */}
-            {/* // ))} */}
-            {/* </CustomSlider> */}
+            <CustomSlider {...settings}>
+                {children && children.length > 0 ? (
+                    children.map((c, index) => (
+                        <Slide key={c.childIdx}>
+                            {' '}
+                            {/* 각 자식의 고유 키 사용 */}
+                            <ChildTestResultContainer>
+                                <ChildInfoContainer>
+                                    <ChildImage src={profileImage} alt="" />
+                                    <ChildInfo>
+                                        <NameText>
+                                            <ChildName>{c.childName}</ChildName> {/* 이름 사용 */}
+                                            어린이 ({c.childBirth}) {/* 생일 사용 */}
+                                        </NameText>
+                                        <TestDate>검사 일시 : 정보 없음</TestDate>
+                                    </ChildInfo>
+                                </ChildInfoContainer>
+                                <TestGraph>
+                                    <img src={testResult} alt="" />
+                                </TestGraph>
+                            </ChildTestResultContainer>
+                        </Slide>
+                    ))
+                ) : (
+                    <>아이 없음</>
+                )}
+            </CustomSlider>
         </ChildTestContainer>
     );
 }
