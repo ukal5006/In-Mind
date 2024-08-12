@@ -5,7 +5,7 @@ import Btn from '../../components/Btn';
 const FindIdBtn = styled(Btn)`
     height: 50px;
     width: 400px;
-    background-color: ${colors.blue};
+    background-color: ${colors.okGreen};
     color: ${colors.white};
     font-size: 20px;
     font-weight: 700;
