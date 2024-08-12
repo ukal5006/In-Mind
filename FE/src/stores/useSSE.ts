@@ -2,14 +2,16 @@ import { useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import useUserStore from './userStore';
 import ENDPOINT from '../apis/endpoint';
-import useNotificationStore from './notificationStore'
+import useNotificationStore from './notificationStore';
+import userStore from './userStore';
 
 const SSE_URL = ENDPOINT + '/notify/subscribe'; // SSE 연결 URL
 
 export const useSSE = () => {
     const notificationStore = useNotificationStore();
     const connectionRef = useRef<boolean>(false);
-    const userInfo = useUserStore(state => state.userInfo);
+    const userInfo = useUserStore((state) => state.userInfo);
+    const { token } = userStore((state) => state);
 
     const connectSSE = useCallback(() => {
         if (!userInfo?.userIdx) {
@@ -23,49 +25,52 @@ export const useSSE = () => {
 
         const source = axios.CancelToken.source();
 
-        axios.get(url, {
-            headers: {
-                'Accept': 'text/event-stream',
-                // 필요한 경우 추가 헤더를 여기에 포함시킬 수 있습니다.
-                // 'Authorization': `Bearer ${token}`,
-            },
-            responseType: 'stream',
-            cancelToken: source.token
-        }).then(response => {
-            connectionRef.current = true;
-            console.log('SSE connection initiated');
+        axios
+            .get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: 'text/event-stream',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+                responseType: 'stream',
+                cancelToken: source.token,
+            })
+            .then((response) => {
+                connectionRef.current = true;
+                console.log('SSE connection initiated');
 
-            let buffer = '';
-            response.data.on('data', (chunk: Buffer) => {
-                buffer += chunk.toString();
-                const lines = buffer.split('\n\n');
-                buffer = lines.pop() || '';
+                let buffer = '';
+                response.data.on('data', (chunk: Buffer) => {
+                    buffer += chunk.toString();
+                    const lines = buffer.split('\n\n');
+                    buffer = lines.pop() || '';
 
-                lines.forEach(line => {
-                    if (line.trim() !== '') {
-                        try {
-                            const data = JSON.parse(line.replace(/^data: /, ''));
-                            notificationStore.addNotification(data);
-                            console.log('SSE event received:', data);
-                        } catch (error) {
-                            console.error('Error parsing SSE data:', error);
+                    lines.forEach((line) => {
+                        if (line.trim() !== '') {
+                            try {
+                                const data = JSON.parse(line.replace(/^data: /, ''));
+                                notificationStore.addNotification(data);
+                                console.log('SSE event received:', data);
+                            } catch (error) {
+                                console.error('Error parsing SSE data:', error);
+                            }
                         }
-                    }
+                    });
                 });
-            });
 
-            response.data.on('end', () => {
-                console.log('SSE connection closed');
+                response.data.on('end', () => {
+                    console.log('SSE connection closed');
+                    connectionRef.current = false;
+                });
+            })
+            .catch((error) => {
+                if (axios.isCancel(error)) {
+                    console.log('SSE connection cancelled');
+                } else {
+                    console.error('SSE error:', error);
+                }
                 connectionRef.current = false;
             });
-        }).catch(error => {
-            if (axios.isCancel(error)) {
-                console.log('SSE connection cancelled');
-            } else {
-                console.error('SSE error:', error);
-            }
-            connectionRef.current = false;
-        });
 
         return () => {
             source.cancel('SSE connection cancelled by user');
