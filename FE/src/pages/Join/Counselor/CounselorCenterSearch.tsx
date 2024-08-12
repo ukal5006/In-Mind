@@ -5,8 +5,9 @@ import axios from 'axios';
 import '../../../theme/class.css';
 // import { JOINCOUNSELOR } from '../../../apis/userApi';
 import { useOrganization } from './OrganizationContext';
+import userStore from '../../../stores/userStore';
 
-const apiUrl = 'https://i11b301.p.ssafy.io/api'
+const apiUrl = 'https://i11b301.p.ssafy.io/api';
 
 interface ModalProps {
     isOpen: boolean;
@@ -17,24 +18,28 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
     return (
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
-            <div style={{
-                background: 'white',
-                padding: '0px',
-                borderRadius: '5px',
-                width: '600px',
-                height:'500px',
-            }}>
+        <div
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <div
+                style={{
+                    background: 'white',
+                    padding: '0px',
+                    borderRadius: '5px',
+                    width: '600px',
+                    height: '500px',
+                }}
+            >
                 {children}
             </div>
         </div>
@@ -56,14 +61,13 @@ const CounselingOrganizationModal: React.FC = () => {
     const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>([]);
     const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
     const { setOrganization } = useOrganization();
+    const { token } = userStore();
 
     const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
 
     const filterOrganizations = (orgs: Organization[], term: string) => {
-        const filtered = orgs.filter(org => 
-            org.name.toLowerCase().includes(term.toLowerCase())
-        );
+        const filtered = orgs.filter((org) => org.name.toLowerCase().includes(term.toLowerCase()));
         setFilteredOrganizations(filtered);
     };
 
@@ -80,8 +84,13 @@ const CounselingOrganizationModal: React.FC = () => {
 
     const searchOrganizations = async () => {
         try {
-            const response = await axios.get(apiUrl+'/orgs', {
-                params: { query: searchTerm }
+            const response = await axios.get(apiUrl + '/orgs', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+                params: { query: searchTerm },
             });
             setOrganizations(response.data);
             filterOrganizations(response.data, searchTerm);
@@ -115,14 +124,20 @@ const CounselingOrganizationModal: React.FC = () => {
 
     const addOrganization = async () => {
         try {
-            const response = await axios.post(`${apiUrl}/orgs`, newOrg);
+            const response = await axios.post(`${apiUrl}/orgs`, newOrg, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            });
             alert('상담기관이 추가되었습니다.');
             setOrganization(response.data.name, response.data.id);
             setNewOrg({ name: '', addr: '', tel: '' });
             setActiveTab('search');
         } catch (error) {
             console.error('Error adding organization:', error);
-            alert('상담기관 추가에 실패하였습니다.')
+            alert('상담기관 추가에 실패하였습니다.');
         }
     };
 
@@ -130,7 +145,6 @@ const CounselingOrganizationModal: React.FC = () => {
         setOrganization('프리랜서', 0);
         closeModal();
     };
-
 
     return (
         <>
@@ -140,7 +154,9 @@ const CounselingOrganizationModal: React.FC = () => {
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <div className="flex mb-4">
                     <button
-                        className={`mr-2 px-4 py-2 ${activeTab === 'search' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                        className={`mr-2 px-4 py-2 ${
+                            activeTab === 'search' ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                        }`}
                         onClick={() => setActiveTab('search')}
                     >
                         상담기관 검색
@@ -173,26 +189,27 @@ const CounselingOrganizationModal: React.FC = () => {
                                 <Search size={20} />
                             </button>
                         </div>
-                         <div className="h-64 overflow-y-auto">
+                        <div className="h-64 overflow-y-auto">
                             {filteredOrganizations.map((org) => (
-                                <div 
-                                    key={org.id} 
-                                    className={`p-2 border-b cursor-pointer ${selectedOrg?.id === org.id ? 'bg-blue-100' : ''}`}
+                                <div
+                                    key={org.id}
+                                    className={`p-2 border-b cursor-pointer ${
+                                        selectedOrg?.id === org.id ? 'bg-blue-100' : ''
+                                    }`}
                                     onClick={() => handleOrgClick(org)}
                                 >
                                     {org.name}
                                 </div>
                             ))}
                         </div>
-                        <button 
-                            onClick={selectOrganization} 
+                        <button
+                            onClick={selectOrganization}
                             className="bg-green-500 text-white px-4 py-2 rounded mt-4"
                             disabled={!selectedOrg}
                         >
                             상담기관 선택하기
                         </button>
                     </div>
-                    
                 )}
 
                 {activeTab === 'add' && (
@@ -226,11 +243,11 @@ const CounselingOrganizationModal: React.FC = () => {
 
                 {activeTab === 'freelance' && (
                     <div>
-                    <p>프리랜서로 선택하시겠습니까?</p>
-                    <button onClick={selectFreelance} className="bg-yellow-500 text-white px-4 py-2 rounded mt-4">
-                        프리랜서 선택
-                    </button>
-                </div>
+                        <p>프리랜서로 선택하시겠습니까?</p>
+                        <button onClick={selectFreelance} className="bg-yellow-500 text-white px-4 py-2 rounded mt-4">
+                            프리랜서 선택
+                        </button>
+                    </div>
                 )}
             </Modal>
         </>
