@@ -22,13 +22,13 @@ interface ChildData {
 }
 
 function Login() {
-    const childStore = useChildStore();
+    // const childStore = useChildStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { setToken, setUserInfo } = userStore((state) => state);
 
-    const [children, setChildren] = useState<ChildData[]>([]);
+    // const [children, setChildren] = useState<ChildData[]>([]);
 
     const handleLogin = async () => {
         try {
@@ -43,8 +43,8 @@ function Login() {
             localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
             setUserInfo(userInfo);
 
-            childStore.readAllChildren(userInfo.userIdx);
-            setChildren(childStore.children);
+            // childStore.readAllChildren(userInfo.userIdx);
+            // setChildren(childStore.children);
 
             if (userInfo.userRole === 'USER') {
                 navigate('/user');

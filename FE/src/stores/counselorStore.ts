@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import { USERDEFAULT } from '../apis/userApi';
-import userStore from './userStore';
-// import { useEffect } from 'react';
 export interface Counselor {
     userIdx: number | undefined;
     name: string;
@@ -32,7 +30,7 @@ interface CounselorState {
     setCurrentPage: (page: number) => void;
 }
 
-const { token } = userStore((state) => state);
+// const { token } = userStore((state) => state);
 
 const useCounselorStore = create<CounselorState>((set, get) => ({
     counselors: [],
@@ -51,7 +49,7 @@ const useCounselorStore = create<CounselorState>((set, get) => ({
             const response = await axios.get(USERDEFAULT, {
                 params: searchTerm ? { name: searchTerm } : {},
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    // Authorization: `Bearer ${token}`,
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
