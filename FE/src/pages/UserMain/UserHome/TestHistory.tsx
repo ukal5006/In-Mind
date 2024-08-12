@@ -1,17 +1,26 @@
-import styled from "styled-components";
-import Container from "../../../components/Container";
-import Wrapper from "../../../components/Wrapper";
-import testHistoryInfo from "../../../testData/testHistoryInfo";
-import ContainerTop from "../../../components/ContainerTop";
-import ContainerTopTitle from "../../../components/ContainerTopTitle";
-import ContainerTopLink from "../../../components/ContainerTopLink";
-import { FaPlus } from "react-icons/fa";
+import styled from 'styled-components';
+import Container from '../../../components/Container';
+import Wrapper from '../../../components/Wrapper';
+import ContainerTop from '../../../components/ContainerTop';
+import ContainerTopTitle from '../../../components/ContainerTopTitle';
+import ContainerTopLink from '../../../components/ContainerTopLink';
+import { FaPlus } from 'react-icons/fa';
+import axios from 'axios';
+import userStore from '../../../stores/userStore';
+import { READREPORTSLIST } from '../../../apis/reportsApi';
+import { useEffect, useState } from 'react';
+import Btn from '../../../components/Btn';
+import moment from 'moment';
 
-interface testInfo {
-  date: string;
-  testType: string;
-  name: string;
-  result: string;
+interface Report {
+  reportCreatedAt: string; // 문자열 형식의 날짜
+  reportResult: string; // 보고서 결과
+}
+
+interface Child {
+  childInfoIdx: number;
+  childInfoName: string;
+  reports: Report[];
 }
 
 const TestHistoryContainer = styled(Container)`
@@ -25,21 +34,55 @@ const TestHistoryWrapper = styled(Wrapper)`
   border-radius: 10px;
   box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  overflow-y: scroll;
 `;
+const DetailBtn = styled(Btn)``;
 
 const TestHistoryList = styled.div`
   width: 100%;
-  height: 70px;
+  min-height: 70px;
   display: flex;
   border-radius: 10px;
   box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
   justify-content: space-evenly;
   align-items: center;
+  margin-bottom: 18px;
 `;
 
 const TestHistoryItem = styled.div``;
 function TestHistory() {
+  const { userInfo, token } = userStore();
+  const [testHistory, setTestHistory] = useState<Child[]>(); // Child 타입 배열로 초기화
+
+  useEffect(() => {
+    if (userInfo?.userIdx) {
+      axios
+        .get(READREPORTSLIST(userInfo.userIdx), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: '*/*',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+        })
+        .then((response) => {
+          const filteredChildren = response.data.children.filter(
+            (child: Child) => child.reports.length > 0
+          );
+          const sortedChildren = filteredChildren.map((child: Child) => ({
+            ...child,
+            reports: child.reports.sort(
+              (a, b) =>
+                new Date(b.reportCreatedAt).getTime() -
+                new Date(a.reportCreatedAt).getTime()
+            ),
+          }));
+          console.log(sortedChildren);
+          setTestHistory(sortedChildren);
+        });
+    }
+  }, [userInfo, token]); // token도 의존성 배열에 추가
+
   return (
     <TestHistoryContainer>
       <TestHistoryWrapper>
@@ -49,16 +92,22 @@ function TestHistory() {
             <FaPlus />
           </ContainerTopLink>
         </ContainerTop>
-        {testHistoryInfo.map((e: testInfo) => {
-          return (
-            <TestHistoryList>
-              <TestHistoryItem>{e.date}</TestHistoryItem>
-              <TestHistoryItem>{e.testType}</TestHistoryItem>
-              <TestHistoryItem>{e.name}</TestHistoryItem>
-              <TestHistoryItem>{e.result}</TestHistoryItem>
-            </TestHistoryList>
-          );
-        })}
+
+        {testHistory?.length !== 0 && testHistory !== undefined ? (
+          testHistory.map((child) =>
+            child.reports.map((report) => (
+              <TestHistoryList>
+                <TestHistoryItem key={report.reportCreatedAt}>
+                  검사일: {moment(report.reportCreatedAt).format('YYYY-MM-DD')}
+                </TestHistoryItem>
+                <TestHistoryItem>이름: {child.childInfoName}</TestHistoryItem>
+                <DetailBtn>자세히 보기</DetailBtn>
+              </TestHistoryList>
+            ))
+          )
+        ) : (
+          <>검사 내역이 없습니다</>
+        )}
       </TestHistoryWrapper>
     </TestHistoryContainer>
   );

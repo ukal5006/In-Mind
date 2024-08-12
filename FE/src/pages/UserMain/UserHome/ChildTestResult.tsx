@@ -202,7 +202,7 @@ function ChildTestResult() {
               </ResultContainer>
             </>
           ) : (
-            <>아이 없음</>
+            <>검사 없음</>
           )}
         </ChildTestResultContainer>
       ) : (

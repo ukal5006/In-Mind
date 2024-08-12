@@ -1,13 +1,16 @@
-import styled from "styled-components";
-import Container from "../../../components/Container";
-import Wrapper from "../../../components/Wrapper";
-import reservationHistoryInfo from "../../../testData/reservationHistoryInfo";
-import ContainerTop from "../../../components/ContainerTop";
-import ContainerTopTitle from "../../../components/ContainerTopTitle";
-import ContainerTopLink from "../../../components/ContainerTopLink";
-import { FaPlus } from "react-icons/fa";
-import ActiveBtn from "../../../components/ActiveBtn";
-
+import styled from 'styled-components';
+import Container from '../../../components/Container';
+import Wrapper from '../../../components/Wrapper';
+import reservationHistoryInfo from '../../../testData/reservationHistoryInfo';
+import ContainerTop from '../../../components/ContainerTop';
+import ContainerTopTitle from '../../../components/ContainerTopTitle';
+import ContainerTopLink from '../../../components/ContainerTopLink';
+import { FaPlus } from 'react-icons/fa';
+import ActiveBtn from '../../../components/ActiveBtn';
+import { useEffect, useState } from 'react';
+import userStore from '../../../stores/userStore';
+import axios from 'axios';
+import { READRESERVEALL } from '../../../apis/reserveApi';
 
 interface reservationInfo {
   date: string;
@@ -15,8 +18,6 @@ interface reservationInfo {
   counselor: string;
   name: string;
 }
-
-
 
 const ReservationHistoryContainer = styled(Container)`
   width: 100%;
@@ -47,7 +48,23 @@ const ReservationHistoryItem = styled.div`
   /* font-weight: 700; */
 `;
 function ReservationHistory() {
- 
+  const { userInfo, token } = userStore();
+  const [reservationHistory, setReservationHistory] = useState();
+
+  useEffect(() => {
+    if (userInfo?.userIdx) {
+      axios
+        .get(READRESERVEALL(userInfo?.userIdx), {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: '*/*',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+        })
+        .then((response) => console.log(response));
+    }
+  }, [userInfo, token]);
+
   return (
     <ReservationHistoryContainer>
       <ReservationHistoryWrapper>
