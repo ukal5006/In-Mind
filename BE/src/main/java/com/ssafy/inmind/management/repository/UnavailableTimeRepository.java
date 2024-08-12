@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface UnavailableTimeRepository extends JpaRepository<UnavailableTime, Long> {
     @Query("SELECT u FROM UnavailableTime u WHERE u.user.id = :counselorId " +
@@ -19,4 +20,6 @@ public interface UnavailableTimeRepository extends JpaRepository<UnavailableTime
                                                           @Param("startTime") LocalTime startTime);
 
     List<UnavailableTime> findByUserId(long counselorId);
+    List<UnavailableTime> findByUserIdAndDate(Long userId, LocalDate date);
+    Optional<UnavailableTime> findByUserIdAndDateAndStartTime(Long userId, LocalDate date, LocalTime startTime);
 }

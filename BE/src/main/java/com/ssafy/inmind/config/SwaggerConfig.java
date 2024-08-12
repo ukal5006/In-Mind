@@ -19,9 +19,13 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .addServersItem(new Server().url("/api"))
                 .addServersItem(new Server().url("/"))
+<<<<<<< HEAD
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth", apiKey()))  // ApiKey 정의 추가
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth")) // SecurityRequirement 추가
+=======
+                .components(new Components())
+>>>>>>> d7a1819d18419ecac7cccfae0db5b7e9ac421c05
                 .info(apiInfo());
     }
 

@@ -7,10 +7,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -44,17 +46,19 @@ public class ManagementController {
 
 
     @Operation(summary = "상담 불가능 시간 조회", description = "상담사 예약 시 상담사의 불가능 시간을 조회합니다.")
-    @GetMapping("/unavailable-time/{counselorId}")
-    public ResponseEntity<List<UnavailableTimeDto>> getUnavailableTimes(@PathVariable Long counselorId) {
-        List<UnavailableTimeDto> dto = managementService.getUnavailableTime(counselorId);
+    @GetMapping("/unavailable-time")
+    public ResponseEntity<List<UnavailableTimeDto>> getUnavailableTimes(
+            @RequestParam Long counselorId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        List<UnavailableTimeDto> dto = managementService.getUnavailableTime(counselorId, date);
         return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @Operation(summary = "상담 불가능 시간 생성", description = "상담사가 상담 불가능 시간을 생성합니다.")
     @PostMapping("/unavailable-time")
-    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@RequestBody UnavailableTimeDto dto) {
-        managementService.saveUnavailableTime(dto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@RequestParam Long counselorId, @RequestBody @Parameter(description = "상담사 번호") UnavailableTimeDto dto) {
+        managementService.saveUnavailableTime(counselorId, dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "상담 불가능 시간 삭제", description = "상담사가 상담 불가능 시간을 삭제합니다.")

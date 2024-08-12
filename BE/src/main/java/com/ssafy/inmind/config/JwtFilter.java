@@ -77,15 +77,17 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             // 새로운 Access Token 발급
-            String newAccessToken = JwtUtil.createAccessTokenJwt(refreshToken, secretKey, accessTokenExpiredMs);
+            // String newAccessToken = JwtUtil.createAccessTokenJwt(refreshToken, secretKey, accessTokenExpiredMs);
 
             // 새로 발급된 Access Token으로 Authorization 헤더를 업데이트
-            token = newAccessToken;
+            // token = newAccessToken;
 
             // 응답 헤더에 새로운 Access Token 설정 (선택사항: 클라이언트에게 새 토큰을 전달하기 위함)
-            response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
+            // response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + newAccessToken);
 
-            logger.info("새로운 Access Token이 발급되었습니다.");
+            // logger.info("새로운 Access Token이 발급되었습니다.");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         // UserName Token에서 꺼내기

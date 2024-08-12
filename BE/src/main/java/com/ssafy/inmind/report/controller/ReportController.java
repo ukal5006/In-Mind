@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +21,13 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
+
+    @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
+    @PostMapping("/start")
+    public ResponseEntity<Void> addReport(@RequestBody ReportRequestDto requestDto) {
+        reportService.addReport(requestDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     
     @Operation(summary = "검사 분석 조회", description = "검사 분석을 조회합니다.")
     @GetMapping("/{reportId}")

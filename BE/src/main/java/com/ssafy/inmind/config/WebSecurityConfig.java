@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                     request.requestMatchers("/users").permitAll();
                     request.requestMatchers("/users/user").permitAll();
                     request.requestMatchers("/users/counselor").permitAll();
+                    request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/orgs/**").permitAll();
                     request.requestMatchers("/notify").permitAll();
 //                    request.requestMatchers("/reserve").authenticated(); // 인증 받은 뒤 가능

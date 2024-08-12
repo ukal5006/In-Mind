@@ -13,8 +13,7 @@ import java.time.LocalTime;
 @Builder
 public class UnavailableTimeDto {
 
-    private long id;
     private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
 }
