@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                     request.requestMatchers("/users").permitAll();
                     request.requestMatchers("/users/user").permitAll();
                     request.requestMatchers("/users/counselor").permitAll();
+                    request.requestMatchers("/users/email-check").permitAll();
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/orgs/**").permitAll();
                     request.requestMatchers("/notify").permitAll();
