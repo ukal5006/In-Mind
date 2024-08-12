@@ -9,6 +9,7 @@ import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -28,21 +29,21 @@ public class UserController {
     private final UserService userService;
     private final ChildService childService;
 
-    @Operation(summary = "유저 회원가입", description = "유저가 회원가입을 합니다.")
+    @Operation(summary = "유저 회원가입", description = "유저가 회원가입을 합니다.", security = @SecurityRequirement(name = ""))
     @PostMapping("user")
     public ResponseEntity<Void> userJoin(@RequestBody UserRequestDto userRequestDto) throws RestApiException {
         userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "상담사 회원가입", description = "상담사가 회원가입을 합니다.")
+    @Operation(summary = "상담사 회원가입", description = "상담사가 회원가입을 합니다.", security = @SecurityRequirement(name = ""))
     @PostMapping("counselor")
     public ResponseEntity<Void> counselorJoin(@RequestBody CounselorRequestDto counselorRequestDto) throws RestApiException {
         userService.saveCounselor(counselorRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "로그인", description = "로그인 기능")
+    @Operation(summary = "로그인", description = "로그인 기능", security = @SecurityRequirement(name = ""))
     @PostMapping
     public ResponseEntity<UserLoginResponseDto> login(@RequestBody UserLoginRequestDto loginDto) throws RestApiException {
         UserLoginResponseDto UserLoginResponseDto = userService.login(loginDto);
@@ -54,12 +55,6 @@ public class UserController {
     public ResponseEntity<Void> savePassword(@PathVariable Long userId, @RequestBody UserPasswordRequestDto requestDto) throws RestApiException {
         userService.updateUserPassword(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
-
-    @Operation(summary = "JWT 테스트", description = "JWT 테스트 API")
-    @GetMapping("JwtTest")
-    public ResponseEntity<String> jwtTest() throws RestApiException {
-        return ResponseEntity.ok("JWT가 정상적으로 작동되고 있습니다.");
     }
 
     @Operation(summary = "자녀정보목록조회", description = "유저가 자녀정보목록을 조회합니다.")
@@ -83,7 +78,7 @@ public class UserController {
         return ResponseEntity.ok(counselor);
     }
 
-    @Operation(summary = "이메일 중복 체크", description = "입력받은 이메일이 중복된 이메일인지 확인합니다.")
+    @Operation(summary = "이메일 중복 체크", description = "입력받은 이메일이 중복된 이메일인지 확인합니다.", security = @SecurityRequirement(name = ""))
     @Parameter(name = "email", description = "이메일")
     @GetMapping("email-check")
     public ResponseEntity<Void> emailCheck(@RequestParam String email) {
