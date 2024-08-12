@@ -13,6 +13,7 @@ import java.time.LocalTime;
 public class ReserveUserResponseDto {
     private Long reserveInfoIdx;
     private String coName;
+    private Long reportIdx;
     private String childName;
     private LocalDate reserveInfoDate;
     private LocalTime reserveInfoStartTime;

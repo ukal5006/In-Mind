@@ -7,7 +7,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReportResponseDto {
+public class ReportCoResponseDto {
+
+    private String objectResult;
 
     private String reportResult;
 
@@ -17,12 +19,16 @@ public class ReportResponseDto {
 
     private String personImage;
 
-    public static ReportResponseDto fromEntity(Report report) {
-        return ReportResponseDto.builder()
+    private String drawingFlow;
+
+    public static ReportCoResponseDto fromEntity(Report report) {
+        return ReportCoResponseDto.builder()
+                .objectResult(report.getObjectResult())
                 .reportResult(report.getResult())
                 .houseImage(report.getHouseImage())
                 .treeImage(report.getTreeImage())
                 .personImage(report.getPersonImage())
+                .drawingFlow(report.getDrawingFlow())
                 .build();
     }
 }

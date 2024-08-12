@@ -31,8 +31,8 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
-    @Column(name = "child_idx", nullable = false)
-    private Long child;
+    @Column(name = "report_idx", nullable = false)
+    private Long reportIdx;
 
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Review review;

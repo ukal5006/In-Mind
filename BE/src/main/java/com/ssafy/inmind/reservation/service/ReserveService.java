@@ -10,6 +10,8 @@ import com.ssafy.inmind.notification.entity.Notification;
 import com.ssafy.inmind.notification.entity.NotificationType;
 import com.ssafy.inmind.notification.repository.NotificationRepository;
 import com.ssafy.inmind.notification.service.SseEmitterService;
+import com.ssafy.inmind.report.entity.Report;
+import com.ssafy.inmind.report.repository.ReportRepository;
 import com.ssafy.inmind.reservation.dto.ReserveRequestDto;
 import com.ssafy.inmind.reservation.dto.ReserveCoResponseDto;
 import com.ssafy.inmind.reservation.dto.ReserveUpdateDto;
@@ -18,6 +20,7 @@ import com.ssafy.inmind.reservation.entity.Reservation;
 import com.ssafy.inmind.management.entity.UnavailableTime;
 import com.ssafy.inmind.reservation.repository.ReserveRepository;
 import com.ssafy.inmind.management.repository.UnavailableTimeRepository;
+import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +47,7 @@ public class ReserveService {
     private final NotificationRepository notificationRepository;
     private final SseEmitterService sseEmitterService;
     private final ChildRepository childRepository;
+    private final ReportRepository reportRepository;
 
     // 상담 예약 추가
     @Transactional
@@ -72,7 +77,7 @@ public class ReserveService {
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .counselor(counselor)
-                .child(request.getChildIdx())
+                .reportIdx(request.getReportIdx())
                 .localDate(reservationDate)
                 .startTime(startTime)
                 .endTime(endTime)
@@ -94,17 +99,31 @@ public class ReserveService {
     }
 
     // 상담사 상담 예약 정보 조회
-    public List<ReserveCoResponseDto> getReservation(Long counselorId) {
-        List<Reservation> reservations = reserveRepository.findAllByCounselor_Id(counselorId);
+    public List<ReserveCoResponseDto> getReservation(Long userId) {
+        List<Reservation> reservations = new ArrayList<>();
+        // role 나눠서
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getRole() == RoleStatus.USER) {
+            reservations = reserveRepository.findAllByUser_Id(userId);
+        }
+        else {
+            reservations = reserveRepository.findAllByCounselor_Id(userId);
+        }
 
         return reservations.stream()
                 .map(reservation -> {
-                    Child child = childRepository.findById(reservation.getChild())
+
+                    Report report = reportRepository.findById(reservation.getReportIdx())
+                            .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+                    Child child = childRepository.findById(report.getChild().getId())
                             .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
 
                     return ReserveCoResponseDto.builder()
                             .reserveInfoIdx(reservation.getId())
                             .coName(reservation.getCounselor().getName())
+                            .reportIdx(reservation.getReportIdx())
                             .childName(child.getName())
                             .reserveInfoDate(reservation.getLocalDate())
                             .reserveInfoStartTime(reservation.getStartTime())
@@ -115,16 +134,19 @@ public class ReserveService {
                 .collect(Collectors.toList());
     }
 
-    // 유저 상담 예약 정보 조회
-    public ReserveUserResponseDto getReserve(Long userId) {
-        Reservation reservation = reserveRepository.findByUserId(userId);
-        Child child = childRepository.findById(reservation.getChild()).
-                orElseThrow(() -> new RuntimeException("Child not found"));
+    // 단건 상담 예약 정보 조회
+    public ReserveUserResponseDto getReserve(Long reserveId) {
+        Reservation reservation = reserveRepository.findById(reserveId)
+                .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        Report report = reportRepository.findById(reservation.getReportIdx())
+                .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
 
         return ReserveUserResponseDto.builder()
                 .reserveInfoIdx(reservation.getId())
                 .coName(reservation.getCounselor().getName())
-                .childName(child.getName())
+                .reportIdx(report.getId())
+                .childName(report.getChild().getName())
                 .reserveInfoDate(reservation.getLocalDate())
                 .reserveInfoStartTime(reservation.getStartTime())
                 .reserveInfoEndTime(reservation.getEndTime())
