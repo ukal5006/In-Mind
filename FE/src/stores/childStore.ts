@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import axios from 'axios';
 import { CHILDDEFAULT } from '../apis/childApi';
 import { CHILDINFO } from '../apis/userApi';
-import userStore from './userStore';
 
 interface ChildData {
     childIdx: number;
@@ -14,26 +13,25 @@ interface ChildState {
     children: ChildData[];
     isLoading: boolean;
     error: string | null;
-    readAllChildren: (userIdx: number) => Promise<void>;
-    fetchChildren: (childIdx: number) => Promise<void>;
-    addChild: (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>) => Promise<void>;
-    updateChild: (childIdx: number, childInfo: Partial<ChildData>) => Promise<void>;
-    deleteChild: (childIdx: number) => Promise<void>;
+    readAllChildren: (userIdx: number, token: string) => Promise<void>; // token 매개변수 추가
+    fetchChildren: (childIdx: number, token: string) => Promise<void>; // token 매개변수 추가
+    addChild: (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>, token: string) => Promise<void>; // token 매개변수 추가
+    updateChild: (childIdx: number, childInfo: Partial<ChildData>, token: string) => Promise<void>; // token 매개변수 추가
+    deleteChild: (childIdx: number, token: string) => Promise<void>; // token 매개변수 추가
 }
 
-const { token } = userStore((state) => state);
-
-const useChildStore = create<ChildState>((set, get) => ({
+const useChildStore = create<ChildState>((set) => ({
     children: [],
     isLoading: false,
     error: null,
 
-    readAllChildren: async (userIdx: number) => {
+    readAllChildren: async (userIdx: number, token: string) => {
+        // token 매개변수 사용
         set({ isLoading: true });
         try {
             const response = await axios.get<ChildData[]>(`${CHILDINFO(userIdx)}`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // token 추가
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
@@ -47,31 +45,31 @@ const useChildStore = create<ChildState>((set, get) => ({
         }
     },
 
-    fetchChildren: async (childIdx: number) => {
+    fetchChildren: async (childIdx: number, token: string) => {
         set({ isLoading: true });
         try {
-            const response = await axios.get(`${CHILDDEFAULT}/${childIdx}`, {
+            const response = await axios.get<ChildData>(`${CHILDDEFAULT}/${childIdx}`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // token 추가
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
             });
             set({ children: [response.data], isLoading: false, error: null });
         } catch (error) {
-            set({ isLoading: false, error: 'Failed to fetch children' });
+            set({ isLoading: false, error: 'Failed to fetch child' });
         }
     },
 
-    addChild: async (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>) => {
+    addChild: async (userIdx: number, childInfo: Omit<ChildData, 'childIdx'>, token: string) => {
         set({ isLoading: true });
         try {
-            const response = await axios.post(
+            const response = await axios.post<ChildData>(
                 `${CHILDDEFAULT}`,
                 { userIdx, ...childInfo },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`, // token 추가
                         accept: '*/*',
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
@@ -94,12 +92,12 @@ const useChildStore = create<ChildState>((set, get) => ({
         }
     },
 
-    updateChild: async (childIdx: number, childInfo: Partial<ChildData>) => {
+    updateChild: async (childIdx: number, childInfo: Partial<ChildData>, token: string) => {
         set({ isLoading: true });
         try {
-            const response = await axios.put(`${CHILDDEFAULT}/${childIdx}`, childInfo, {
+            const response = await axios.put<ChildData>(`${CHILDDEFAULT}/${childIdx}`, childInfo, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // token 추가
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
@@ -116,11 +114,12 @@ const useChildStore = create<ChildState>((set, get) => ({
         }
     },
 
-    deleteChild: async (childIdx: number) => {
+    deleteChild: async (childIdx: number, token: string) => {
         set({ isLoading: true });
         try {
             await axios.delete(`${CHILDDEFAULT}/${childIdx}`, {
                 headers: {
+                    Authorization: `Bearer ${token}`, // token 추가
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },

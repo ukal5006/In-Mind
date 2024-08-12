@@ -4,7 +4,6 @@ import Container from '../../../components/Container';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { colors } from '../../../theme/colors';
-import childInfo from '../../../testData/childInfo';
 import Text from '../../../components/Text';
 import profileImage from './profile.png';
 import testResult from './testresult.png';
@@ -149,7 +148,7 @@ function ChildTestResult() {
     }
     return (
         <ChildTestContainer>
-            <CustomSlider {...settings}>
+            {/* <CustomSlider {...settings}>
                 {children.map((c: any, index: number) => (
                     <Slide key={index}>
                         <ChildTestResultContainer>
@@ -165,12 +164,12 @@ function ChildTestResult() {
                             </ChildInfoContainer>
                             <TestGraph>
                                 <img src={testResult} alt="" />
-                            </TestGraph>
-                            <ResultContainer>{/* <ResultText>{e.updated_at}</ResultText> */}</ResultContainer>
-                        </ChildTestResultContainer>
-                    </Slide>
-                ))}
-            </CustomSlider>
+                            </TestGraph> */}
+            {/* <ResultContainer><ResultText>{e.updated_at}</ResultText></ResultContainer> */}
+            {/* </ChildTestResultContainer> */}
+            {/* </Slide> */}
+            {/* // ))} */}
+            {/* </CustomSlider> */}
         </ChildTestContainer>
     );
 }

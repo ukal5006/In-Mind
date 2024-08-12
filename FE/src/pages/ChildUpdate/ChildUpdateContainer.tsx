@@ -16,7 +16,7 @@ interface ChildUpdateProps {
 
 const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }): JSX.Element => {
     const { addChild, updateChild } = useChildStore();
-    const userInfo = userStore((state) => state.userInfo);
+    const { userInfo, token } = userStore((state) => state);
     const [childInfo, setChildInfo] = useState<ChildInfo>({
         childName: '',
         childBirth: '',
@@ -88,12 +88,12 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                 throw new Error('사용자 정보를 찾을 수 없습니다.');
             }
 
-            if (type === 'create') {
-                await addChild(userInfo.userIdx, childInfo);
+            if (type === 'create' && token) {
+                await addChild(userInfo.userIdx, childInfo, token);
                 console.log('자녀정보 생성 성공');
                 alert('자녀 정보 생성');
-            } else if (type === 'update' && childIdx) {
-                await updateChild(childIdx, childInfo);
+            } else if (type === 'update' && childIdx && token) {
+                await updateChild(childIdx, childInfo, token);
                 console.log('자녀정보 수정 성공');
                 alert('자녀 정보 수정');
             }
