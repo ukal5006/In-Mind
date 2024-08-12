@@ -6,10 +6,96 @@ import userStore from '../../stores/userStore';
 import AWS from 'aws-sdk';
 
 const HTPExamContainer = (): JSX.Element => {
-    const {
-        children,
-        selectedChild,
-        imageUrl,
+  const { 
+    children, selectedChild, imageUrl, drawingOrder, background,
+    setChildren, setSelectedChild, setImageUrl, setDrawingOrder, setBackground 
+  } = useHTPExamStore();
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const childStore = useChildStore()
+  const token = userStore().token
+  const userInfo = userStore().userInfo
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // userStore에서 userId가져오고
+    // userId로 api 요청해서 다시 자녀목록 받아오는 방법,
+
+    // childStore에서 자녀 받아오기
+    
+    const childSet =  async () => {
+      if(userInfo){
+        try{
+          await childStore.readAllChildren(userInfo.userIdx)
+          setChildren(childStore.children)
+        } catch (error) {
+          console.error('Failed to fetch children:', error);
+        }
+      } 
+    }
+    try {
+      childSet()
+    } catch (error) {
+      console.log('failed to load children', error)
+    } finally {
+      setIsLoading(false)
+    }
+    console.log(children)
+}, [setChildren]);
+  if (isLoading) 
+    return <div>...is Loading</div>
+
+  const handleChildSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const child = children.find(c => c.childIdx === parseInt(e.target.value));
+    if (child) setSelectedChild(child);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleDrawingOrderChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const newOrder = [...drawingOrder];
+    newOrder[index] = parseInt(e.target.value);
+    setDrawingOrder(newOrder);
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await axios.post('/api/upload-image', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'accept': '*/*',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }
+    );
+      return response.data.imageUrl;
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {  //현재 플로우를 제공받는게 1번부터 7번까지 모두 입력되는걸 전제로 하지만, 수정필요할듯 6개까지만 쓰거나 숫자 7이 포함되어 있을 경우 개수 검사를 안 하는 식으로
+      alert('모든 필드를 입력해주세요.');
+      return;                                               // 플로우 입력을 체크박스를 통한 순서입력으로 바꿀지 고민중, 추후에 개발진행
+    }
+
+    try {
+      const uploadedImageUrl = await uploadImage(file);
+      setImageUrl(uploadedImageUrl);
+
+      await axios.post('/api/htp-exam', {
+        childId: selectedChild.childIdx,
+        imageUrl: uploadedImageUrl,
         drawingOrder,
         background,
         setChildren,

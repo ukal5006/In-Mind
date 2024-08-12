@@ -8,12 +8,15 @@ import ContainerTopLink from "../../../components/ContainerTopLink";
 import { FaPlus } from "react-icons/fa";
 import ActiveBtn from "../../../components/ActiveBtn";
 
+
 interface reservationInfo {
   date: string;
   time: string;
   counselor: string;
   name: string;
 }
+
+
 
 const ReservationHistoryContainer = styled(Container)`
   width: 100%;
@@ -44,6 +47,7 @@ const ReservationHistoryItem = styled.div`
   /* font-weight: 700; */
 `;
 function ReservationHistory() {
+ 
   return (
     <ReservationHistoryContainer>
       <ReservationHistoryWrapper>

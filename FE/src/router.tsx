@@ -18,7 +18,7 @@ import CounselorCareers from './pages/CounselorCareers';
 import MyReviews from './pages/MyReviews';
 import CounselorSearch from './pages/CounselorSearch';
 import Test from './pages/Test';
-import FacialMeeting from './pages/FacialMeeting/App';
+import FacialMeeting from './pages/FacialMeeting/components/VideoRoomComponent';
 import TestHistory from './pages/TestHistory';
 import ReservationHistory from './pages/ReservationHistory';
 import Notification from './pages/Notification'

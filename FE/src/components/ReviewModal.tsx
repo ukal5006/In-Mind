@@ -4,6 +4,7 @@ import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
 import '../theme/class.css'
 import styled from 'styled-components';
+import userStore from '../stores/userStore';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api'
 // const apiUrl = 'http://localhost:5000'
@@ -97,6 +98,7 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
         content
       }, {
         headers: {
+          'Authorization': `Bearer ${userStore().token}`,
           'accept': '*/*',
           'Content-Type': 'application/json;charset=UTF-8'
         }
