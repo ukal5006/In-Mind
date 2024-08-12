@@ -29,17 +29,17 @@ public class ReserveController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "상담 예약 조회", description = "상담사가 자신에 대한 예약을 조회합니다.")
+    @Operation(summary = "상담 예약 목록 조회", description = "상담사 또는 유저가 예약목록을 조회합니다.")
     @GetMapping("/all")
-    public ResponseEntity<List<ReserveCoResponseDto>> getReserve(@RequestParam("counselorId") @Parameter(description = "상담사번호") Long counselorId) {
-        List<ReserveCoResponseDto> responseDtoList = reserveService.getReservation(counselorId);
+    public ResponseEntity<List<ReserveCoResponseDto>> getReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
+        List<ReserveCoResponseDto> responseDtoList = reserveService.getReservation(userId);
         return ResponseEntity.ok(responseDtoList);
     }
 
-    @Operation(summary = "상담 예약 조회", description = "유저가 자신에 대한 예약을 조회합니다.")
+    @Operation(summary = "상담 예약 조회", description = "하나의 예약 상세 정보를 조회합니다.")
     @GetMapping
-    public ResponseEntity<ReserveUserResponseDto> getUserReserve(@RequestParam("userId") @Parameter(description = "유저번호") Long userId) {
-        ReserveUserResponseDto responseDto = reserveService.getReserve(userId);
+    public ResponseEntity<ReserveUserResponseDto> getUserReserve(@RequestParam("reserveId") @Parameter(description = "예약번호") Long reserveId) {
+        ReserveUserResponseDto responseDto = reserveService.getReserve(reserveId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ReportDto {
-    private Long reportIdx;
     private LocalDateTime reportCreatedAt;
     private String reportResult;
 }

@@ -12,7 +12,13 @@ public class ReportRequestDto {
 
     private Long childIdx;
 
-    private String img;
+    private String objectResult;
+
+    private String houseImage;
+
+    private String treeImage;
+
+    private String personImage;
 
     private String background;
 

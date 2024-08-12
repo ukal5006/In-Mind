@@ -31,9 +31,8 @@ public class ReportController {
     
     @Operation(summary = "검사 분석 조회", description = "검사 분석을 조회합니다.")
     @GetMapping("/{reportId}")
-    public ResponseEntity<ReportResponseDto> getReport(@PathVariable @Parameter(description = "검사분석번호") Long reportId) {
-        ReportResponseDto report = reportService.getReport(reportId);
-        return ResponseEntity.ok(report);
+    public ResponseEntity<?> getReport(@PathVariable @Parameter(description = "검사분석번호") Long reportId, @RequestParam @Parameter(description = "유저번호") Long userId) {
+        return ResponseEntity.ok(reportService.getReport(reportId, userId));
     }
 
     @Operation(summary = "분석 결과 목록 조회", description = "분석 결과 목록을 조회합니다.")

@@ -22,11 +22,20 @@ public class Report extends BaseEntity {
     @JoinColumn(name = "child_idx", nullable = false)
     private Child child;
 
+    @Column(name = "object_result", nullable = false)
+    private String objectResult;
+
     @Column(name = "result", nullable = false)
     private String result;
 
-    @Column(name = "image", nullable = false)
-    private String image;
+    @Column(name = "img_h")
+    private String houseImage;
+
+    @Column(name = "img_t")
+    private String treeImage;
+
+    @Column(name = "img_p")
+    private String personImage;
 
     @Column(name = "background", nullable = false)
     private String background;
