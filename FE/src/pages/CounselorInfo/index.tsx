@@ -145,7 +145,7 @@ const ModalButton = styled(Btn)`
 `;
 
 function CounselorInfo() {
-    const { userInfo, setUserInfo } = userStore((state) => state);
+    const { userInfo, setUserInfo, token } = userStore((state) => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [type, setType] = useState('');
     const [name, setName] = useState(userInfo?.userName);
@@ -169,7 +169,7 @@ function CounselorInfo() {
                 if (userInfo?.userIdx) {
                     const response = await axios.get(RDDEFAULTTIME(userInfo?.userIdx), {
                         headers: {
-                            Authorization: `Bearer ${userStore().token}`,
+                            Authorization: `Bearer ${token}`,
                             accept: '*/*',
                             'Content-Type': 'application/json;charset=UTF-8',
                         },
@@ -206,7 +206,7 @@ function CounselorInfo() {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${userStore().token}`,
+                        Authorization: `Bearer ${token}`,
                         accept: '*/*',
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
@@ -236,7 +236,7 @@ function CounselorInfo() {
                     },
                     {
                         headers: {
-                            Authorization: `Bearer ${userStore().token}`,
+                            Authorization: `Bearer ${token}`,
                             accept: '*/*',
                             'Content-Type': 'application/json;charset=UTF-8',
                         },
@@ -245,7 +245,7 @@ function CounselorInfo() {
                 .then(() =>
                     axios.get(LOADUSERINFO(userInfo?.userIdx), {
                         headers: {
-                            Authorization: `Bearer ${userStore().token}`,
+                            Authorization: `Bearer ${token}`,
                             accept: '*/*',
                             'Content-Type': 'application/json;charset=UTF-8',
                         },
@@ -270,7 +270,7 @@ function CounselorInfo() {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${userStore().token}`,
+                        Authorization: `Bearer ${token}`,
                         accept: '*/*',
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
@@ -285,7 +285,7 @@ function CounselorInfo() {
                         },
                         {
                             headers: {
-                                Authorization: `Bearer ${userStore().token}`,
+                                Authorization: `Bearer ${token}`,
                                 accept: '*/*',
                                 'Content-Type': 'application/json;charset=UTF-8',
                             },

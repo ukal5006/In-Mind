@@ -26,7 +26,7 @@ const HTPExamContainer = (): JSX.Element => {
     const [result, setResult] = useState<string>('');
 
     const childStore = useChildStore();
-    const userInfo = userStore().userInfo;
+    const { userInfo, token } = userStore();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -140,13 +140,23 @@ const HTPExamContainer = (): JSX.Element => {
             console.log('답변:', answer);
 
             await axios
-                .post('https://i11b301.p.ssafy.io/api/reports/start', {
-                    childIdx: 2,
-                    img: uploadedImageUrl,
-                    background: background,
-                    drawingFlow: drawingOrder.join(','),
-                    result: answer,
-                })
+                .post(
+                    'https://i11b301.p.ssafy.io/api/reports/start',
+                    {
+                        childIdx: 2,
+                        img: uploadedImageUrl,
+                        background: background,
+                        drawingFlow: drawingOrder.join(','),
+                        result: answer,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    }
+                )
                 .then((response) => console.log(response));
         } catch (error) {
             console.error('Failed to start HTP exam:', error);

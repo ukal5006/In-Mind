@@ -141,7 +141,7 @@ const ModalButton = styled(Btn)`
 `;
 
 function UserInfo() {
-    const { userInfo, setUserInfo } = userStore((state) => state);
+    const { userInfo, setUserInfo, token } = userStore((state) => state);
     const [modalType, setModalType] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [changePhone, setChangePhone] = useState(userInfo?.userTel);
@@ -153,13 +153,31 @@ function UserInfo() {
     const handleUpdate = () => {
         if (userInfo?.userIdx) {
             axios
-                .put(UPDATEUSERINFO(userInfo.userIdx), {
-                    userName: userInfo.userName,
-                    userTel: changePhone,
-                    userProfile: userInfo.userProfile,
-                    userRole: 'USER',
-                })
-                .then(() => axios.get(LOADUSERINFO(userInfo?.userIdx)))
+                .put(
+                    UPDATEUSERINFO(userInfo.userIdx),
+                    {
+                        userName: userInfo.userName,
+                        userTel: changePhone,
+                        userProfile: userInfo.userProfile,
+                        userRole: 'USER',
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    }
+                )
+                .then(() =>
+                    axios.get(LOADUSERINFO(userInfo?.userIdx), {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    })
+                )
                 .then((response) => {
                     setUserInfo(response.data);
                     alert('정보가 수정되었습니다.');
@@ -173,15 +191,35 @@ function UserInfo() {
 
     const handleUpdatePW = () => {
         axios
-            .post(CHECKPW, {
-                email: userInfo?.userEmail,
-                password: beforePw,
-            })
+            .post(
+                CHECKPW,
+                {
+                    email: userInfo?.userEmail,
+                    password: beforePw,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                }
+            )
             .then((response) => {
                 if (userInfo?.userIdx) {
-                    axios.put(CHANGEPW(userInfo?.userIdx), {
-                        password: changePw,
-                    });
+                    axios.put(
+                        CHANGEPW(userInfo?.userIdx),
+                        {
+                            password: changePw,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                accept: '*/*',
+                                'Content-Type': 'application/json;charset=UTF-8',
+                            },
+                        }
+                    );
                 }
             })
             .then((response) => {
@@ -201,7 +239,13 @@ function UserInfo() {
         const check = window.confirm('정말 회원탈퇴를 하시겠습니까?');
         if (check === true && userInfo?.userIdx) {
             axios
-                .put(DELETEUSER(userInfo?.userIdx))
+                .put(DELETEUSER(userInfo?.userIdx), {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                })
                 .then()
                 .catch((error) => console.log(error));
             alert('회원 탈퇴가 완료되었습니다.');
