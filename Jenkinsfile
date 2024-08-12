@@ -43,10 +43,10 @@ pipeline {
                 docker cp $WORKSPACE/mysql/Dump.sql openvidu-mysql-1:/Dump.sql
                 
                 # 덤프 파일을 MySQL 데이터베이스로 복원
-                docker exec openvidu-mysql-1 bash -c "mysql -u root -p1234 inmind < /Dump.sql"
+                docker exec openvidu-mysql-1 bash -c "mysql -u root -p1234 inmind < Dump.sql"
                 
                 # 덤프 파일 삭제 (선택 사항)
-                docker exec openvidu-mysql-1 rm /Dump.sql
+                docker exec openvidu-mysql-1 rm Dump.sql
                 '''
             }
         }
