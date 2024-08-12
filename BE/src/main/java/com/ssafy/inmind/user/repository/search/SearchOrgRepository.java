@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface SearchOrgRepository {
     List<OrgListResponseDto> findOrgByName(String name);
+
+    List<OrgListResponseDto> findAllOrgs();
 }
