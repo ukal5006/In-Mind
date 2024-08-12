@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -122,6 +123,7 @@ public class ReserveService {
 
         return ReserveUserResponseDto.builder()
                 .reserveInfoIdx(reservation.getId())
+                .coName(reservation.getCounselor().getName())
                 .childName(child.getName())
                 .reserveInfoDate(reservation.getLocalDate())
                 .reserveInfoStartTime(reservation.getStartTime())
@@ -148,8 +150,19 @@ public class ReserveService {
     }
 
     @Transactional
-    public void deleteReserve(long reserveId) {
+    public void deleteReserve(Long reserveId) {
         try {
+            Reservation reservation = reserveRepository.findById(reserveId)
+                    .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+            LocalDate date = reservation.getLocalDate();
+            LocalTime startTime = reservation.getStartTime();
+            Long counselorId = reservation.getCounselor().getId();
+
+            Optional<UnavailableTime> unavailableTime = unavailableTimeRepository.findByUserIdAndDateAndStartTime(counselorId, date, startTime);
+
+            unavailableTime.ifPresent(unavailableTimeRepository::delete);
+
             reserveRepository.deleteById(reserveId);
         } catch (EmptyResultDataAccessException e) {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
