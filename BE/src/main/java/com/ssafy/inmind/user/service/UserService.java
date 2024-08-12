@@ -37,7 +37,7 @@ public class UserService {
     private final OrganizationRepository orgRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final Long accessTokenExpiredMs = 1000 * 60L; // * 60
+    private final Long accessTokenExpiredMs = 1000 * 60 * 60L; //
     private final Long refreshTokenExpiredMs = 7 * 24 * 1000 * 60 * 60L; //
     private final DefaultTimeRepository defaultTimeRepository;
 
