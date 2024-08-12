@@ -29,7 +29,8 @@ function CounselorHome() {
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
-                .then((response) => setReservationList(response.data));
+                .then((response) => setReservationList(response.data))
+                .catch((error) => console.log(error));
         }
     }, [userInfo]);
 
