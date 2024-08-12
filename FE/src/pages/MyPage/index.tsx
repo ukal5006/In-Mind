@@ -26,7 +26,7 @@ const Button = styled.button`
 `;
 
 function MyPage() {
-  const { userInfo,token } = userStore((state) => state);
+    const { userInfo, token } = userStore((state) => state);
 
     const [password, setPassword] = useState('');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -75,25 +75,40 @@ function MyPage() {
 
     // 여기까지 테스트 코드
 
-  const handleSubmit = () => {
-    axios
-      .post(CHECKPW, {
-        email: userInfo?.userEmail,
-        password,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'accept': '*/*',
-          'Content-Type': 'application/json;charset=UTF-8'
-        }
-      })
-      .then((response) => {
-        setIsAuthenticated(true);
-        setError("");
-        if (userInfo?.userRole === "USER") {
-          navigate("userInfo");
-        } else {
-          navigate("counselorInfo");
+    const handleSubmit = () => {
+        axios
+            .post(
+                CHECKPW,
+                {
+                    email: userInfo?.userEmail,
+                    password,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                }
+            )
+            .then((response) => {
+                setIsAuthenticated(true);
+                setError('');
+                if (userInfo?.userRole === 'USER') {
+                    navigate('userInfo');
+                } else {
+                    navigate('counselorInfo');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+                setError('비밀번호가 일치하지 않습니다.');
+            });
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            handleSubmit();
         }
     };
 
