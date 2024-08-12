@@ -13,6 +13,7 @@ const HTPExamContainer = (): JSX.Element => {
   const [file, setFile] = useState<File | null>(null);
 
   const childStore = useChildStore()
+  const token = userStore().token
   const userInfo = userStore().userInfo
   const [isLoading, setIsLoading] = useState(true)
 
@@ -66,11 +67,14 @@ const HTPExamContainer = (): JSX.Element => {
     formData.append('image', file);
 
     try {
-      const response = await axios.post('/api/upload-image', formData, {  //api 확정 후 이미지 업로드하는 api 정확하게 연결 필요
+      const response = await axios.post('/api/upload-image', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+          'Authorization': `Bearer ${token}`,
+          'accept': '*/*',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
+      }
+    );
       return response.data.imageUrl;
     } catch (error) {
       console.error('Failed to upload image:', error);

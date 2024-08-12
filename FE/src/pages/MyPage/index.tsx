@@ -26,7 +26,7 @@ const Button = styled.button`
 `;
 
 function MyPage() {
-  const { userInfo } = userStore((state) => state);
+  const { userInfo,token } = userStore((state) => state);
 
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -80,6 +80,12 @@ function MyPage() {
       .post(CHECKPW, {
         email: userInfo?.userEmail,
         password,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'accept': '*/*',
+          'Content-Type': 'application/json;charset=UTF-8'
+        }
       })
       .then((response) => {
         setIsAuthenticated(true);

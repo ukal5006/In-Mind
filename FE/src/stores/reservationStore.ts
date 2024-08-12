@@ -19,6 +19,8 @@ interface ReserveTime {
 const reservationStore = create((set) => ({
     reservationList: null,
     setReservationList: (reservationList: Reservation[]) => set({ reservationList }),
+    nowReservation:null,
+    setNowReservation:(nowReservation: Reservation[]) => set({nowReservation}),
 }));
 
 export default reservationStore;
