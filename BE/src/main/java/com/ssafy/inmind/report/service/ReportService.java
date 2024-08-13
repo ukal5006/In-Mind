@@ -24,7 +24,7 @@ public class ReportService {
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
 
-    public void addReport(ReportRequestDto requestDto, FastApiResponseDto jsonData) {
+    public ReportEndResponseDto addReport(ReportRequestDto requestDto, FastApiResponseDto jsonData, String result) {
         Child child = childRepository.findById(requestDto.getChildIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
@@ -33,13 +33,15 @@ public class ReportService {
                 .houseImage(requestDto.getHouseImage())
                 .objectResult(jsonData.toString())
                 .treeImage(requestDto.getTreeImage())
-                .result("hi")
+                .result(result)
                 .personImage(requestDto.getPersonImage())
                 .background(requestDto.getBackground())
-                .drawingFlow(requestDto.getDrawingFlow())
+                .drawingFlow("flow")
                 .build();
 
-        reportRepository.save(report);
+        Report reportInfo = reportRepository.save(report);
+
+        return ReportEndResponseDto.fromEntity(reportInfo);
     }
 
     public Object getReport(Long reportId, Long userId) {
