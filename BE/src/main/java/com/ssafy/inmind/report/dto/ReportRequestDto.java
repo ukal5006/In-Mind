@@ -12,8 +12,6 @@ public class ReportRequestDto {
 
     private Long childIdx;
 
-    private String objectResult;
-
     private String houseImage;
 
     private String treeImage;
@@ -23,7 +21,5 @@ public class ReportRequestDto {
     private String background;
 
     private String drawingFlow;
-
-    private String result;
 
 }
