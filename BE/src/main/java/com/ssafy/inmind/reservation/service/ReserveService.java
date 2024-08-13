@@ -22,6 +22,7 @@ import com.ssafy.inmind.management.repository.UnavailableTimeRepository;
 import com.ssafy.inmind.user.entity.RoleStatus;
 import com.ssafy.inmind.user.entity.User;
 import com.ssafy.inmind.user.repository.UserRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
