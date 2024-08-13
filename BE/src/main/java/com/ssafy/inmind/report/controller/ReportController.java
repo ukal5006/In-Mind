@@ -1,5 +1,6 @@
 package com.ssafy.inmind.report.controller;
 
+import com.ssafy.inmind.gpt.service.GptService;
 import com.ssafy.inmind.report.dto.*;
 import com.ssafy.inmind.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,10 +23,12 @@ public class ReportController {
 
     private final ReportService reportService;
     private final RestTemplate restTemplate;
+    private final GptService gptService;
 
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
-    public ResponseEntity<FastApiResponseDto> addReport(@Validated @RequestBody ReportRequestDto requestDto) {
+    public ResponseEntity<ReportEndResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
+//        String fastApi = "http://b301.xyz/interpretation";
         String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
                 .url(requestDto.getTreeImage())
@@ -40,9 +43,15 @@ public class ReportController {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
-                reportService.addReport(requestDto, jsonData);
-                // 여기서 gpt를 연결해야겠네? jsonData들고 해석에대한 총평가를 만들어달라해서 return해서 result에 열고
-                return ResponseEntity.status(HttpStatus.OK).body(jsonData);
+//                System.out.println(jsonData.toString());
+                String result;
+                if(jsonData != null) {
+                    result = gptService.generateResult(jsonData);
+                    ReportEndResponseDto reportEndResponseDto = reportService.addReport(requestDto, jsonData, result);// 검사 결과 저장하고 바로 조회하게 해야하나?
+                    return ResponseEntity.status(HttpStatus.OK).body(reportEndResponseDto);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
             } else {
                 log.error("Error response from FastAPI: {}", response.getBody());
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -14,4 +14,11 @@ import java.util.Map;
 public class FastApiResponseDto {
 
     private Map<String, Object> data;
+
+    @Override
+    public String toString() {
+        return "FastApiResponseDto{" +
+                "data=" + data +
+                '}';
+    }
 }
