@@ -1,22 +1,27 @@
-import styled from 'styled-components';
-import Container from '../../../components/Container';
-import Wrapper from '../../../components/Wrapper';
-import reservationHistoryInfo from '../../../testData/reservationHistoryInfo';
-import ContainerTop from '../../../components/ContainerTop';
-import ContainerTopTitle from '../../../components/ContainerTopTitle';
-import ContainerTopLink from '../../../components/ContainerTopLink';
-import { FaPlus } from 'react-icons/fa';
-import ActiveBtn from '../../../components/ActiveBtn';
-import { useEffect, useState } from 'react';
-import userStore from '../../../stores/userStore';
-import axios from 'axios';
-import { READRESERVEALL } from '../../../apis/reserveApi';
+import React from 'react';
+import styled from "styled-components";
+import Container from "../../../components/Container";
+import Wrapper from "../../../components/Wrapper";
+import ContainerTop from "../../../components/ContainerTop";
+import ContainerTopTitle from "../../../components/ContainerTopTitle";
+import ContainerTopLink from "../../../components/ContainerTopLink";
+import { FaPlus } from "react-icons/fa";
+import ActiveBtn from "../../../components/ActiveBtn";
+import reservationStore from "../../../stores/reservationStore";
 
-interface reservationInfo {
-    date: string;
-    time: string;
-    counselor: string;
-    name: string;
+interface Reservation {
+  reserveInfoIdx: number;
+  coName: string;
+  reserveInfoDate: string;
+  reserveInfoStartTime: ReserveTime;
+  reserveInfoEndTime: ReserveTime;
+}
+
+interface ReserveTime {
+  hour: number;
+  minute: number;
+  second: number;
+  nano: number;
 }
 
 const ReservationHistoryContainer = styled(Container)`
@@ -47,52 +52,42 @@ const ReservationHistoryItem = styled.div`
     /* font-size: 19px; */
     /* font-weight: 700; */
 `;
-function ReservationHistory() {
-    const { userInfo, token } = userStore();
-    const [reservationHistory, setReservationHistory] = useState();
 
-    useEffect(() => {
-        if (userInfo?.userIdx) {
-            axios
-                .get(READRESERVEALL(userInfo?.userIdx), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                })
-                .then((response) => console.log(response));
-        }
-    }, [userInfo, token]);
+const ReservationHistory: React.FC = () => {
+  const reservationList = reservationStore(state => state.reservationList);
 
-    return (
-        <ReservationHistoryContainer>
-            <ReservationHistoryWrapper>
-                <ContainerTop>
-                    <ContainerTopTitle>상담 예약 내역</ContainerTopTitle>
-                    <ContainerTopLink to="/user/reservationHistory">
-                        <FaPlus />
-                    </ContainerTopLink>
-                </ContainerTop>
-                <>
-                    {reservationHistoryInfo.map((e: reservationInfo) => {
-                        return (
-                            <ReservationHistoryList>
-                                <ReservationHistoryItem>
-                                    {e.date} {e.time}
-                                </ReservationHistoryItem>
-                                <ReservationHistoryItem>{e.counselor} 상담가님</ReservationHistoryItem>
-                                <ReservationHistoryItem>{e.name}</ReservationHistoryItem>
-                                <ReservationHistoryItem>
-                                    <ActiveBtn>입장하기</ActiveBtn>
-                                </ReservationHistoryItem>
-                            </ReservationHistoryList>
-                        );
-                    })}
-                </>
-            </ReservationHistoryWrapper>
-        </ReservationHistoryContainer>
-    );
-}
+  return (
+    <ReservationHistoryContainer>
+      <ReservationHistoryWrapper>
+        <ContainerTop>
+          <ContainerTopTitle>상담 예약 내역</ContainerTopTitle>
+          <ContainerTopLink to="/user/reservationHistory">
+            <FaPlus />
+          </ContainerTopLink>
+        </ContainerTop>
+        {reservationList && reservationList.length > 0 ? (
+          <>
+            {reservationList.map((e: Reservation) => (
+              <ReservationHistoryList key={e.reserveInfoIdx}>
+                <ReservationHistoryItem>
+                  {e.reserveInfoDate} {e.reserveInfoStartTime.hour}
+                </ReservationHistoryItem>
+                <ReservationHistoryItem>
+                  {e.coName} 상담가님
+                </ReservationHistoryItem>
+                <ReservationHistoryItem>{e.coName}</ReservationHistoryItem>
+                <ReservationHistoryItem>
+                  <ActiveBtn>입장하기</ActiveBtn>
+                </ReservationHistoryItem>
+              </ReservationHistoryList>
+            ))}
+          </>
+        ) : (
+          <div>No Reservation...</div>
+        )}
+      </ReservationHistoryWrapper>
+    </ReservationHistoryContainer>
+  );
+};
 
 export default ReservationHistory;
