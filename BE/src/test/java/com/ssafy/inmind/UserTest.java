@@ -32,8 +32,6 @@ public class UserTest {
     public void setUp() {
         // 유저, 상담사 등록
         // 기관 등록
-
-
     }
 
     @Test
@@ -58,7 +56,7 @@ public class UserTest {
     @DisplayName("상담사 회원 가입 테스트")
     public void addCounselor() {
         // Given
-        CounselorRequestDto counselorRequestDto = new CounselorRequestDto(0L,"counselor@naver.com", "q1w2e3r4!", "testUser", "01012341234", "COUNSELOR");
+        CounselorRequestDto counselorRequestDto = new CounselorRequestDto(0L, "counselor@naver.com", "q1w2e3r4!", "testUser", "01012341234", "COUNSELOR");
 
         // When
         userService.saveCounselor(counselorRequestDto);
