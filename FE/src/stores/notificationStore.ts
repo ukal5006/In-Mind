@@ -80,7 +80,7 @@ const useNotificationStore = create<NotificationStore>((set) => ({
 
             eventSource = new EventSourcePolyfill(url, {
                 headers: {
-                    'Authorization': `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`,
                 },
                 heartbeatTimeout: CONNECTION_TIMEOUT,
             });
@@ -122,7 +122,9 @@ const useNotificationStore = create<NotificationStore>((set) => ({
             if (retryCount < MAX_RETRY_COUNT) {
                 const retryDelay = Math.min(1000 * 2 ** retryCount, MAX_RETRY_DELAY);
                 retryCount++;
-                console.log(`Retrying in ${retryDelay / 1000} seconds... (Attempt ${retryCount} of ${MAX_RETRY_COUNT})`);
+                console.log(
+                    `Retrying in ${retryDelay / 1000} seconds... (Attempt ${retryCount} of ${MAX_RETRY_COUNT})`
+                );
                 setTimeout(connectSSE, retryDelay);
             } else {
                 console.error('Max retry attempts reached. Please check your network connection or contact support.');
