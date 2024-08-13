@@ -25,7 +25,7 @@ public class ReportController {
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
     public ResponseEntity<FastApiResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
-        String fastApi = "http://b301.xyz/interpretation";
+        String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
                 .url(requestDto.getTreeImage())
                 .build();
