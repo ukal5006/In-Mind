@@ -44,7 +44,7 @@ public class SseEmitterService {
         SseEmitter sseEmitter = emitterRepository.findById(eventId);
 
         try {
-            emitter.send(SseEmitter.event()
+            sseEmitter.send(SseEmitter.event()
                     .name("sse")
                     .id(eventId)
                     .data(object));
@@ -56,14 +56,6 @@ public class SseEmitterService {
     // emitterId 생성
     public String makeTimeIncludeId(Long userId) {
         return userId.toString() + "_" + System.currentTimeMillis();
-    }
-
-    // 연결 시 알림 처리
-    private void sendInitialNotification(Long userId, String emitterId) {
-        NotificationDto notificationDto = NotificationDto.builder()
-                    .message("EventStream Created. [userId=" + userId + "]")
-                    .build();
-        sendNotification(emitterId, notificationDto);
     }
 
     public void sendNotification(String emitterId, NotificationDto notificationDto) {
