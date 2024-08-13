@@ -68,7 +68,7 @@ const DetailContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    background-color: azure;
+    background-color: white;
     width: 700px;
 `;
 

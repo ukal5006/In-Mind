@@ -17,12 +17,8 @@ interface ScheduleCalendarProps {
 const CustomCalendar = styled(Calendar)`
     border-radius: 1px solid black;
     width: 700px;
-    :nth-child(7n) {
-        color: ${colors.blue};
-    }
 
     .react-calendar__navigation {
-        /* background-color: tomato; */
         margin-top: 20px;
         .react-calendar__navigation__arrow {
             width: 25%;
@@ -39,7 +35,6 @@ const CustomCalendar = styled(Calendar)`
             color: ${colors.red};
         }
         & > div {
-            // 요일 div
             border: 1px solid black;
             font-size: 18px;
             abbr {
@@ -49,7 +44,6 @@ const CustomCalendar = styled(Calendar)`
     }
     .react-calendar__tile {
         border: 1px solid black;
-        /* background-color: tomato; */
     }
     .react-calendar__month-view__days__day {
         height: 90px;
@@ -61,6 +55,11 @@ const CustomCalendar = styled(Calendar)`
 
 const ReservationDiv = styled.div`
     color: black;
+`;
+
+const Checkmark = styled.span`
+    color: green;
+    font-weight: bold;
 `;
 
 function ScheduleCalendar({ reservationList, onDateSelect }: ScheduleCalendarProps) {
@@ -77,6 +76,14 @@ function ScheduleCalendar({ reservationList, onDateSelect }: ScheduleCalendarPro
             onDateSelect(formattedDate); // 단일 날짜도 배열로 전달
         }
     }, [selectedDate]);
+
+    // 예약 건수를 날짜별로 맵핑
+    const reservationCountByDate = reservationList?.reduce((acc, reservation) => {
+        const date = moment(reservation.date).format('YYYY-MM-DD'); // 예약 날짜 형식 맞추기
+        acc[date] = (acc[date] || 0) + 1; // 해당 날짜의 예약 건수 증가
+        return acc;
+    }, {} as Record<string, number>);
+
     return (
         <>
             <CustomCalendar
@@ -91,8 +98,15 @@ function ScheduleCalendar({ reservationList, onDateSelect }: ScheduleCalendarPro
                 formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
                 formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
                 locale="kr"
-                tileContent={({ date, view }) => {
-                    return <ReservationDiv>n건의 예약이 있습니다.</ReservationDiv>;
+                tileContent={({ date }) => {
+                    const formattedDate = moment(date).format('YYYY-MM-DD');
+                    const count = reservationCountByDate?.[formattedDate] || 0;
+                    return (
+                        <ReservationDiv>
+                            {count > 0 && <span>{count}건의 예약이 있습니다.</span>}
+                            {moment(date).isBefore(moment(), 'day') && <Checkmark>✔️</Checkmark>}
+                        </ReservationDiv>
+                    );
                 }}
             />
         </>
