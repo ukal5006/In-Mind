@@ -33,57 +33,55 @@ public class UserTest {
         // 유저, 상담사 등록
         // 기관 등록
     }
+
+    @Test
+    @DisplayName("유저 회원 가입 테스트")
+    public void addUser() {
+        // Given
+        UserRequestDto userRequestDto = new UserRequestDto("test@naver.com", "q1w2e3r4!", "testUser", "01012341234", "USER");
+
+        // When
+        userService.saveUser(userRequestDto);
+
+        // Then
+        Optional<User> savedUser = userRepository.findByUserEmail("test@naver.com");
+        assertThat(savedUser).isPresent();
+        assertThat(savedUser.get().getEmail()).isEqualTo("test@naver.com");
+        assertThat(savedUser.get().getName()).isEqualTo("testUser");
+        assertThat(savedUser.get().getTel()).isEqualTo("01012341234");
+        assertThat(savedUser.get().getRole()).isEqualTo(RoleStatus.USER);
+    }
+
+    @Test
+    @DisplayName("상담사 회원 가입 테스트")
+    public void addCounselor() {
+        // Given
+        CounselorRequestDto counselorRequestDto = new CounselorRequestDto(0L, "counselor@naver.com", "q1w2e3r4!", "testUser", "01012341234", "COUNSELOR");
+
+        // When
+        userService.saveCounselor(counselorRequestDto);
+
+        // Then
+        Optional<User> savedUser = userRepository.findByUserEmail("counselor@naver.com");
+        assertThat(savedUser).isPresent();
+        assertThat(savedUser.get().getEmail()).isEqualTo("counselor@naver.com");
+        assertThat(savedUser.get().getName()).isEqualTo("testUser");
+        assertThat(savedUser.get().getTel()).isEqualTo("01012341234");
+        assertThat(savedUser.get().getRole()).isEqualTo(RoleStatus.COUNSELOR);
+    }
+
+    @Test
+    @DisplayName("이메일 중복 검사 테스트")
+    public void duplicateEmail() {
+        // Given
+        UserRequestDto userRequestDto = new UserRequestDto("test@naver.com", "q1w2e3r4!", "testUser", "01012341234", "USER");
+
+        // When
+        userService.saveUser(userRequestDto);
+
+        // Then
+        assertThat(userService.checkUserEmail("test@naver.com")).isEqualTo("duplicated");
+    }
+
+
 }
-
-//    }
-//
-//    @Test
-//    @DisplayName("유저 회원 가입 테스트")
-//    public void addUser() {
-//        // Given
-//        UserRequestDto userRequestDto = new UserRequestDto("test@naver.com", "q1w2e3r4!", "testUser", "01012341234", "USER");
-//
-//        // When
-//        userService.saveUser(userRequestDto);
-//
-//        // Then
-//        Optional<User> savedUser = userRepository.findByUserEmail("test@naver.com");
-//        assertThat(savedUser).isPresent();
-//        assertThat(savedUser.get().getEmail()).isEqualTo("test@naver.com");
-//        assertThat(savedUser.get().getName()).isEqualTo("testUser");
-//        assertThat(savedUser.get().getTel()).isEqualTo("01012341234");
-//        assertThat(savedUser.get().getRole()).isEqualTo(RoleStatus.USER);
-//    }
-//
-//    @Test
-//    @DisplayName("상담사 회원 가입 테스트")
-//    public void addCounselor() {
-//        // Given
-//        CounselorRequestDto counselorRequestDto = new CounselorRequestDto(0L,"counselor@naver.com", "q1w2e3r4!", "testUser", "01012341234", "COUNSELOR");
-//
-//        // When
-//        userService.saveCounselor(counselorRequestDto);
-//
-//        // Then
-//        Optional<User> savedUser = userRepository.findByUserEmail("counselor@naver.com");
-//        assertThat(savedUser).isPresent();
-//        assertThat(savedUser.get().getEmail()).isEqualTo("counselor@naver.com");
-//        assertThat(savedUser.get().getName()).isEqualTo("testUser");
-//        assertThat(savedUser.get().getTel()).isEqualTo("01012341234");
-//        assertThat(savedUser.get().getRole()).isEqualTo(RoleStatus.COUNSELOR);
-//    }
-//
-//    @Test
-//    @DisplayName("이메일 중복 검사 테스트")
-//    public void duplicateEmail() {
-//        // Given
-//        UserRequestDto userRequestDto = new UserRequestDto("test@naver.com", "q1w2e3r4!", "testUser", "01012341234", "USER");
-//
-//        // When
-//        userService.saveUser(userRequestDto);
-//
-//        // Then
-//        assertThat(userService.checkUserEmail("test@naver.com")).isEqualTo("duplicated");
-//    }
-
-
