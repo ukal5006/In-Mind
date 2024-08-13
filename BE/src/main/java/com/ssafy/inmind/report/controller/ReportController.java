@@ -38,9 +38,8 @@ public class ReportController {
             ResponseEntity<FastApiResponseDto> response = restTemplate.exchange(fastApi, HttpMethod.POST, requestEntity, FastApiResponseDto.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println(response.getBody());
                 FastApiResponseDto jsonData = response.getBody();
-                reportService.addReport(requestDto);
+                reportService.addReport(requestDto, jsonData);
                 return ResponseEntity.status(HttpStatus.OK).body(jsonData);
             } else {
                 log.error("Error response from FastAPI: {}", response.getBody());

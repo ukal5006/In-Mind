@@ -24,7 +24,7 @@ public class ReportService {
     private final ChildRepository childRepository;
     private final UserRepository userRepository;
 
-    public void addReport(ReportRequestDto requestDto) {
+    public void addReport(ReportRequestDto requestDto, FastApiResponseDto jsonData) {
         Child child = childRepository.findById(requestDto.getChildIdx())
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
 
