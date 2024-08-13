@@ -27,8 +27,8 @@ public class History extends BaseEntity {
     private LocalDate date;
 
     @Column(name = "start_time")
-    private LocalTime startTime;
+    private String startTime;
 
     @Column(name = "end_time")
-    private LocalTime endTime;
+    private String endTime;
 }

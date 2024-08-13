@@ -20,4 +20,5 @@ public class ReserveCoResponseDto {
     private LocalTime reserveInfoStartTime;
     private LocalTime reserveInfoEndTime;
     private LocalDateTime reserveInfoCreateTime;
+    private String isEnd;
 }

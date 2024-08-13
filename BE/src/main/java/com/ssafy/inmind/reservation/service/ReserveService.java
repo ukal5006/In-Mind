@@ -137,6 +137,7 @@ public class ReserveService {
                             .reserveInfoStartTime(reservation.getStartTime())
                             .reserveInfoEndTime(reservation.getEndTime())
                             .reserveInfoCreateTime(reservation.getCreatedAt())
+                            .isEnd(reservation.getIsEnd())
                             .build();
                 })
                 .collect(Collectors.toList());

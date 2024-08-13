@@ -38,6 +38,8 @@ public class ConsultingService {
         Reservation reservation = reserveRepository.findById(requestDTO.getReserveID())
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
 
+        reserveRepository.updateIsEndToY(reservation.getId());  // 상담 종료 시 y 로 업데이트하는 기능
+
         History history = History.builder()
                 .reservation(reservation)
                 .date(requestDTO.getDate())
