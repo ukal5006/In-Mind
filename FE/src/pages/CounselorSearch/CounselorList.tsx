@@ -12,6 +12,11 @@ import axios from 'axios';
 import { RDDEFAULTTIME, READUNAVAILABLETIME } from '../../apis/managementApi';
 import ReservationTime from './ReservationTime';
 import userStore from '../../stores/userStore';
+import { Interface } from 'readline';
+
+interface DateSet {
+    date: any;
+}
 
 const ModalBackground = styled.div`
     position: fixed;
@@ -151,6 +156,19 @@ const CounselorList: React.FC = () => {
         }
     }, [selectedDate, detail]);
 
+    const tileClassName = ({ date }: DateSet) => {
+        const today = new Date();
+        // 과거 날짜인지 확인
+        if (date < today) {
+            return 'disabled-date'; // 스타일 클래스명
+        }
+        // 주말인지 확인
+        if (date.getDay() === 0 || date.getDay() === 6) {
+            return 'weekend-date'; // 주말 스타일 클래스명
+        }
+        return '';
+    };
+
     return (
         <div>
             {counselors.map((counselor) => (
@@ -211,6 +229,8 @@ const CounselorList: React.FC = () => {
                                 formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
                                 formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
                                 locale="kr"
+                                minDate={new Date()} // 오늘 날짜 이후의 날짜만 선택 가능
+                                tileClassName={tileClassName} // 커스텀 클래스 추가
                             />
                             {/* {ableTime.availableTimeStartTime} */}
                             <ReservationTime

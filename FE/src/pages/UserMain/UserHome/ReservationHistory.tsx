@@ -21,6 +21,7 @@ interface reservationInfo {
     reserveInfoStartTime: string;
     reserveInfoEndTime: string;
     reserveInfoCreateTime: string;
+    isEnd: 'Y' | 'N';
 }
 
 const ReservationHistoryContainer = styled(Container)`
@@ -51,9 +52,10 @@ const ReservationHistoryItem = styled.div`
     /* font-size: 19px; */
     /* font-weight: 700; */
 `;
+
 function ReservationHistory() {
     const { userInfo, token } = userStore();
-    const [reservationHistory, setReservationHistory] = useState([]);
+    const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
 
     useEffect(() => {
         if (userInfo?.userIdx) {
@@ -65,10 +67,12 @@ function ReservationHistory() {
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
-                .then((response) => setReservationHistory(response.data))
-                .then(() => console.log(reservationHistory));
+                .then((response) => setReservationHistory(response.data));
         }
     }, [userInfo, token]);
+
+    // isEnd가 'N'인 예약 내역만 필터링
+    const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === 'N');
 
     return (
         <ReservationHistoryContainer>
@@ -80,10 +84,10 @@ function ReservationHistory() {
                     </ContainerTopLink>
                 </ContainerTop>
                 <>
-                    {reservationHistory.length > 0 ? (
-                        reservationHistory.map((e: reservationInfo) => {
+                    {filteredReservationHistory.length > 0 ? (
+                        filteredReservationHistory.map((e: reservationInfo) => {
                             return (
-                                <ReservationHistoryList>
+                                <ReservationHistoryList key={e.reserveInfoIdx}>
                                     <ReservationHistoryItem>
                                         {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
                                     </ReservationHistoryItem>

@@ -156,3 +156,19 @@
 /* .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6;
 } */
+
+.disabled-date {
+    color: gray; /* 회색 텍스트 */
+    pointer-events: none; /* 클릭 불가 */
+}
+
+.weekend-date {
+    color: gray; /* 주말도 회색으로 */
+    pointer-events: none; /* 클릭 불가 */
+}
+
+/* 기존 주말 스타일을 수정 */
+.react-calendar__month-view__days__day--weekend {
+    color: gray; /* 주말 날짜를 회색으로 변경 */
+    pointer-events: none; /* 클릭 불가 */
+}

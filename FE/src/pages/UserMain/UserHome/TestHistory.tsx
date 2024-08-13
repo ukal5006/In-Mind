@@ -76,11 +76,16 @@ const DetailContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    width: 700px;
+    background-color: white;
 `;
 
 const ImgContainer = styled.div``;
 
-const ImgWrapper = styled.img``;
+const ImgWrapper = styled.img`
+    width: 210px;
+    height: 297px;
+`;
 
 const ResultDiv = styled.div``;
 
