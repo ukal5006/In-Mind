@@ -40,6 +40,7 @@ public class ReportController {
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
                 reportService.addReport(requestDto, jsonData);
+                // 여기서 gpt를 연결해야겠네? jsonData들고 해석에대한 총평가를 만들어달라해서 return해서 result에 열고
                 return ResponseEntity.status(HttpStatus.OK).body(jsonData);
             } else {
                 log.error("Error response from FastAPI: {}", response.getBody());

@@ -22,25 +22,25 @@ public class Report extends BaseEntity {
     @JoinColumn(name = "child_idx", nullable = false)
     private Child child;
 
-    @Column(name = "object_result", nullable = false)
+    @Column(name = "object_result", columnDefinition = "TEXT", nullable = false)
     private String objectResult;
 
-    @Column(name = "result", nullable = false)
+    @Column(name = "result", columnDefinition = "TEXT", nullable = false)
     private String result;
 
-    @Column(name = "img_h")
+    @Column(name = "img_h" ,columnDefinition = "TEXT")
     private String houseImage;
 
-    @Column(name = "img_t")
+    @Column(name = "img_t", columnDefinition = "TEXT")
     private String treeImage;
 
-    @Column(name = "img_p")
+    @Column(name = "img_p" , columnDefinition = "TEXT")
     private String personImage;
 
-    @Column(name = "background", nullable = false)
+    @Column(name = "background",columnDefinition = "TEXT", nullable = false)
     private String background;
 
-    @Column(name = "drawing_flow", nullable = false)
+    @Column(name = "drawing_flow",columnDefinition = "TEXT", nullable = false)
     private String drawingFlow;
 
 }
