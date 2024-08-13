@@ -2,7 +2,6 @@ package com.ssafy.inmind.report.controller;
 
 import com.ssafy.inmind.report.dto.ReportListResponseDto;
 import com.ssafy.inmind.report.dto.ReportRequestDto;
-import com.ssafy.inmind.report.dto.ReportResponseDto;
 import com.ssafy.inmind.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
