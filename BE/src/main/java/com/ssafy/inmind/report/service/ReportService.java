@@ -30,8 +30,6 @@ public class ReportService {
 
         Report report = Report.builder()
                 .child(child)
-                .result(requestDto.getResult())
-                .objectResult(requestDto.getObjectResult())
                 .houseImage(requestDto.getHouseImage())
                 .treeImage(requestDto.getTreeImage())
                 .personImage(requestDto.getPersonImage())
@@ -67,7 +65,7 @@ public class ReportService {
                         .childInfoIdx(child.getId())
                         .childInfoName(child.getName())
                         .reports(child.getReports().stream()
-                                .map(report -> new ReportDto(report.getCreatedAt(), report.getResult()))
+                                .map(report -> new ReportDto(report.getId(),report.getCreatedAt(), report.getResult()))
                                 .collect(Collectors.toList()))
                         .build()).toList();
 
