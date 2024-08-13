@@ -9,8 +9,12 @@ import json
 
 class Yolo:
     def start_yolo(self, image_path):
-        model = YOLO('best.pt')
-        results = model.predict(source=f'{image_path}', save=True)
+        # model = YOLO('best.pt')
+        model = YOLO("best.onnx")
+
+        image = preprocess_image(image_path)
+
+        results = model.predict(source=processed_image_path, save=True)
         
         # 탐지 결과 json 저장
         file_path = save_result(results, image_path)
@@ -23,6 +27,16 @@ class Yolo:
         interpreter_json = interpreter_image_grid(file_path)
         flow_fruit(predictions, interpreter_json)
         return interpreter_json
+
+def preprocess_image(image_path):
+    # Load the image
+    image = cv2.imread(image_path)
+        
+    # Resize the image to 1280x1280
+    resized_image = cv2.resize(image, (1280, 1280))
+        
+    return resized_image
+
 
 
 def save_result(results, image_path):

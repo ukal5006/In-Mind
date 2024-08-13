@@ -2,3 +2,5 @@ opencv-python-headless
 ultralytics
 fastapi
 uvicorn
+onnx
+onnxruntime
