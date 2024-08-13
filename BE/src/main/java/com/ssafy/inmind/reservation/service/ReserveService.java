@@ -86,6 +86,7 @@ public class ReserveService {
                 .counselor(counselor)
                 .reportIdx(report.getId())
                 .localDate(reservationDate)
+                .isEnd("N")
                 .startTime(startTime)
                 .endTime(endTime)
                 .build();
