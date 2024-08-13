@@ -5,31 +5,32 @@ import axios from 'axios';
 import emailVerification from '../../../apis/emailVerification';
 import styled from 'styled-components';
 import { colors } from '../../../theme/colors';
+import { useNavigate } from 'react-router-dom';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api';
 
-const UserJoin= styled.div`
+const UserJoin = styled.div`
     display: flex;
     flex-direction: column;
     /* height: auto; */
-    align-items: center;  
+    align-items: center;
     margin-top: 60px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 `;
 const EmailWrapper = styled.div`
     display: flex;
     align-items: center;
-    &>input{
+    & > input {
         width: calc(100% - 110px);
         margin-right: 10px;
     }
-    &>button{
+    & > button {
         width: 110px;
         height: 45px;
         padding: 0px;
         font-weight: 500;
         font-size: 15px;
-        color:${colors.white};
+        color: ${colors.white};
         border-radius: 10px;
         background-color: ${colors.okGreen};
     }
@@ -44,6 +45,7 @@ function User() {
     const [name, setName] = useState('');
     const [tel, setTel] = useState('');
     const role = 'USER';
+    const navigate = useNavigate();
 
     const emailCheckSubmit = async () => {
         try {
@@ -94,6 +96,7 @@ function User() {
                 );
                 console.log('회원가입 성공');
                 alert('회원가입 성공');
+                navigate('/login');
             } catch (error) {
                 console.error('회원가입 실패', error);
                 alert('회원가입 실패');
@@ -105,16 +108,22 @@ function User() {
 
     return (
         <UserJoin>
-        <EmailWrapper>
-        <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <button onClick={emailCheckSubmit}>중복확인</button>
-        </EmailWrapper>
+            <EmailWrapper>
+                <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <button onClick={emailCheckSubmit}>중복확인</button>
+            </EmailWrapper>
             <JoinBtn onClick={handleEmailVerification}>인증번호 받기</JoinBtn>
             <JoinInput placeholder="인증번호" value={code} onChange={(e) => setCode(e.target.value)} />
-            <JoinInput placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <JoinInput
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
             <JoinInput
                 placeholder="비밀번호 확인"
                 value={passwordCheck}
+                type="password"
                 onChange={(e) => setPasswordCheck(e.target.value)}
             />
             <JoinInput placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} />

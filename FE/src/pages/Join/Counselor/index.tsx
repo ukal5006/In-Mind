@@ -10,6 +10,7 @@ import userStore from '../../../stores/userStore';
 import styled from 'styled-components';
 import { colors } from '../../../theme/colors';
 import emailVerification from '../../../apis/emailVerification';
+import { useNavigate } from 'react-router-dom';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api';
 const role = 'COUNSELOR';
@@ -18,25 +19,25 @@ const CoJoin = styled.div`
     display: flex;
     flex-direction: column;
     /* height: auto; */
-    align-items: center;  
+    align-items: center;
     margin-top: 60px;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 `;
 
 const EmailWrapper = styled.div`
     display: flex;
     align-items: center;
-    &>input{
+    & > input {
         width: calc(100% - 110px);
         margin-right: 10px;
     }
-    &>button{
+    & > button {
         width: 110px;
         height: 45px;
         padding: 0px;
         font-weight: 500;
         font-size: 15px;
-        color:${colors.white};
+        color: ${colors.white};
         border-radius: 10px;
         background-color: ${colors.okGreen};
     }
@@ -46,11 +47,11 @@ const InputRow = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    max-width: 350px;  /* 두 개의 input이 175px 너비를 가지므로 이를 감쌀 수 있는 충분한 너비 */
+    max-width: 350px; /* 두 개의 input이 175px 너비를 가지므로 이를 감쌀 수 있는 충분한 너비 */
 `;
 
 const HalfWidthInput = styled(JoinInput)`
-    width: calc(50% - 5px);  /* 원래 크기의 반절, 두 input 사이에 20px 간격을 주기 위해 각각 10px씩 뺌 */
+    width: calc(50% - 5px); /* 원래 크기의 반절, 두 input 사이에 20px 간격을 주기 위해 각각 10px씩 뺌 */
 `;
 
 function CounselorForm() {
@@ -61,9 +62,9 @@ function CounselorForm() {
     const [passwordCheck, setPasswordCheck] = useState('');
     const [name, setName] = useState('');
     const [tel, setPhone] = useState('');
-    const [time, setTime] = useState('');
     const { organizationName, orgIdx } = useOrganization();
     const { token } = userStore();
+    const navigate = useNavigate();
 
     const emailCheckSubmit = async () => {
         try {
@@ -153,6 +154,7 @@ function CounselorForm() {
                 );
                 console.log('회원가입 성공');
                 alert('회원가입 성공');
+                navigate('/login');
             } catch (error) {
                 console.error('회원가입 실패', error);
                 alert('회원가입 실패');
@@ -168,22 +170,28 @@ function CounselorForm() {
                 <JoinInput placeholder="이메일" value={email} onChange={(e) => setEmail(e.target.value)} />
                 <button onClick={emailCheckSubmit}>중복확인</button>
             </EmailWrapper>
-            <JoinBtn  onClick={handleEmailVerification}>인증번호 받기</JoinBtn>
+            <JoinBtn onClick={handleEmailVerification}>인증번호 받기</JoinBtn>
             <JoinInput placeholder="인증번호" value={code} onChange={(e) => setCode(e.target.value)} />
-            <JoinInput placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <JoinInput
+                placeholder="비밀번호"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+            />
             <JoinInput
                 placeholder="비밀번호 확인"
+                type="password"
                 value={passwordCheck}
                 onChange={(e) => setPasswordCheck(e.target.value)}
             />
             <InputRow>
-                <HalfWidthInput  placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} />
-                <HalfWidthInput  placeholder="전화번호" value={tel} onChange={(e) => setPhone(e.target.value)} />
+                <HalfWidthInput placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} />
+                <HalfWidthInput placeholder="전화번호" value={tel} onChange={(e) => setPhone(e.target.value)} />
             </InputRow>
-           
+
             <EmailWrapper>
-            <JoinInput placeholder="소속기관" value={organizationName} readOnly />
-            <CounselingOrganizationModal />
+                <JoinInput placeholder="소속기관" value={organizationName} readOnly />
+                <CounselingOrganizationModal />
             </EmailWrapper>
 
             <JoinBtn onClick={signInSubmit}>회원가입</JoinBtn>
