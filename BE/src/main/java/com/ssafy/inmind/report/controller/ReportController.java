@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +25,7 @@ public class ReportController {
 
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
-    public ResponseEntity<FastApiResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
+    public ResponseEntity<FastApiResponseDto> addReport(@Validated @RequestBody ReportRequestDto requestDto) {
         String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
                 .url(requestDto.getTreeImage())

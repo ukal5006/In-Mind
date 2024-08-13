@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class ReserveController {
 
     @Operation(summary = "상담 예약", description = "상담사에 대해 유저 상담 예약을 생성합니다.")
     @PostMapping()
-    public ResponseEntity<Void> reserve(@RequestBody ReserveRequestDto request){
+    public ResponseEntity<Void> reserve(@Validated @RequestBody ReserveRequestDto request){
         reserveService.reserve(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -45,7 +46,7 @@ public class ReserveController {
 
     @Operation(summary = "상담 예약 수정", description = "유저가 예약 내역을 수정합니다.")
     @PutMapping
-    public ResponseEntity<Void> updateReserve(@RequestBody ReserveUpdateDto request){
+    public ResponseEntity<Void> updateReserve(@Validated @RequestBody ReserveUpdateDto request){
         reserveService.updateReserve(request);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
