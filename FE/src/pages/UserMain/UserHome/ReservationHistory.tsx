@@ -13,10 +13,14 @@ import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
 
 interface reservationInfo {
-    date: string;
-    time: string;
-    counselor: string;
-    name: string;
+    reserveInfoIdx: number;
+    coName: string;
+    reportIdx: number;
+    childName: string;
+    reserveInfoDate: string;
+    reserveInfoStartTime: string;
+    reserveInfoEndTime: string;
+    reserveInfoCreateTime: string;
 }
 
 const ReservationHistoryContainer = styled(Container)`
@@ -49,7 +53,7 @@ const ReservationHistoryItem = styled.div`
 `;
 function ReservationHistory() {
     const { userInfo, token } = userStore();
-    const [reservationHistory, setReservationHistory] = useState();
+    const [reservationHistory, setReservationHistory] = useState([]);
 
     useEffect(() => {
         if (userInfo?.userIdx) {
@@ -61,7 +65,8 @@ function ReservationHistory() {
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
-                .then((response) => console.log(response));
+                .then((response) => setReservationHistory(response.data))
+                .then(() => console.log(reservationHistory));
         }
     }, [userInfo, token]);
 
@@ -75,20 +80,24 @@ function ReservationHistory() {
                     </ContainerTopLink>
                 </ContainerTop>
                 <>
-                    {reservationHistoryInfo.map((e: reservationInfo) => {
-                        return (
-                            <ReservationHistoryList>
-                                <ReservationHistoryItem>
-                                    {e.date} {e.time}
-                                </ReservationHistoryItem>
-                                <ReservationHistoryItem>{e.counselor} 상담가님</ReservationHistoryItem>
-                                <ReservationHistoryItem>{e.name}</ReservationHistoryItem>
-                                <ReservationHistoryItem>
-                                    <ActiveBtn>입장하기</ActiveBtn>
-                                </ReservationHistoryItem>
-                            </ReservationHistoryList>
-                        );
-                    })}
+                    {reservationHistory.length > 0 ? (
+                        reservationHistory.map((e: reservationInfo) => {
+                            return (
+                                <ReservationHistoryList>
+                                    <ReservationHistoryItem>
+                                        {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
+                                    </ReservationHistoryItem>
+                                    <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
+                                    <ReservationHistoryItem>{e.childName} 어린이</ReservationHistoryItem>
+                                    <ReservationHistoryItem>
+                                        <ActiveBtn>입장하기</ActiveBtn>
+                                    </ReservationHistoryItem>
+                                </ReservationHistoryList>
+                            );
+                        })
+                    ) : (
+                        <>예약 없음</>
+                    )}
                 </>
             </ReservationHistoryWrapper>
         </ReservationHistoryContainer>

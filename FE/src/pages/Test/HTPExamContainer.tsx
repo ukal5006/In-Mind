@@ -114,43 +114,16 @@ const HTPExamContainer = (): JSX.Element => {
             setImageUrl(uploadedImageUrl);
             console.log('Uploaded Image URL:', uploadedImageUrl);
             alert('검사가 시작되었습니다.');
-            // const response = await axios.post('http://localhost:8000/analyze-image/', uploadedImageUrl, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data',
-            //     },
-            // });
-            // setResult(response.data.result);
-            const url = 'https://api.openai.com/v1/chat/completions';
-
-            const response = await axios.post(
-                url,
-                {
-                    model: 'gpt-3.5-turbo', // 사용할 모델을 선택하세요.
-                    messages: [{ role: 'user', content: '나 심리상담해줭' }],
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer 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`,
-                        'Content-Type': 'application/json',
-                    },
-                }
-            );
-
-            const answer = await response.data.choices[0].message.content;
-            console.log('답변:', answer);
-
             await axios
                 .post(
                     'https://i11b301.p.ssafy.io/api/reports/start',
                     {
                         childIdx: selectedChild.childIdx,
-                        objectResult: answer,
                         houseImage: uploadedImageUrl,
                         treeImage: uploadedImageUrl,
                         personImage: uploadedImageUrl,
                         background: background,
                         drawingFlow: drawingOrder.join(','),
-                        result: answer,
                     },
                     {
                         headers: {
