@@ -44,6 +44,9 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "co_idx", nullable = false)
     private User counselor;
 
+    @Column(name = "is_end", nullable = false)
+    private String isEnd = "N";
+
     @Column(name = "date", nullable = false)
     private LocalDate localDate;
 
