@@ -341,7 +341,7 @@ def flow_fruit(data, output_file_path):
             if record["inputs"] in tree_results:
                 key = record["inputs"]
                 value = record["response"]
-                interpreter[key] = value
+                interpreter["나무"][key] = value
     
     try:
         with open(output_file_path, "w", encoding='utf-8') as f:
