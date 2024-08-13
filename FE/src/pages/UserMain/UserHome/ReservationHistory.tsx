@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Container from '../../../components/Container';
 import Wrapper from '../../../components/Wrapper';
@@ -7,6 +7,7 @@ import ContainerTopTitle from '../../../components/ContainerTopTitle';
 import ContainerTopLink from '../../../components/ContainerTopLink';
 import { FaPlus } from 'react-icons/fa';
 import ActiveBtn from '../../../components/ActiveBtn';
+import reservationStore from '../../../stores/reservationStore';
 import userStore from '../../../stores/userStore';
 import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
