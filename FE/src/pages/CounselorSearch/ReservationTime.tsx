@@ -90,6 +90,8 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({ date, ableTime, unabl
             return;
         }
 
+        console.log();
+
         axios
             .post(
                 RUDRESERVE,
