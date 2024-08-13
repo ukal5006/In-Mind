@@ -10,6 +10,8 @@ import axios from 'axios';
 import { DELETERESERVE, RUDRESERVE } from '../../../apis/reserveApi';
 import { useNavigate } from 'react-router-dom';
 import userStore from '../../../stores/userStore';
+import { FacialContainer, FacialInfo } from '../../UserMain/UserHome/ReservationHistory';
+import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -114,7 +116,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<any>(null);
     const navigate = useNavigate();
-    const { token } = userStore((state) => state);
+    const { userInfo, token } = userStore((state) => state);
 
     const handleDetailClick = (reservation: ReservationInfo) => {
         setSelectedReservation(reservation);
@@ -155,6 +157,13 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
             const dateB = new Date(b.reserveInfoDate + ' ' + b.reserveInfoStartTime);
             return dateA.getTime() - dateB.getTime();
         });
+
+    const [isFacial, setIsFacial] = useState(false);
+    const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+    const handleFacial = (facialInfo: FacialInfo) => {
+        setFacialInfo(facialInfo);
+        setIsFacial(true);
+    };
     return (
         <>
             <TitleContainer>
@@ -176,7 +185,17 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                                 {reservation.reserveInfoEndTime.substring(0, 5)}
                             </Time>
                             <BtnWrapper>
-                                <RoomBtn>방 만들기</RoomBtn>
+                                <RoomBtn
+                                    onClick={() =>
+                                        handleFacial({
+                                            childName: reservation.childName,
+                                            reserveInfoIdx: reservation.reserveInfoIdx,
+                                            reportIdx: reservation.reportIdx,
+                                        })
+                                    }
+                                >
+                                    방 만들기
+                                </RoomBtn>
                             </BtnWrapper>
                         </Item>
                     ))
@@ -203,6 +222,27 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                         </CancelBtn>
                         <Btn onClick={handleCloseModal}>닫기</Btn>
                     </ModalContent>
+                </ModalBackground>
+            )}
+
+            {isFacial && (
+                <ModalBackground>
+                    <FacialContainer>
+                        <VideoRoomComponent
+                            userName={userInfo?.userName}
+                            childName={facialInfo?.childName}
+                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                            reportIdx={facialInfo?.reportIdx}
+                        />
+                    </FacialContainer>
+                    <Btn
+                        onClick={() => {
+                            setIsFacial(false);
+                            setFacialInfo(null);
+                        }}
+                    >
+                        닫기
+                    </Btn>
                 </ModalBackground>
             )}
         </>

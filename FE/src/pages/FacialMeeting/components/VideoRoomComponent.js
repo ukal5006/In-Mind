@@ -10,24 +10,26 @@ import OpenViduLayout from '../layout/openvidu-layout';
 import UserModel from '../models/user-model';
 import ToolbarComponent from './toolbar/ToolbarComponent';
 
-import userStore from '../../../stores/userStore'
+import userStore from '../../../stores/userStore';
 import reservationStore from '../../../stores/reservationStore';
 
 var localUser = new UserModel();
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://i11b301.p.ssafy.io/';
-
 
 class VideoRoomComponent extends Component {
     constructor(props) {
         super(props);
         this.hasBeenUpdated = false;
         this.layout = new OpenViduLayout();
+        console.log(props);
+        console.log('진입성공');
         // 이 밑으로 sessionName지정해야하는데, 현재는 userIdx를 알아도 상담에 대한 정확한 정보를 알 수 없어서 지정이 어려움
-        // const {userIdx} = userStore.userInfo?.userIdx.getState()
 
-        let sessionName = this.props.sessionName ? this.props.sessionName : 'SessionAB';
+        let sessionName = this.props ? `InMind${this.props.reserveInfoIdx}${this.props.reportIdx}` : 'SessionAB';
         // 여기도 바꿔줘야함.
-        let userName = this.props.user ? this.props.user : 'OpenVidu_User' + Math.floor(Math.random() * 100);
+        let userName = this.props
+            ? `${this.props.userName}님(${this.props.childName} 어린이)`
+            : 'OpenVidu_User' + Math.floor(Math.random() * 100);
 
         this.remotes = [];
         this.localUserAccessAllowed = false;
@@ -100,7 +102,7 @@ class VideoRoomComponent extends Component {
             async () => {
                 this.subscribeToStreamCreated();
                 await this.connectToSession();
-            },
+            }
         );
     }
 
@@ -115,8 +117,13 @@ class VideoRoomComponent extends Component {
                 this.connect(token);
             } catch (error) {
                 console.error('There was an error getting the token:', error.code, error.message);
-                if(this.props.error){
-                    this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
+                if (this.props.error) {
+                    this.props.error({
+                        error: error.error,
+                        messgae: error.message,
+                        code: error.code,
+                        status: error.status,
+                    });
                 }
                 alert('There was an error getting the token:', error.message);
             }
@@ -125,16 +132,18 @@ class VideoRoomComponent extends Component {
 
     connect(token) {
         this.state.session
-            .connect(
-                token,
-                { clientData: this.state.myUserName },
-            )
+            .connect(token, { clientData: this.state.myUserName })
             .then(() => {
                 this.connectWebCam();
             })
             .catch((error) => {
-                if(this.props.error){
-                    this.props.error({ error: error.error, messgae: error.message, code: error.code, status: error.status });
+                if (this.props.error) {
+                    this.props.error({
+                        error: error.error,
+                        messgae: error.message,
+                        code: error.code,
+                        status: error.status,
+                    });
                 }
                 alert('There was an error connecting to the session:', error.message);
                 console.log('There was an error connecting to the session:', error.code, error.message);
@@ -144,7 +153,7 @@ class VideoRoomComponent extends Component {
     async connectWebCam() {
         await this.OV.getUserMedia({ audioSource: undefined, videoSource: undefined });
         var devices = await this.OV.getDevices();
-        var videoDevices = devices.filter(device => device.kind === 'videoinput');
+        var videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
         let publisher = this.OV.initPublisher(undefined, {
             audioSource: undefined,
@@ -157,7 +166,7 @@ class VideoRoomComponent extends Component {
         });
 
         if (this.state.session.capabilities.publish) {
-            publisher.on('accessAllowed' , () => {
+            publisher.on('accessAllowed', () => {
                 this.state.session.publish(publisher).then(() => {
                     this.updateSubscribers();
                     this.localUserAccessAllowed = true;
@@ -166,7 +175,6 @@ class VideoRoomComponent extends Component {
                     }
                 });
             });
-
         }
         localUser.setNickname(this.state.myUserName);
         localUser.setConnectionId(this.state.session.connection.connectionId);
@@ -200,7 +208,7 @@ class VideoRoomComponent extends Component {
                     });
                 }
                 this.updateLayout();
-            },
+            }
         );
     }
 
@@ -272,7 +280,7 @@ class VideoRoomComponent extends Component {
             const nickname = event.stream.connection.data.split('%')[0];
             newUser.setNickname(JSON.parse(nickname).clientData);
             this.remotes.push(newUser);
-            if(this.localUserAccessAllowed) {
+            if (this.localUserAccessAllowed) {
                 this.updateSubscribers();
             }
         });
@@ -316,7 +324,7 @@ class VideoRoomComponent extends Component {
                 {
                     subscribers: remoteUsers,
                 },
-                () => this.checkSomeoneShareScreen(),
+                () => this.checkSomeoneShareScreen()
             );
         });
     }
@@ -367,13 +375,14 @@ class VideoRoomComponent extends Component {
     }
 
     async switchCamera() {
-        try{
-            const devices = await this.OV.getDevices()
-            var videoDevices = devices.filter(device => device.kind === 'videoinput');
+        try {
+            const devices = await this.OV.getDevices();
+            var videoDevices = devices.filter((device) => device.kind === 'videoinput');
 
-            if(videoDevices && videoDevices.length > 1) {
-
-                var newVideoDevice = videoDevices.filter(device => device.deviceId !== this.state.currentVideoDevice.deviceId)
+            if (videoDevices && videoDevices.length > 1) {
+                var newVideoDevice = videoDevices.filter(
+                    (device) => device.deviceId !== this.state.currentVideoDevice.deviceId
+                );
 
                 if (newVideoDevice.length > 0) {
                     // Creating a new publisher with specific videoSource
@@ -383,12 +392,12 @@ class VideoRoomComponent extends Component {
                         videoSource: newVideoDevice[0].deviceId,
                         publishAudio: localUser.isAudioActive(),
                         publishVideo: localUser.isVideoActive(),
-                        mirror: true
+                        mirror: true,
                     });
 
                     //newPublisher.once("accessAllowed", () => {
                     await this.state.session.unpublish(this.state.localUser.getStreamManager());
-                    await this.state.session.publish(newPublisher)
+                    await this.state.session.publish(newPublisher);
                     this.state.localUser.setStreamManager(newPublisher);
                     this.setState({
                         currentVideoDevice: newVideoDevice,
@@ -421,7 +430,7 @@ class VideoRoomComponent extends Component {
                 } else if (error && error.name === 'SCREEN_CAPTURE_DENIED') {
                     alert('You need to choose a window or application to share');
                 }
-            },
+            }
         );
 
         publisher.once('accessAllowed', () => {
@@ -452,7 +461,8 @@ class VideoRoomComponent extends Component {
     checkSomeoneShareScreen() {
         let isScreenShared;
         // return true if at least one passes the test
-        isScreenShared = this.state.subscribers.some((user) => user.isScreenShareActive()) || localUser.isScreenShareActive();
+        isScreenShared =
+            this.state.subscribers.some((user) => user.isScreenShareActive()) || localUser.isScreenShareActive();
         const openviduLayoutOptions = {
             maxRatio: 3 / 2,
             minRatio: 9 / 16,
@@ -520,7 +530,10 @@ class VideoRoomComponent extends Component {
                     toggleChat={this.toggleChat}
                 />
 
-                <DialogExtensionComponent showDialog={this.state.showExtensionDialog} cancelClicked={this.closeDialogExtension} />
+                <DialogExtensionComponent
+                    showDialog={this.state.showExtensionDialog}
+                    cancelClicked={this.closeDialogExtension}
+                />
 
                 <div id="layout" className="bounds">
                     {localUser !== undefined && localUser.getStreamManager() !== undefined && (
@@ -571,33 +584,39 @@ class VideoRoomComponent extends Component {
     async createSession(sessionId) {
         let response = null;
         const list = await axios.get(APPLICATION_SERVER_URL + 'openvidu/api/sessions', {
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+            headers: { 'Content-Type': 'application/json', Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
         });
-    
+
         for (let element of list.data.content) {
             if (element.sessionId === sessionId) {
                 console.log(element);
                 return element;
             }
         }
-    
+
         if (!response) {
-            response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions', { customSessionId: sessionId }, {
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
-            });
+            response = await axios.post(
+                APPLICATION_SERVER_URL + 'openvidu/api/sessions',
+                { customSessionId: sessionId },
+                {
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+                }
+            );
         }
-    
+
         console.log(sessionId);
         console.log(response);
         return response.data; // The sessionId
     }
 
     async createToken(sessionId) {
-        const response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions/' + sessionId.sessionId + '/connection', {}, {
-            headers: { 'Content-Type': 'application/json', 
-                'Authorization': 'Basic T1BFTlZJRFVBUFA6c3NhZnk=',
-            },
-        });
+        const response = await axios.post(
+            APPLICATION_SERVER_URL + 'openvidu/api/sessions/' + sessionId.sessionId + '/connection',
+            {},
+            {
+                headers: { 'Content-Type': 'application/json', Authorization: 'Basic T1BFTlZJRFVBUFA6c3NhZnk=' },
+            }
+        );
         return response.data.token; // The token
     }
 }

@@ -11,6 +11,8 @@ import reservationStore from '../../../stores/reservationStore';
 import userStore from '../../../stores/userStore';
 import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
+import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import Btn from '../../../components/Btn';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -22,6 +24,12 @@ interface reservationInfo {
     reserveInfoEndTime: string;
     reserveInfoCreateTime: string;
     isEnd: 'Y' | 'N';
+}
+
+export interface FacialInfo {
+    childName: string;
+    reserveInfoIdx: number;
+    reportIdx: number;
 }
 
 const ReservationHistoryContainer = styled(Container)`
@@ -53,9 +61,34 @@ const ReservationHistoryItem = styled.div`
     /* font-weight: 700; */
 `;
 
+const ModalBackground = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const FacialContainer = styled.div`
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+`;
+
 function ReservationHistory() {
     const { userInfo, token } = userStore();
     const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
+    const [isFacial, setIsFacial] = useState(false);
+    const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+
+    const handleFacial = (facialInfo: FacialInfo) => {
+        setFacialInfo(facialInfo);
+        setIsFacial(true);
+    };
 
     useEffect(() => {
         if (userInfo?.userIdx) {
@@ -68,6 +101,7 @@ function ReservationHistory() {
                     },
                 })
                 .then((response) => setReservationHistory(response.data));
+            // .then((response) => console.log(response.data));
         }
     }, [userInfo, token]);
 
@@ -94,7 +128,17 @@ function ReservationHistory() {
                                     <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
                                     <ReservationHistoryItem>{e.childName} 어린이</ReservationHistoryItem>
                                     <ReservationHistoryItem>
-                                        <ActiveBtn>입장하기</ActiveBtn>
+                                        <ActiveBtn
+                                            onClick={() =>
+                                                handleFacial({
+                                                    childName: e.childName,
+                                                    reserveInfoIdx: e.reserveInfoIdx,
+                                                    reportIdx: e.reportIdx,
+                                                })
+                                            }
+                                        >
+                                            입장하기
+                                        </ActiveBtn>
                                     </ReservationHistoryItem>
                                 </ReservationHistoryList>
                             );
@@ -104,6 +148,26 @@ function ReservationHistory() {
                     )}
                 </>
             </ReservationHistoryWrapper>
+            {isFacial && (
+                <ModalBackground>
+                    <FacialContainer>
+                        <VideoRoomComponent
+                            userName={userInfo?.userName}
+                            childName={facialInfo?.childName}
+                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                            reportIdx={facialInfo?.reportIdx}
+                        />
+                    </FacialContainer>
+                    <Btn
+                        onClick={() => {
+                            setIsFacial(false);
+                            setFacialInfo(null);
+                        }}
+                    >
+                        닫기
+                    </Btn>
+                </ModalBackground>
+            )}
         </ReservationHistoryContainer>
     );
 }
