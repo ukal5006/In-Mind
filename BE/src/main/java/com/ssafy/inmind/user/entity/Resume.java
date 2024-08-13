@@ -22,7 +22,7 @@ public class Resume extends BaseEntity {
     @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String info;
 
 }

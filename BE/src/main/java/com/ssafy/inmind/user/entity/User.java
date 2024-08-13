@@ -70,6 +70,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String tel;
 
+    @Column(columnDefinition = "TEXT")
     private String profile;
 
     @Column(name = "is_auth", nullable = false)
@@ -84,6 +85,6 @@ public class User extends BaseEntity {
     @ColumnDefault("'Y'")
     private String isAlive;
 
-    @Column(name= "intro")
+    @Column(name= "intro",columnDefinition = "TEXT")
     private String intro;
 }

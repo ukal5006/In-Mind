@@ -28,7 +28,7 @@ public class Review extends BaseEntity {
     @Column(name = "co_idx", nullable = false)
     private Long coIdx;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(name = "score", nullable = false)
