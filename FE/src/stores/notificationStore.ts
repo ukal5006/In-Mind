@@ -1,14 +1,12 @@
 import { create } from 'zustand';
-// userStore에서 userIdx받아와야 함.
-// 일단 지금은 testData에서 해볼 예정
-import userInfo from '../testData/userInfo';
+import axios from 'axios';
+import userStore from './userStore';
+import ENDPOINT from '../apis/endpoint';
 
 export interface Notification {
     notificationIdx: number;
     message: string;
-    // 제목
     scheduleDate: string;
-    // 컨텐츠
     isRead: boolean;
     created_at: string;
 }
@@ -21,7 +19,7 @@ interface NotificationStore {
     markAllAsRead: () => void;
     deleteNotification: (notificationIdx: number) => void;
     deleteAllNotifications: () => void;
-    initializeSSE: () => () => void;
+    initializeSSE: (userId: any, token:any) => () => void;
 }
 
 const useNotificationStore = create<NotificationStore>((set) => ({
@@ -54,22 +52,60 @@ const useNotificationStore = create<NotificationStore>((set) => ({
             return { notifications: updatedNotifications, unreadCount: newUnreadCount };
         }),
     deleteAllNotifications: () => set({ notifications: [], unreadCount: 0 }),
-    initializeSSE: () => {
-        // userStore 받아온 이후에 import변경과 userStore.userIdx로 변경해야함
-        const userIdx = userInfo.userIdx;
-        const eventSource = new EventSource(`/notify?userIdx=${userIdx}`); //일단 api명세서에도 적어놓긴 했으나 수정되도 상관없음.
+    initializeSSE: (userId: any, token:any) => {
+        let source: EventSource;
 
-        eventSource.onmessage = (event) => {
-            const newNotification: Notification = JSON.parse(event.data);
-            useNotificationStore.getState().addNotification(newNotification);
+        const connectSSE = async () => {
+            console.log('here~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+            console.log(userId, token)
+            try {
+                const response = await axios.get(`${ENDPOINT}/notify/subscribe?userId=${userId}`, {
+                    headers: {
+                        'accept': 'text/event-stream',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    
+                });
+
+                const reader = response.data.getReader();
+                const decoder = new TextDecoder();
+
+                const processChunk = async ({ done, value }: ReadableStreamReadResult<Uint8Array>) => {
+                    if (done) {
+                        console.log('SSE connection closed');
+                        return;
+                    }
+
+                    const chunk = decoder.decode(value);
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            const eventData = line.slice(5).trim();
+                            if (eventData) {
+                                const newNotification: Notification = JSON.parse(eventData);
+                                useNotificationStore.getState().addNotification(newNotification);
+                            }
+                        }
+                    }
+
+                    await reader.read().then(processChunk);
+                };
+
+                await reader.read().then(processChunk);
+            } catch (error) {
+                console.error('SSE connection error:', error);
+                setTimeout(connectSSE, 5000); // Retry after 5 seconds
+            }
         };
 
-        eventSource.onerror = (error) => {
-            console.error('SSE error:', error);
-            eventSource.close();
-        };
+        connectSSE();
 
-        return () => eventSource.close();
+        return () => {
+            if (source) {
+                source.close();
+            }
+        };
     },
 }));
 
