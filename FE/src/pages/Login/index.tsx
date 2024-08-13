@@ -46,7 +46,7 @@ function Login() {
             localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
             setUserInfo(userInfo);
             console.log(userInfo.userIdx)
-            notificationStore.initializeSSE(userInfo.userIdx, token)
+            // notificationStore.initializeSSE(userInfo.userIdx, token)
 
             // childStore.readAllChildren(userInfo.userIdx);
             // setChildren(childStore.children);
