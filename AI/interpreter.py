@@ -14,7 +14,7 @@ class Yolo:
 
         image = preprocess_image(image_path)
 
-        results = model.predict(source=processed_image_path, save=True)
+        results = model.predict(source=image, save=True)
         
         # 탐지 결과 json 저장
         file_path = save_result(results, image_path)
