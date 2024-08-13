@@ -14,6 +14,8 @@ import { LOGIN } from '../../apis/userApi';
 import userStore from '../../stores/userStore';
 import useChildStore from '../../stores/childStore';
 import styled from 'styled-components';
+import useNotificationStore from '../../stores/notificationStore';
+
 
 interface ChildData {
     childIdx: number;
@@ -22,6 +24,7 @@ interface ChildData {
 }
 
 function Login() {
+    const notificationStore = useNotificationStore()
     // const childStore = useChildStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -42,6 +45,8 @@ function Login() {
             setToken(token); // Zustand에 사용자 정보 저장
             localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
             setUserInfo(userInfo);
+            console.log(userInfo.userIdx)
+            notificationStore.initializeSSE(userInfo.userIdx, token)
 
             // childStore.readAllChildren(userInfo.userIdx);
             // setChildren(childStore.children);
