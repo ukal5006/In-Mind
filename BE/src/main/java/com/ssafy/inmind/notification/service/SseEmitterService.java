@@ -61,8 +61,6 @@ public class SseEmitterService {
                         .name("sse")
                         .data(notificationDto));
             } catch (IOException exception) {
-                System.out.println("삭제되었습니다");
-                emitterRepository.deleteById(emitterId); // 오류 발생 시 emitter 삭제
             }
         }
     }
