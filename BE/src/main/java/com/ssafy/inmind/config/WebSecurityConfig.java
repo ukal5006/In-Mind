@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                     request.requestMatchers("/swagger-ui/**").permitAll();
                     request.requestMatchers("/orgs/**").permitAll();
                     request.requestMatchers("/notify").permitAll();
+                    request.requestMatchers("/notify/**").permitAll();
 //                    request.requestMatchers("/reserve").authenticated(); // 인증 받은 뒤 가능
 //                    request.requestMatchers("/reserve").hasRole("COUNSELOR"); // 사용자 롤을 지정
 //                    request.anyRequest().permitAll(); // 인증 없이 가능

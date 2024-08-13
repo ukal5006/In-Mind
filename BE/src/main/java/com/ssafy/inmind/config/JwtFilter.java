@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -38,14 +39,22 @@ public class JwtFilter extends OncePerRequestFilter {
 //        excludedPaths.put("/chat", Collections.singletonList("POST"));
        excludedPaths.put("/notify", Collections.singletonList("GET"));
 //        excludedPaths.put("/notify/all", Arrays.asList("GET", "DELETE"));
-    //    excludedPaths.put("/notify/subscribe", Collections.singletonList("GET"));
+        excludedPaths.put("/notify/subscribe", Collections.singletonList("GET"));
 //        excludedPaths.put("/notify/unread", Collections.singletonList("GET"));
 //        excludedPaths.put("/orgs/list", Collections.singletonList("GET"));
         excludedPaths.put("/swagger-ui", Collections.singletonList("GET"));
         excludedPaths.put("/v3/api-docs", Collections.singletonList("GET"));
 
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+
         // 요청된 경로가 필터링 제외 목록에 있고, 해당 경로에서 허용된 메서드인지 확인
-        return excludedPaths.containsKey(path) && excludedPaths.get(path).contains(method);
+        for (Map.Entry<String, List<String>> entry : excludedPaths.entrySet()) {
+            if (pathMatcher.match(entry.getKey(), path) && entry.getValue().contains(method)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
