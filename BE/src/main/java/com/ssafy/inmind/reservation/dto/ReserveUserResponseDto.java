@@ -19,4 +19,5 @@ public class ReserveUserResponseDto {
     private LocalTime reserveInfoStartTime;
     private LocalTime reserveInfoEndTime;
     private LocalDateTime reserveInfoCreateTime;
+    private String isEnd;
 }

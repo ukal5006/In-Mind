@@ -17,6 +17,6 @@ public class ConsultingRequestDto {
 
     private Long reserveID;
     private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private String startTime;
+    private String endTime;
 }
