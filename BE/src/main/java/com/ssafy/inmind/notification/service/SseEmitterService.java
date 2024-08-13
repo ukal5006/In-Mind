@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.yaml.snakeyaml.emitter.Emitter;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class SseEmitterService {
         emitter.onTimeout(() -> emitterRepository.deleteById(emitterId));
 
         // 연결 시 503 에러 방지용 더미 이벤트 전송
-        sendInitialNotification(userId, emitterId);
+        initialSend(emitterId, emitter, "알림 서버 연결 성공. [userId" + userId + "]");
 
         // 클라이언트가 미수신한 event 목록 존재 시 전송(event 유실 방지)
         if (hasLostData(lastEventId)) {
@@ -39,9 +40,22 @@ public class SseEmitterService {
         return emitter;
     }
 
+    private void initialSend(String eventId, SseEmitter emitter, Object object) {
+        SseEmitter sseEmitter = emitterRepository.findById(eventId);
+
+        try {
+            emitter.send(SseEmitter.event()
+                    .name("sse")
+                    .id(eventId)
+                    .data(object));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // emitterId 생성
     public String makeTimeIncludeId(Long userId) {
-        return String.valueOf(userId);
+        return userId.toString() + "_" + System.currentTimeMillis();
     }
 
     // 연결 시 알림 처리
@@ -61,6 +75,8 @@ public class SseEmitterService {
                         .name("sse")
                         .data(notificationDto));
             } catch (IOException exception) {
+                sseEmitter.completeWithError(exception);
+                emitterRepository.deleteById(emitterId);
             }
         }
     }
