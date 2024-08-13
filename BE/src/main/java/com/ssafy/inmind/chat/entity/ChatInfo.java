@@ -29,7 +29,7 @@ public class ChatInfo {
     @JoinColumn(name = "post_idx", nullable = false)
     private User postIdx;
 
-    @Column(name = "content", nullable = false)
+    @Column(columnDefinition = "TEXT", name = "content", nullable = false)
     private String content;
 
     @Column(name = "created_at", nullable = false)

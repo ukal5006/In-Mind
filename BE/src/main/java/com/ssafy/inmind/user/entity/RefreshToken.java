@@ -25,7 +25,7 @@ public class RefreshToken extends BaseEntity {
     @JoinColumn(name = "user_idx")
     private User user;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String refreshToken;
 
     @Column(nullable = false)
