@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SseEmitterService {
 
-    private static final Long TIMEOUT = 60 * 60 * 1000L;
+    private static final Long TIMEOUT = 10 * 1000L;
 
     private final EmitterRepository emitterRepository;
 
