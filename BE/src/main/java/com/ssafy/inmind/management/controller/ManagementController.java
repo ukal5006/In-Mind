@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -25,21 +26,21 @@ public class ManagementController {
 
     @Operation(summary = "기본 상담 시간 조회", description = "상담사가 기본 상담 시간을 조회합니다.")
     @GetMapping("/default-time")
-    public ResponseEntity<DefaultTimeResponseDto> getDefaultTime(@RequestParam @Parameter(description = "유저번호") Long userId) {
+    public ResponseEntity<DefaultTimeResponseDto> getDefaultTime(@Validated @RequestParam @Parameter(description = "유저번호") Long userId) {
         DefaultTimeResponseDto responseDto = managementService.getDefaultTime(userId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @Operation(summary = "기본 상담 시간 수정", description = "상담사가 기본 상담 시간을 추가합니다.")
     @PutMapping("/default-time")
-    public ResponseEntity<Void> updateDefaultTime(@RequestBody DefaultTimeResponseDto dto) {
+    public ResponseEntity<Void> updateDefaultTime(@Validated @RequestBody DefaultTimeResponseDto dto) {
         managementService.updateDefaultTime(dto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Operation(summary = "기본 상담 시간 수정", description = "상담사가 기본 상담 시간을 추가합니다.")
     @DeleteMapping("/default-time")
-    public ResponseEntity<Void> deleteDefaultTime(@RequestParam @Parameter(description = "유저번호") Long userId) {
+    public ResponseEntity<Void> deleteDefaultTime(@Validated @RequestParam @Parameter(description = "유저번호") Long userId) {
         managementService.deleteDefaultTime(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -56,7 +57,7 @@ public class ManagementController {
 
     @Operation(summary = "상담 불가능 시간 생성", description = "상담사가 상담 불가능 시간을 생성합니다.")
     @PostMapping("/unavailable-time")
-    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@RequestParam Long counselorId, @RequestBody @Parameter(description = "상담사 번호") UnavailableTimeDto dto) {
+    public ResponseEntity<UnavailableTimeDto> saveUnavailableTime(@Validated @RequestParam Long counselorId, @RequestBody @Parameter(description = "상담사 번호") UnavailableTimeDto dto) {
         managementService.saveUnavailableTime(counselorId, dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

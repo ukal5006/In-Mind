@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,14 +32,14 @@ public class ResumeController {
 
     @Operation(summary = "이력 등록", description = "이력을 등록합니다.")
     @PostMapping()
-    public ResponseEntity<Void> addResume(@RequestBody ResumeRequestDto requestDto){
+    public ResponseEntity<Void> addResume(@Validated @RequestBody ResumeRequestDto requestDto){
         resumeService.saveResume(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "이력 수정", description = "이력을 수정합니다.")
     @PutMapping("/{resumeId}")
-    public ResponseEntity<Void> updateResume(@PathVariable @Parameter(description = "이력번호") Long resumeId, @RequestBody ResumeUpdateRequestDto requestDto){
+    public ResponseEntity<Void> updateResume(@Validated @PathVariable @Parameter(description = "이력번호") Long resumeId, @RequestBody ResumeUpdateRequestDto requestDto){
         resumeService.updateResume(resumeId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class OrganizationController {
 
     @Operation(summary = "기관 등록", description = "기관 조회시 값이 없으면 기관을 등록합니다.")
     @PostMapping()
-    public ResponseEntity<Void> addOrganization(@RequestBody OrgRequestDto requestDTO) throws RestApiException {
+    public ResponseEntity<Void> addOrganization(@Validated @RequestBody OrgRequestDto requestDTO) throws RestApiException {
         orgService.saveOrg(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

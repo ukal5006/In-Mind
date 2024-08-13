@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ReviewController {
 
     @Operation(summary = "리뷰 등록")
     @PostMapping()
-    public ResponseEntity<Void> addReview(@RequestBody ReviewRequestDto requestDto) {
+    public ResponseEntity<Void> addReview(@Validated @RequestBody ReviewRequestDto requestDto) {
         reviewService.addReview(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
