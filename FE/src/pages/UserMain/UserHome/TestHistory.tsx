@@ -12,19 +12,19 @@ import { useEffect, useState } from 'react';
 import Btn from '../../../components/Btn';
 import moment from 'moment';
 
-interface Report {
+export interface Report {
     reportIdx: number;
     reportCreatedAt: string; // 문자열 형식의 날짜
     reportResult: string; // 보고서 결과
 }
 
-interface Child {
+export interface Child {
     childInfoIdx: number;
     childInfoName: string;
     reports: Report[];
 }
 
-interface Detail {
+export interface Detail {
     reportResult: string;
     houseImage: string;
     treeImage: string;
