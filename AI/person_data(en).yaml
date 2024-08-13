@@ -1,0 +1,20 @@
+path: ../datasets/Person  # dataset root dir
+train: ./train/images
+val: ./val/images
+test: ./test/images
+names:
+    0: Person
+    1: Head
+    2: Face
+    3: Eyes
+    4: Nose
+    5: Mouth
+    6: Ears
+    7: Hair
+    8: Neck
+    9: UpperBody
+    10: Arm
+    11: Hand
+    12: Leg
+    13: Foot
+    14: Button

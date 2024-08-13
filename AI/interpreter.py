@@ -10,7 +10,7 @@ import json
 class Yolo:
     def start_yolo(self, image_path):
         # model = YOLO('best.pt')
-        model = YOLO("best.onnx")
+        model = YOLO("tree_best.onnx")
 
         image = preprocess_image(image_path)
 

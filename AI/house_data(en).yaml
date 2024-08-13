@@ -1,0 +1,13 @@
+path: ../datasets/House  # dataset root dir
+train: ./train/images
+val: ./val/images
+test: ./test/images
+names:
+    0: House
+    1: Roof
+    2: Wall
+    3: Door
+    4: Window
+    5: Chimney
+    6: Smoke
+    7: Fence

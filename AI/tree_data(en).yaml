@@ -1,0 +1,19 @@
+path: ../datasets/Tree  # dataset root dir
+train: ./train/images
+val: ./val/images
+test: ./test/images
+names:
+    0: Tree
+    1: Trunk
+    2: Crown
+    3: Branch
+    4: Root
+    5: Leaf
+    6: Flower
+    7: Fruit
+    8: Swing
+    9: Bird
+    10: Cloud
+    11: Moon
+    12: Star
+
