@@ -1,6 +1,5 @@
 package com.ssafy.inmind.reservation.service;
 
-
 import com.ssafy.inmind.child.entity.Child;
 import com.ssafy.inmind.child.repository.ChildRepository;
 import com.ssafy.inmind.exception.ErrorCode;
@@ -73,11 +72,18 @@ public class ReserveService {
             throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
 
+        Child child = childRepository.findById(request.getChildIdx())
+                .orElseThrow(() ->new RestApiException(ErrorCode.NOT_FOUND));
+
+        Report report = reportRepository.findTopByChildIdOrderByCreatedAtDesc(child.getId())
+                .orElseThrow(()-> new RestApiException(ErrorCode.NOT_FOUND));
+        log.info(report.toString());
+
         // 예약 정보 저장
         Reservation reservation = Reservation.builder()
                 .user(user)
                 .counselor(counselor)
-                .reportIdx(request.getReportIdx())
+                .reportIdx(report.getId())
                 .localDate(reservationDate)
                 .startTime(startTime)
                 .endTime(endTime)
