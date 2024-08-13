@@ -52,6 +52,23 @@ const Card = styled.div`
 const Item = styled.div``;
 
 function ReservationHistory() {
+    // const { userInfo, token } = userStore();
+    // const [reservationHistory, setReservationHistory] = useState([]);
+
+    // useEffect(() => {
+    //     if (userInfo?.userIdx) {
+    //         axios
+    //             .get(READRESERVEALL(userInfo?.userIdx), {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`,
+    //                     accept: '*/*',
+    //                     'Content-Type': 'application/json;charset=UTF-8',
+    //                 },
+    //             })
+    //             .then((response) => setReservationHistory(response.data))
+    //             .then(() => console.log(reservationHistory));
+    //     }
+    // }, [userInfo, token]);
     return (
         <ReservationHistoryContainer>
             <HistoryContainer>
