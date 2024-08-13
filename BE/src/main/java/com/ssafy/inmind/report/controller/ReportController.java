@@ -1,17 +1,16 @@
 package com.ssafy.inmind.report.controller;
 
-import com.ssafy.inmind.report.dto.ReportListResponseDto;
-import com.ssafy.inmind.report.dto.ReportRequestDto;
-import com.ssafy.inmind.report.dto.ReportResponseDto;
+import com.ssafy.inmind.report.dto.*;
 import com.ssafy.inmind.report.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @Slf4j
@@ -21,14 +20,39 @@ import org.springframework.web.bind.annotation.*;
 public class ReportController {
 
     private final ReportService reportService;
+    private final RestTemplate restTemplate;
 
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
-    public ResponseEntity<Void> addReport(@RequestBody ReportRequestDto requestDto) {
-        reportService.addReport(requestDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<FastApiResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
+        String fastApi = "http://127.0.0.1:8000/interpretation";
+        FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
+                .url(requestDto.getTreeImage())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<FastApiRequestDto> requestEntity = new HttpEntity<>(fastApiRequestDto, headers);
+
+        try {
+            ResponseEntity<FastApiResponseDto> response = restTemplate.exchange(fastApi, HttpMethod.POST, requestEntity, FastApiResponseDto.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println(response.getBody());
+                FastApiResponseDto jsonData = response.getBody();
+                reportService.addReport(requestDto);
+                return ResponseEntity.status(HttpStatus.OK).body(jsonData);
+            } else {
+                log.error("Error response from FastAPI: {}", response.getBody());
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (RestClientException e) {
+            log.error("Request to FastAPI failed: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-    
+
+
     @Operation(summary = "검사 분석 조회", description = "검사 분석을 조회합니다.")
     @GetMapping("/{reportId}")
     public ResponseEntity<?> getReport(@PathVariable @Parameter(description = "검사분석번호") Long reportId, @RequestParam @Parameter(description = "유저번호") Long userId) {
