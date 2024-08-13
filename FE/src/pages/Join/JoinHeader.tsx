@@ -4,11 +4,14 @@ import { Link, useLocation } from 'react-router-dom';
 
 const HeaderContainer = styled.div`
     width: 100%;
-    height: 40px;
+    height: 55px;
     position: absolute;
     top: -1px;
-    border: 1px solid ${colors.gray};
+    border: 1px ${colors.gray};
     display: flex;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    overflow: hidden;  // 이를 추가하여 자식 요소가 모서리를 벗어나지 않도록 합니다.
 `;
 
 const HeaderLink = styled(Link)<{ isActive: boolean }>`
@@ -16,12 +19,11 @@ const HeaderLink = styled(Link)<{ isActive: boolean }>`
     align-items: center;
     justify-content: center;
     width: 50%;
-    background-color: ${(props) => (props.isActive ? colors.lightGreen : colors.white)}; /* 활성화 시 배경색 변경 */
-    color: ${(props) => (props.isActive ? colors.black : colors.gray)}; /* 활성화 시 배경색 변경 */
-    font-weight: ${(props) => (props.isActive ? '700' : '500')}; /* 활성화 시 글자색 변경 */
-    &:hover {
-        transition: 1s;
-        background-color: ${colors.lightGreen};
+    background-color: ${(props) => (props.isActive ? colors.white : colors.lightGreen)};
+    color: ${(props) => (props.isActive ? colors.black : colors.black)};
+    font-weight: ${(props) => (props.isActive ? '700' : '500')};
+    &:first-child {
+        border-right: 1px solid ${colors.veryLightGray};  // 첫 번째 링크의 오른쪽에 border 추가
     }
 `;
 

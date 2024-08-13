@@ -12,4 +12,7 @@ export const colors = {
     darkGray: '#757575',
     lightGray: '#999999',
     lightWhite: '#fdfdf8',
+    realDarkGreen: '#2E8B57',
+    okGreen: '#10c263',
+    veryLightGray: '#f0f0f0',
 };
