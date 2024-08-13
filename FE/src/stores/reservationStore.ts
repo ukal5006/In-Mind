@@ -15,12 +15,20 @@ interface ReserveTime {
     second: number;
     nano: number;
 }
+
+interface ReservationState {
+    reservationList: Reservation[] | null;
+    setReservationList: (reservationList: Reservation[]) => void;
+    nowReservation: Reservation | null;
+    setNowReservation: (nowReservation: Reservation) => void;
+  }
+
 // Zustand 스토어 생성
-const reservationStore = create((set) => ({
+const reservationStore = create<ReservationState>((set) => ({
     reservationList: null,
     setReservationList: (reservationList: Reservation[]) => set({ reservationList }),
     nowReservation:null,
-    setNowReservation:(nowReservation: Reservation[]) => set({nowReservation}),
+    setNowReservation: (nowReservation: Reservation) => set({ nowReservation }),
 }));
 
 export default reservationStore;
