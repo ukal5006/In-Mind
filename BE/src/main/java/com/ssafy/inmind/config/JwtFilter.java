@@ -38,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
 //        excludedPaths.put("/chat", Collections.singletonList("POST"));
        excludedPaths.put("/notify", Collections.singletonList("GET"));
 //        excludedPaths.put("/notify/all", Arrays.asList("GET", "DELETE"));
-//        excludedPaths.put("/notify/subscribe", Arrays.asList("POST", "DELETE"));
+       excludedPaths.put("/notify/subscribe", Collections.singletonList("GET"));
 //        excludedPaths.put("/notify/unread", Collections.singletonList("GET"));
 //        excludedPaths.put("/orgs/list", Collections.singletonList("GET"));
         excludedPaths.put("/swagger-ui", Collections.singletonList("GET"));
