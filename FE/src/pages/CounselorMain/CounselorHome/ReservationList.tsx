@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import userStore from '../../../stores/userStore';
 import { FacialContainer, FacialInfo } from '../../UserMain/UserHome/ReservationHistory';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import { READREPORTS } from '../../../apis/reportsApi';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -160,10 +161,22 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
 
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+    const [report, setReport] = useState<any>();
+
     const handleFacial = (facialInfo: FacialInfo) => {
         setFacialInfo(facialInfo);
-        setIsFacial(true);
+        axios
+            .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setReport(response.data))
+            .then(() => setIsFacial(true));
     };
+
     return (
         <>
             <TitleContainer>
@@ -233,6 +246,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                             childName={facialInfo?.childName}
                             reserveInfoIdx={facialInfo?.reserveInfoIdx}
                             reportIdx={facialInfo?.reportIdx}
+                            report={report}
                         />
                     </FacialContainer>
                     <Btn

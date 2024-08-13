@@ -7,12 +7,13 @@ import ContainerTopTitle from '../../../components/ContainerTopTitle';
 import ContainerTopLink from '../../../components/ContainerTopLink';
 import { FaPlus } from 'react-icons/fa';
 import ActiveBtn from '../../../components/ActiveBtn';
-import reservationStore from '../../../stores/reservationStore';
+// import reservationStore from '../../../stores/reservationStore';
 import userStore from '../../../stores/userStore';
 import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
 import Btn from '../../../components/Btn';
+import { READREPORTS } from '../../../apis/reportsApi';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -84,10 +85,20 @@ function ReservationHistory() {
     const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+    const [report, setReport] = useState<any>();
 
     const handleFacial = (facialInfo: FacialInfo) => {
         setFacialInfo(facialInfo);
-        setIsFacial(true);
+        axios
+            .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setReport(response.data))
+            .then(() => setIsFacial(true));
     };
 
     useEffect(() => {
@@ -156,6 +167,7 @@ function ReservationHistory() {
                             childName={facialInfo?.childName}
                             reserveInfoIdx={facialInfo?.reserveInfoIdx}
                             reportIdx={facialInfo?.reportIdx}
+                            report={report}
                         />
                     </FacialContainer>
                     <Btn
