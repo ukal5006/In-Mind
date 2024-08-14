@@ -1,20 +1,23 @@
 from interpreter import analyze_house_image, analyze_tree_image, analyze_person_image
+
+import string
 import json
+import random
 
 # 모델 경로 설정
-house_model_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/PT_Files/house_best.onnx'
-tree_model_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/PT_Files/tree_best.onnx'
-person_model_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/PT_Files/person_best.onnx'
+house_model_path = 'PT_Files/house_best.onnx'
+tree_model_path = 'PT_Files/tree_best.onnx'
+person_model_path = 'PT_Files/person_best.onnx'
 
 # 테스트용 이미지 경로 설정
-house_image_path = '/home/byunggyu/transform/집_7_남_04487.jpg'  # 여기에 실제 로컬 이미지 경로를 넣으세요
-tree_image_path = '/home/byunggyu/transform/tree_files/tree_00000.jpg'    # 여기에 실제 로컬 이미지 경로를 넣으세요
-person_image_path = '/home/byunggyu/transform/남자사람_8_남_13433.jpg'  # 여기에 실제 로컬 이미지 경로를 넣으세요
+house_image_path = 'temp/home.jpg'  # 여기에 실제 로컬 이미지 경로를 넣으세요
+tree_image_path = 'temp/img_4180.jpg'    # 여기에 실제 로컬 이미지 경로를 넣으세요
+person_image_path = 'temp/person.PNG'  # 여기에 실제 로컬 이미지 경로를 넣으세요
 
 # 해석 파일 경로 설정
-house_interpretations_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/jsonl/House_interpretations.jsonl'
-tree_interpretations_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/jsonl/Tree_Interpretations.jsonl'
-person_interpretations_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/jsonl/Person_Interpretations.jsonl'
+house_interpretations_path = 'jsonl/House_interpretations.jsonl'
+tree_interpretations_path = 'jsonl/Tree_Interpretations.jsonl'
+person_interpretations_path = 'jsonl/Person_Interpretations.jsonl'
 
 def load_interpretations(jsonl_file_path):
     interpretations = {}
@@ -83,7 +86,9 @@ if __name__ == "__main__":
     analysis_json = generate_analysis_json(house_results, tree_results, person_results)
 
     # JSON 파일로 저장
-    output_file_path = '/home/byunggyu/HTP_Project/S11P12B301/AI/results/analysis_results.json'
+    random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+    output_file_path = f'results/analysis_results_{random_suffix}.json'
+
     with open(output_file_path, 'w', encoding='utf-8') as output_file:
         json.dump(analysis_json, output_file, ensure_ascii=False, indent=4)
 
