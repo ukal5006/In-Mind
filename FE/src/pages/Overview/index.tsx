@@ -8,6 +8,7 @@ import OnePageWrapper from './OnePageWrapper';
 import Pagination from './Pagination';
 import Dot from './Dot';
 import BtnWrapper from './BtnWrapper';
+import userStore from '../../stores/userStore';
 
 const Overview: React.FC = () => {
     const navigate = useNavigate();
@@ -25,6 +26,28 @@ const Overview: React.FC = () => {
     const handleLoginClick = () => {
         navigate('/login');
     };
+
+    const { setToken, setUserInfo } = userStore();
+
+    useEffect(() => {
+        const userInfo = localStorage.getItem('userInfo');
+        const token = localStorage.getItem('jwt');
+
+        // 유저 정보가 있으면 자동 로그인
+        if (userInfo && token) {
+            const parsedUserInfo = JSON.parse(userInfo);
+            setToken(token);
+            setUserInfo(parsedUserInfo);
+            console.log('토큰있음');
+
+            // 역할에 따라 적절한 페이지로 이동
+            if (parsedUserInfo.userRole === 'USER') {
+                navigate('/user');
+            } else {
+                navigate('/counselor');
+            }
+        }
+    }, [navigate, setToken, setUserInfo]);
 
     useEffect(() => {
         const handleScroll = (event: WheelEvent) => {

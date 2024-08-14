@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LoginBtn from './LoginBtn';
 import LoginContainer from './LoginContainer';
 import LoginInput from './LoginInput';
@@ -16,7 +16,6 @@ import useChildStore from '../../stores/childStore';
 import styled from 'styled-components';
 import useNotificationStore from '../../stores/notificationStore';
 
-
 interface ChildData {
     childIdx: number;
     childName: string;
@@ -24,14 +23,12 @@ interface ChildData {
 }
 
 function Login() {
-    const notificationStore = useNotificationStore()
+    const notificationStore = useNotificationStore();
     // const childStore = useChildStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { setToken, setUserInfo } = userStore((state) => state);
-
-    // const [children, setChildren] = useState<ChildData[]>([]);
 
     const handleLogin = async () => {
         try {
@@ -42,14 +39,10 @@ function Login() {
 
             // 로그인 성공 시 JWT 저장 및 사용자 정보 설정
             const { token, userInfo } = response.data; // 서버에서 반환된 JWT 및 사용자 정보
-            setToken(token); // Zustand에 사용자 정보 저장
             localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
+            localStorage.setItem('userInfo', JSON.stringify(userInfo)); // 사용자 정보를 JSON 문자열로 저장
+            setToken(token); // Zustand에 사용자 정보 저장
             setUserInfo(userInfo);
-            console.log(userInfo.userIdx)
-            // notificationStore.initializeSSE(userInfo.userIdx, token)
-
-            // childStore.readAllChildren(userInfo.userIdx);
-            // setChildren(childStore.children);
 
             if (userInfo.userRole === 'USER') {
                 navigate('/user');
