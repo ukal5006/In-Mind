@@ -18,14 +18,14 @@ class Dto(BaseModel):
     data : dict
 
 # 모델 경로 설정
-house_model_path = 'PT_Files/house_best.onnx'
-tree_model_path = 'PT_Files/tree_best.onnx'
-person_model_path = 'PT_Files/person_best.onnx'
+house_model_path = './PT_Files/house_best.onnx'
+tree_model_path = './PT_Files/tree_best.onnx'
+person_model_path = './PT_Files/person_best.onnx'
 
 # 해석 파일 경로 설정
-house_interpretations_path = 'jsonl/House_interpretations.jsonl'
-tree_interpretations_path = 'jsonl/Tree_Interpretations.jsonl'
-person_interpretations_path = 'jsonl/Person_Interpretations.jsonl'
+house_interpretations_path = './jsonl/House_interpretations.jsonl'
+tree_interpretations_path = './jsonl/Tree_Interpretations.jsonl'
+person_interpretations_path = './jsonl/Person_Interpretations.jsonl'
 
 def load_interpretations(jsonl_file_path):
     interpretations = {}
@@ -63,7 +63,7 @@ def generate_analysis_json(house_results, tree_results, person_results):
             
     return analysis_result
 
-@app.post("/analyze/")
+@app.post("/analyze")
 async def analyze(request: AnalyzeRequest):
     # 임시 이미지 저장 디렉토리 설정
     temp_dir = "temp_images"
