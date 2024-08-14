@@ -24,8 +24,8 @@ person_model_path = './PT_Files/person_best.onnx'
 
 # 해석 파일 경로 설정
 house_interpretations_path = './jsonl/House_interpretations.jsonl'
-tree_interpretations_path = './jsonl/Tree_Interpretations.jsonl'
-person_interpretations_path = './jsonl/Person_Interpretations.jsonl'
+tree_interpretations_path = './jsonl/Tree_interpretations.jsonl'
+person_interpretations_path = './jsonl/Person_interpretations.jsonl'
 
 def load_interpretations(jsonl_file_path):
     interpretations = {}
