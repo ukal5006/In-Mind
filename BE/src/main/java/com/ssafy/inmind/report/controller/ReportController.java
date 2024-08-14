@@ -31,8 +31,6 @@ public class ReportController {
         String fastApi = "https://b301.xyz/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
                 .treeUrl(requestDto.getTreeImage())
-                .houseUrl(requestDto.getHouseImage())
-                .personUrl(requestDto.getPersonImage())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
@@ -44,7 +42,6 @@ public class ReportController {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
-                System.out.println(jsonData.toString());
                 String result;
                 if(jsonData != null) {
                     result = gptService.generateResult(jsonData);

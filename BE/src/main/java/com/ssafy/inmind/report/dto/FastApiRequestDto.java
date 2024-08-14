@@ -11,6 +11,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FastApiRequestDto {
     private String treeUrl;
-    private String houseUrl;
-    private String personUrl;
 }
