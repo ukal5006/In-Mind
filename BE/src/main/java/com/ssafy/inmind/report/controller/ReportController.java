@@ -39,15 +39,15 @@ public class ReportController {
 
         try {
             ResponseEntity<FastApiResponseDto> response = restTemplate.exchange(fastApi, HttpMethod.POST, requestEntity, FastApiResponseDto.class);
-
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
                 String result;
-                if(jsonData != null) {
+                if(jsonData!=null) {
                     result = gptService.generateResult(jsonData);
                     ReportEndResponseDto reportEndResponseDto = reportService.addReport(requestDto, jsonData, result);// 검사 결과 저장하고 바로 조회하게 해야하나?
                     return ResponseEntity.status(HttpStatus.OK).body(reportEndResponseDto);
-                } else {
+                }
+                else {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
             } else {
