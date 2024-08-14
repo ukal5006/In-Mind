@@ -28,10 +28,11 @@ public class ReportController {
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
     public ResponseEntity<ReportEndResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
-//        String fastApi = "http://b301.xyz/interpretation";
-        String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
+        String fastApi = "http://b301.xyz/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
-                .url(requestDto.getTreeImage())
+                .treeUrl(requestDto.getTreeImage())
+                .houseUrl(requestDto.getHouseImage())
+                .personUrl(requestDto.getPersonImage())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
@@ -43,7 +44,7 @@ public class ReportController {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
-//                System.out.println(jsonData.toString());
+                System.out.println(jsonData.toString());
                 String result;
                 if(jsonData != null) {
                     result = gptService.generateResult(jsonData);
