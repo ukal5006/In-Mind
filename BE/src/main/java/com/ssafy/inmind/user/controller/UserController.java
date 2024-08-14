@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,28 +33,28 @@ public class UserController {
 
     @Operation(summary = "유저 회원가입", description = "유저가 회원가입을 합니다.", security = @SecurityRequirement(name = ""))
     @PostMapping("user")
-    public ResponseEntity<Void> userJoin(@Validated @RequestBody UserRequestDto userRequestDto) throws RestApiException {
+    public ResponseEntity<Void> userJoin(@Valid @RequestBody UserRequestDto userRequestDto) throws RestApiException {
         userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "상담사 회원가입", description = "상담사가 회원가입을 합니다.", security = @SecurityRequirement(name = ""))
     @PostMapping("counselor")
-    public ResponseEntity<Void> counselorJoin(@Validated @RequestBody CounselorRequestDto counselorRequestDto) throws RestApiException {
+    public ResponseEntity<Void> counselorJoin(@Valid @RequestBody CounselorRequestDto counselorRequestDto) throws RestApiException {
         userService.saveCounselor(counselorRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(summary = "로그인", description = "로그인 기능", security = @SecurityRequirement(name = ""))
     @PostMapping
-    public ResponseEntity<UserLoginResponseDto> login(@Validated @RequestBody UserLoginRequestDto loginDto) throws RestApiException {
+    public ResponseEntity<UserLoginResponseDto> login(@Valid @RequestBody UserLoginRequestDto loginDto) throws RestApiException {
         UserLoginResponseDto UserLoginResponseDto = userService.login(loginDto);
         return ResponseEntity.ok().body(UserLoginResponseDto);
     }
 
     @Operation(summary = "비밀번호 변경", description = "사용자의 비밀번호를 변경합니다.")
     @PutMapping("/password/{userId}")
-    public ResponseEntity<Void> savePassword(@Validated @PathVariable Long userId, @RequestBody UserPasswordRequestDto requestDto) throws RestApiException {
+    public ResponseEntity<Void> savePassword(@Valid @PathVariable Long userId, @RequestBody UserPasswordRequestDto requestDto) throws RestApiException {
         userService.updateUserPassword(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -91,7 +92,7 @@ public class UserController {
 
     @Operation(summary = "비밀번호 확인", description = "입력받은 비밀번호가 맞는지 확인합니다.")
     @PostMapping("check-pw")
-    public ResponseEntity<Void> userPasswordCheck(@RequestBody UserLoginRequestDto userLoginRequestDto){
+    public ResponseEntity<Void> userPasswordCheck(@Valid @RequestBody UserLoginRequestDto userLoginRequestDto){
         if (userService.checkUserPassword(userLoginRequestDto).equals("fail")){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -109,7 +110,7 @@ public class UserController {
     @Operation(summary = "유저 회원 정보 수정", description = "입력받은 유저번호로 유저의 회원 정보를 수정합니다.")
     @Parameter(name = "userId", description = "유저번호")
     @PutMapping("/user/{userId}")
-    public ResponseEntity<UserResponseDto> updateUser(@Validated @PathVariable Long userId, @RequestBody UserUpdateRequestDto requestDto){
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @PathVariable Long userId, @RequestBody UserUpdateRequestDto requestDto){
         userService.updateUser(userId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
