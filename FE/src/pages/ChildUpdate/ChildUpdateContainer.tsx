@@ -22,6 +22,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
         childBirth: '',
     });
     const [error, setError] = useState<string>('');
+    const [isOpen, setIsOpen] = useState<boolean>(true);
 
     const formatDate = (input: string): string => {
         const numbers = input.replace(/\D/g, '');
@@ -66,7 +67,16 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
         const lastDayOfMonth = new Date(year, month, 0).getDate();
         if (day < 1 || day > lastDayOfMonth) return false;
 
+        const inputDate = new Date(year, month - 1, day);
+        const today = new Date();
+        if (inputDate > today) return false;
+
         return true;
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+        onClose();
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,7 +89,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
         }
 
         if (!isValidDate(childInfo.childBirth)) {
-            setError('올바른 생년월일을 입력해주세요. (YYYY-MM-DD 형식)');
+            setError('생년월일은 1900년 1월 1일부터 오늘까지의 날짜만 입력 가능합니다. (YYYY-MM-DD 형식)');
             return;
         }
 
@@ -97,7 +107,8 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                 console.log('자녀정보 수정 성공');
                 alert('자녀 정보 수정');
             }
-            // 성공 후 추가 작업 (예: 폼 초기화, 페이지 이동 등)
+            // 성공 후 추가 작업
+            closeModal();
         } catch (error) {
             console.error('API 요청 오류:', error);
             setError('정보 저장 중 오류가 발생했습니다. 다시 시도해 주세요.');
@@ -108,6 +119,10 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
             }
         }
     };
+
+    if (!isOpen) {
+        return <></>;
+    }
 
     return (
         <div>
