@@ -1,3 +1,4 @@
+import { useCounselorStore } from '../../stores/counselorDetailStore';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Container from '../../components/Container';
@@ -57,26 +58,27 @@ const CareerScollList = styled(CareerList)`
 `;
 
 const CareerListItem = styled.li`
-    display: flex;
     width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    margin: 10px 0; /* 아이템 간격 추가 */
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 0px 10px;
 `;
 
 const ItemContent = styled.div`
-    height: 50px;
-    display: flex;
-    align-items: center;
-    font-size: 18px;
+  flex: 1;  // 0 0 80%에서 1로 변경
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  margin-right: 10px;  // BtnWrapper와의 간격
 `;
 
 const UpdateBtn = styled(Btn)`
     background-color: ${colors.darkGreen};
     color: ${colors.white};
     font-size: 14px;
-    width: auto;
-    min-width: 40px;
 `;
 
 const DeleteBtn = styled(Btn)`
@@ -84,6 +86,29 @@ const DeleteBtn = styled(Btn)`
     color: ${colors.white};
     font-size: 14px;
     margin-left: 5px;
+`;
+
+
+const BtnWrapper = styled(Wrapper)`
+  flex: 0 0 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;  // flex-end에서 stretch로 변경
+  justify-content: center;
+  height: 100%;
+  gap: 5px;  // 버튼 사이의 간격
+`;
+
+const DragIcon = styled(MdDragHandle)`
+font-size: 20px;
+margin-right: 5px;
+`;
+
+const CareerItemContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;  // 추가
 `;
 
 const Input = styled.input`
@@ -95,38 +120,63 @@ const Input = styled.input`
     }
 `;
 
-const BtnWrapper = styled(Wrapper)`
-    display: flex;
+const CareerButton = styled.button`
+  width: 50%;  // 80%에서 100%로 변경
+  height: 25px;
+  display: inline-flex;  // flex에서 inline-flex로 변경
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap;  // 텍스트가 한 줄로 유지되도록 함
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const DragIcon = styled(MdDragHandle)`
-    font-size: 20px;
-    margin-right: 5px;
+const CareerUpdateBtn = styled(CareerButton)`
+  background-color: ${colors.darkGreen};
+  color: ${colors.white};
+  margin-bottom: 5px;
+  &:hover {
+    background-color: ${colors.darkGreen};
+  }
+`;
+
+const CareerDeleteBtn = styled(CareerButton)`
+  background-color: ${colors.red};
+  color: ${colors.white};
+  &:hover {
+    background-color: tomato;
+  }
 `;
 
 function CounselorCareer() {
     const { userInfo, token } = userStore((state) => state);
     const [careers, setCareers] = useState<string[]>([]);
     const [resumeIdx, setResumeIdx] = useState('-1');
+    const {counselor} = useCounselorStore()
     //   const array = [`밥먹기`, `청소하기`, `공부하기`];
     //   const jsonString = JSON.stringify(array);
     //   console.log(jsonString);
 
+    
     useEffect(() => {
         if (userInfo?.userIdx) {
             axios
-                .get(READRESUMES(userInfo.userIdx), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                })
-                .then((response) => {
-                    setResumeIdx(response.data.resumeIdx);
-                    const formattedString = response.data.info.replace(/`/g, '"');
-                    setCareers(JSON.parse(formattedString));
-                })
+            .get(READRESUMES(userInfo.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => {
+                setResumeIdx(response.data.resumeIdx);
+                const formattedString = response.data.info.replace(/`/g, '"');
+                setCareers(JSON.parse(formattedString));
+            })
                 .catch((error) => {
                     if (error.response && error.response.status === 404) {
                         console.log('이력없슴');
@@ -160,7 +210,7 @@ function CounselorCareer() {
                                         setCareers(JSON.parse(formattedString));
                                     });
                             });
-                    } else {
+                        } else {
                         console.error('API 호출 실패:', error);
                     }
                 });
@@ -170,7 +220,7 @@ function CounselorCareer() {
     const [newCareer, setNewCareer] = useState<string>('');
     const [editingIndex, setEditingIndex] = useState<number | null>(null);
     const [editingCareer, setEditingCareer] = useState<string>('');
-
+   
     useEffect(() => {
         if (resumeIdx !== '-1') {
             axios
@@ -247,78 +297,84 @@ function CounselorCareer() {
 
     return (
         <CounselorCareerContainer>
-            <CareerContainer>
-                <CareerContainerHeader>소속 기관</CareerContainerHeader>
-                <CareerList>
-                    <CareerListItem>기관명 : 삼성청년심리상담센터</CareerListItem>
-                    <Line />
-                    <CareerListItem>주소 : 대전광역시 유성구 덕명동 124</CareerListItem>
-                    <Line />
-                    <CareerListItem>전화번호 : 042-820-7400</CareerListItem>
-                    <Line />
-                    <CareerListItem>
-                        <UpdateBtn>수정하기</UpdateBtn>
-                    </CareerListItem>
-                </CareerList>
-            </CareerContainer>
-            <Line />
-            <CareerContainer>
-                <CareerContainerHeader>이력</CareerContainerHeader>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="careers">
-                        {(provided) => (
-                            <CareerScollList {...provided.droppableProps} ref={provided.innerRef}>
-                                {careers.map((career, index) => (
-                                    <Draggable key={career} draggableId={career} index={index}>
-                                        {(provided) => (
-                                            <CareerListItem
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                            >
-                                                {editingIndex === index ? (
-                                                    <>
-                                                        <Input
-                                                            type="text"
-                                                            value={editingCareer}
-                                                            onChange={(e) => setEditingCareer(e.target.value)}
-                                                        />
-                                                        <UpdateBtn onClick={handleUpdateCareer}>확인</UpdateBtn>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <ItemContent>
-                                                            <DragIcon />
-                                                            {career}
-                                                        </ItemContent>
-                                                        <BtnWrapper>
-                                                            <UpdateBtn onClick={() => handleEditCareer(index)}>
-                                                                수정
-                                                            </UpdateBtn>
-                                                            <DeleteBtn onClick={() => handleDeleteCareer(index)}>
-                                                                삭제
-                                                            </DeleteBtn>
-                                                        </BtnWrapper>
-                                                    </>
-                                                )}
-                                            </CareerListItem>
+    <CareerContainer>
+        <CareerContainerHeader>소속 기관</CareerContainerHeader>
+        {counselor ? (
+            <CareerList>
+                <CareerListItem>기관명 : {counselor.organizationName}</CareerListItem>
+                <Line />
+                <CareerListItem>전화번호 : {counselor.organizationTel}</CareerListItem>
+                <Line />
+            </CareerList>
+        ) : (
+            <CareerList>
+                <CareerListItem>기관명 : 삼성청년심리상담센터</CareerListItem>
+                <Line />
+                <CareerListItem>주소 : 대전광역시 유성구 덕명동 124</CareerListItem>
+                <Line />
+                <CareerListItem>전화번호 : 042-820-7400</CareerListItem>
+                <Line />
+            </CareerList>
+        )}
+    </CareerContainer>
+    <Line />
+    <CareerContainer>
+        <CareerContainerHeader>이력</CareerContainerHeader>
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="careers">
+                {(provided) => (
+                    <CareerScollList {...provided.droppableProps} ref={provided.innerRef}>
+                        {careers.map((career, index) => (
+                            <Draggable key={career} draggableId={career} index={index}>
+                                {(provided) => (
+                                    <CareerListItem
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                    >
+                                        {editingIndex === index ? (
+                                            <>
+                                                <Input
+                                                    type="text"
+                                                    value={editingCareer}
+                                                    onChange={(e) => setEditingCareer(e.target.value)}
+                                                />
+                                                <UpdateBtn onClick={handleUpdateCareer}>확인</UpdateBtn>
+                                            </>
+                                        ) : (
+                                            <CareerItemContainer>
+                                                <ItemContent>
+                                                    <DragIcon />
+                                                    {career}
+                                                </ItemContent>
+                                                <BtnWrapper>
+                                                    <CareerUpdateBtn onClick={() => handleEditCareer(index)}>
+                                                        수정
+                                                    </CareerUpdateBtn>
+                                                    <CareerDeleteBtn onClick={() => handleDeleteCareer(index)}>
+                                                        삭제
+                                                    </CareerDeleteBtn>
+                                                </BtnWrapper>
+                                            </CareerItemContainer>
                                         )}
-                                    </Draggable>
-                                ))}
-                                {provided.placeholder}
-                            </CareerScollList>
-                        )}
-                    </Droppable>
-                </DragDropContext>
-                <Input
-                    type="text"
-                    value={newCareer}
-                    onChange={(e) => setNewCareer(e.target.value)}
-                    onKeyDown={handleInputKeyDown}
-                    placeholder="새 이력 추가"
-                />
-            </CareerContainer>
-        </CounselorCareerContainer>
+                                    </CareerListItem>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
+                    </CareerScollList>
+                )}
+            </Droppable>
+        </DragDropContext>
+        <Input
+            type="text"
+            value={newCareer}
+            onChange={(e) => setNewCareer(e.target.value)}
+            onKeyDown={handleInputKeyDown}
+            placeholder="새 이력 추가"
+        />
+    </CareerContainer>
+</CounselorCareerContainer>
     );
 }
 

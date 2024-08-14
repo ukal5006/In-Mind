@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import Container from "../../../components/Container";
-import Wrapper from "../../../components/Wrapper";
-import ContainerTop from "../../../components/ContainerTop";
-import ContainerTopTitle from "../../../components/ContainerTopTitle";
-import ContainerTopLink from "../../../components/ContainerTopLink";
-import { FaPlus } from "react-icons/fa";
-import ActiveBtn from "../../../components/ActiveBtn";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Container from '../../../components/Container';
+import Wrapper from '../../../components/Wrapper';
+import ContainerTop from '../../../components/ContainerTop';
+import ContainerTopTitle from '../../../components/ContainerTopTitle';
+import ContainerTopLink from '../../../components/ContainerTopLink';
+import { FaPlus } from 'react-icons/fa';
+import ActiveBtn from '../../../components/ActiveBtn';
 // import reservationStore from '../../../stores/reservationStore';
-import userStore from "../../../stores/userStore";
-import axios from "axios";
-import { READRESERVEALL } from "../../../apis/reserveApi";
-import VideoRoomComponent from "../../FacialMeeting/components/VideoRoomComponent";
-import Btn from "../../../components/Btn";
-import { READREPORTS } from "../../../apis/reportsApi";
+import userStore from '../../../stores/userStore';
+import axios from 'axios';
+import { READRESERVEALL } from '../../../apis/reserveApi';
+import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import Btn from '../../../components/Btn';
+import { READREPORTS } from '../../../apis/reportsApi';
 
 interface reservationInfo {
     reserveInfoIdx: number;
