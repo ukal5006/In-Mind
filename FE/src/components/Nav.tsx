@@ -84,8 +84,19 @@ const NotificationBadge = styled.span`
 
 function Nav() {
     const navigate = useNavigate();
-    const { userInfo } = userStore((state) => state);
+    const { userInfo, setToken, setUserInfo } = userStore((state) => state);
     const { unreadCount } = useNotificationStore();
+
+    const handleLogout = () => {
+        // 상태 및 localStorage 초기화
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('userInfo');
+        setToken('');
+        setUserInfo(null); // 사용자 정보를 초기화
+
+        // 로그인 페이지로 리다이렉트
+        navigate('/login');
+    };
 
     useSSE();
     console.log('Nav component rendering');
@@ -111,7 +122,7 @@ function Nav() {
                         </NotificationLink>
                         <Link to="mypage">{userInfo.userName}님, 환영합니다!</Link>
 
-                        <LogoutBtn onClick={() => navigate('/')}>로그아웃</LogoutBtn>
+                        <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
                     </>
                 ) : (
                     <>

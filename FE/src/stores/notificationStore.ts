@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import axios from 'axios';
-import userStore from './userStore';
 import ENDPOINT from '../apis/endpoint';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 
 export interface Notification {
     notificationIdx: number;
@@ -19,7 +18,7 @@ interface NotificationStore {
     markAllAsRead: () => void;
     deleteNotification: (notificationIdx: number) => void;
     deleteAllNotifications: () => void;
-    initializeSSE: (userId: any, token:any) => () => void;
+    initializeSSE: (userId: string, token: string) => () => void;
 }
 
 const useNotificationStore = create<NotificationStore>((set) => ({
@@ -52,58 +51,92 @@ const useNotificationStore = create<NotificationStore>((set) => ({
             return { notifications: updatedNotifications, unreadCount: newUnreadCount };
         }),
     deleteAllNotifications: () => set({ notifications: [], unreadCount: 0 }),
-    initializeSSE: (userId: any, token:any) => {
-        let source: EventSource;
+    initializeSSE: (userId: string, token: string) => {
+        let eventSource: EventSourcePolyfill | null = null;
+        let retryCount = 0;
+        const MAX_RETRY_COUNT = 5;
+        const MAX_RETRY_DELAY = 60000;
+        const CONNECTION_TIMEOUT = 180000; // 90초로 연결 타임아웃 증가
 
-        const connectSSE = async () => {
-            console.log('here~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-            console.log(userId, token)
-            try {
-                const response = await axios.get(`${ENDPOINT}/notify/subscribe?userId=${userId}`, {
-                    headers: {
-                        'accept': 'text/event-stream',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    
-                });
+        const checkNetworkStatus = () => {
+            return navigator.onLine;
+        };
 
-                const reader = response.data.getReader();
-                const decoder = new TextDecoder();
+        const connectSSE = () => {
+            if (!checkNetworkStatus()) {
+                console.log('No network connection. Retrying in 5 seconds...');
+                setTimeout(connectSSE, 5000);
+                return;
+            }
 
-                const processChunk = async ({ done, value }: ReadableStreamReadResult<Uint8Array>) => {
-                    if (done) {
-                        console.log('SSE connection closed');
-                        return;
-                    }
+            console.log('Attempting SSE connection...', userId, token);
+            const url = `${ENDPOINT}/notify/subscribe?userId=${userId}`;
 
-                    const chunk = decoder.decode(value);
-                    const lines = chunk.split('\n');
-                    
-                    for (const line of lines) {
-                        if (line.startsWith('data:')) {
-                            const eventData = line.slice(5).trim();
-                            if (eventData) {
-                                const newNotification: Notification = JSON.parse(eventData);
-                                useNotificationStore.getState().addNotification(newNotification);
-                            }
-                        }
-                    }
+            if (eventSource) {
+                eventSource.close();
+            }
 
-                    await reader.read().then(processChunk);
-                };
+            let connectionTimeout: NodeJS.Timeout;
 
-                await reader.read().then(processChunk);
-            } catch (error) {
+            eventSource = new EventSourcePolyfill(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                heartbeatTimeout: CONNECTION_TIMEOUT,
+            });
+
+            connectionTimeout = setTimeout(() => {
+                console.error('SSE connection timed out');
+                eventSource?.close();
+                retryConnection();
+            }, CONNECTION_TIMEOUT);
+
+            eventSource.onopen = () => {
+                console.log('SSE connection opened');
+                clearTimeout(connectionTimeout);
+                retryCount = 0;
+            };
+
+            eventSource.onmessage = (event) => {
+                clearTimeout(connectionTimeout); // 메시지를 받을 때마다 타임아웃 리셋
+                try {
+                    const newNotification: Notification = JSON.parse(event.data);
+                    set((state) => ({
+                        notifications: [...state.notifications, newNotification],
+                        unreadCount: state.unreadCount + (newNotification.isRead ? 0 : 1),
+                    }));
+                } catch (error) {
+                    console.error('Error parsing SSE message:', error);
+                }
+            };
+
+            eventSource.onerror = (error) => {
                 console.error('SSE connection error:', error);
-                setTimeout(connectSSE, 5000); // Retry after 5 seconds
+                clearTimeout(connectionTimeout);
+                eventSource?.close();
+                retryConnection();
+            };
+        };
+
+        const retryConnection = () => {
+            if (retryCount < MAX_RETRY_COUNT) {
+                const retryDelay = Math.min(1000 * 2 ** retryCount, MAX_RETRY_DELAY);
+                retryCount++;
+                console.log(
+                    `Retrying in ${retryDelay / 1000} seconds... (Attempt ${retryCount} of ${MAX_RETRY_COUNT})`
+                );
+                setTimeout(connectSSE, retryDelay);
+            } else {
+                console.error('Max retry attempts reached. Please check your network connection or contact support.');
             }
         };
 
         connectSSE();
 
         return () => {
-            if (source) {
-                source.close();
+            if (eventSource) {
+                console.log('Closing SSE connection');
+                eventSource.close();
             }
         };
     },

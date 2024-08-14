@@ -12,6 +12,8 @@ import userStore from '../../../stores/userStore';
 import { useEffect, useState } from 'react';
 import useChildStore from '../../../stores/childStore';
 import moment from 'moment';
+import Btn from '../../../components/Btn';
+import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 
 interface Reports {
@@ -106,10 +108,31 @@ const ResultText = styled(Text)`
     width: 95%;
 `;
 
+const NoChild = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: tomato;
+    height: 400px;
+`;
+
+const NoChildText = styled(Text)`
+    font-size: 30px;
+    font-weight: 700;
+`;
+
+const AddChildBtn = styled(Btn)`
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 700;
+`;
+
 function ChildTestResult() {
     const { userInfo, token } = userStore((state) => state);
     const { children } = useChildStore();
     const [result, setResult] = useState<ResultData[] | []>([]);
+    const navigate = useNavigate();
 
     //   const navigate = useNavigate();
 
@@ -199,7 +222,10 @@ function ChildTestResult() {
                     )}
                 </ChildTestResultContainer>
             ) : (
-                <>등록된 아이가 없습니다.</>
+                <NoChild>
+                    <NoChildText>등록된 아이가 없습니다.</NoChildText>
+                    <AddChildBtn onClick={() => navigate('/user/mypage/childInfo')}>아이 정보 등록하기</AddChildBtn>
+                </NoChild>
             )}
         </ChildTestContainer>
     );

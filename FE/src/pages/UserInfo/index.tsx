@@ -180,6 +180,7 @@ function UserInfo() {
                 )
                 .then((response) => {
                     setUserInfo(response.data);
+                    localStorage.setItem('userInfo', JSON.stringify(response.data)); // 사용자 정보를 JSON 문자열로 저장
                     alert('정보가 수정되었습니다.');
                     setIsModalOpen(false); // 모달 닫기
                 })

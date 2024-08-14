@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import Container from "../../../components/Container";
@@ -11,6 +12,24 @@ import reservationStore from "../../../stores/reservationStore";
 import userStore from '../../../stores/userStore';
 import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
+=======
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import Container from '../../../components/Container';
+import Wrapper from '../../../components/Wrapper';
+import ContainerTop from '../../../components/ContainerTop';
+import ContainerTopTitle from '../../../components/ContainerTopTitle';
+import ContainerTopLink from '../../../components/ContainerTopLink';
+import { FaPlus } from 'react-icons/fa';
+import ActiveBtn from '../../../components/ActiveBtn';
+// import reservationStore from '../../../stores/reservationStore';
+import userStore from '../../../stores/userStore';
+import axios from 'axios';
+import { READRESERVEALL } from '../../../apis/reserveApi';
+import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import Btn from '../../../components/Btn';
+import { READREPORTS } from '../../../apis/reportsApi';
+>>>>>>> d7357fa345fbc18536d91bb4b0d82041bd8d3422
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -22,6 +41,12 @@ interface reservationInfo {
     reserveInfoEndTime: string;
     reserveInfoCreateTime: string;
     isEnd: 'Y' | 'N';
+}
+
+export interface FacialInfo {
+    childName: string;
+    reserveInfoIdx: number;
+    reportIdx: number;
 }
 
 const ReservationHistoryContainer = styled(Container)`
@@ -53,9 +78,44 @@ const ReservationHistoryItem = styled.div`
     /* font-weight: 700; */
 `;
 
+const ModalBackground = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+export const FacialContainer = styled.div`
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+`;
+
 function ReservationHistory() {
     const { userInfo, token } = userStore();
     const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
+    const [isFacial, setIsFacial] = useState(false);
+    const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+    const [report, setReport] = useState<any>();
+
+    const handleFacial = (facialInfo: FacialInfo) => {
+        setFacialInfo(facialInfo);
+        axios
+            .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setReport(response.data))
+            .then(() => setIsFacial(true));
+    };
 
     useEffect(() => {
         if (userInfo?.userIdx) {
@@ -68,6 +128,7 @@ function ReservationHistory() {
                     },
                 })
                 .then((response) => setReservationHistory(response.data));
+            // .then((response) => console.log(response.data));
         }
     }, [userInfo, token]);
 
@@ -94,7 +155,17 @@ function ReservationHistory() {
                                     <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
                                     <ReservationHistoryItem>{e.childName} 어린이</ReservationHistoryItem>
                                     <ReservationHistoryItem>
-                                        <ActiveBtn>입장하기</ActiveBtn>
+                                        <ActiveBtn
+                                            onClick={() =>
+                                                handleFacial({
+                                                    childName: e.childName,
+                                                    reserveInfoIdx: e.reserveInfoIdx,
+                                                    reportIdx: e.reportIdx,
+                                                })
+                                            }
+                                        >
+                                            입장하기
+                                        </ActiveBtn>
                                     </ReservationHistoryItem>
                                 </ReservationHistoryList>
                             );
@@ -104,6 +175,27 @@ function ReservationHistory() {
                     )}
                 </>
             </ReservationHistoryWrapper>
+            {isFacial && (
+                <ModalBackground>
+                    <FacialContainer>
+                        <VideoRoomComponent
+                            userName={userInfo?.userName}
+                            childName={facialInfo?.childName}
+                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                            reportIdx={facialInfo?.reportIdx}
+                            role={userInfo?.userRole}
+                        />
+                    </FacialContainer>
+                    <Btn
+                        onClick={() => {
+                            setIsFacial(false);
+                            setFacialInfo(null);
+                        }}
+                    >
+                        닫기
+                    </Btn>
+                </ModalBackground>
+            )}
         </ReservationHistoryContainer>
     );
 }

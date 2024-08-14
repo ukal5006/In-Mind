@@ -10,6 +10,11 @@ import axios from 'axios';
 import { DELETERESERVE, RUDRESERVE } from '../../../apis/reserveApi';
 import { useNavigate } from 'react-router-dom';
 import userStore from '../../../stores/userStore';
+import { FacialContainer, FacialInfo } from '../../UserMain/UserHome/ReservationHistory';
+import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import { READREPORTS } from '../../../apis/reportsApi';
+import { TbReportAnalytics } from 'react-icons/tb';
+import { FaPowerOff } from 'react-icons/fa';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -109,12 +114,59 @@ const CancelBtn = styled(Btn)`
     margin-top: 10px;
 `;
 
+const BtnContainer = styled.div`
+    position: fixed;
+    z-index: 999999;
+    top: 46px;
+    right: 570px;
+    display: flex;
+    align-items: center;
+`;
+
+const ReportBtn = styled.div`
+    font-size: 30px;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+`;
+
+const ExitBtn = styled.div`
+    font-size: 28px;
+    color: tomato;
+    cursor: pointer;
+`;
+
+const ReportContainer = styled.div`
+    position: fixed;
+    left: 0;
+    /* width: 300px; */
+    background-color: white;
+`;
+
+const ImgContainer = styled.div`
+    display: flex;
+`;
+
+const ImgTP = styled.img`
+    width: 300px;
+    height: 500px;
+`;
+const ImgH = styled.img`
+    width: 500px;
+    height: 300px;
+`;
+
 function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProps) {
     console.log(selectedDate);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<any>(null);
     const navigate = useNavigate();
-    const { token } = userStore((state) => state);
+    const { userInfo, token } = userStore((state) => state);
+    const [reportOpen, setReportOpen] = useState(false);
+
+    const handleReport = () => {
+        setReportOpen(true);
+    };
 
     const handleDetailClick = (reservation: ReservationInfo) => {
         setSelectedReservation(reservation);
@@ -155,6 +207,25 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
             const dateB = new Date(b.reserveInfoDate + ' ' + b.reserveInfoStartTime);
             return dateA.getTime() - dateB.getTime();
         });
+
+    const [isFacial, setIsFacial] = useState(false);
+    const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
+    const [report, setReport] = useState<any>();
+
+    const handleFacial = (facialInfo: FacialInfo) => {
+        setFacialInfo(facialInfo);
+        axios
+            .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setReport(response.data))
+            .then(() => setIsFacial(true));
+    };
+
     return (
         <>
             <TitleContainer>
@@ -176,7 +247,17 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                                 {reservation.reserveInfoEndTime.substring(0, 5)}
                             </Time>
                             <BtnWrapper>
-                                <RoomBtn>방 만들기</RoomBtn>
+                                <RoomBtn
+                                    onClick={() =>
+                                        handleFacial({
+                                            childName: reservation.childName,
+                                            reserveInfoIdx: reservation.reserveInfoIdx,
+                                            reportIdx: reservation.reportIdx,
+                                        })
+                                    }
+                                >
+                                    방 만들기
+                                </RoomBtn>
                             </BtnWrapper>
                         </Item>
                     ))
@@ -204,6 +285,50 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                         <Btn onClick={handleCloseModal}>닫기</Btn>
                     </ModalContent>
                 </ModalBackground>
+            )}
+
+            {isFacial && (
+                <ModalBackground>
+                    <FacialContainer>
+                        <VideoRoomComponent
+                            userName={userInfo?.userName}
+                            role={userInfo?.userRole}
+                            childName={facialInfo?.childName}
+                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                            reportIdx={facialInfo?.reportIdx}
+                            report={report}
+                        />
+                    </FacialContainer>
+                    <BtnContainer>
+                        <ReportBtn onClick={handleReport}>
+                            <TbReportAnalytics />
+                        </ReportBtn>
+                        <ExitBtn
+                            onClick={() => {
+                                setIsFacial(false);
+                                setReportOpen(false);
+                                setFacialInfo(null);
+                            }}
+                        >
+                            <FaPowerOff />
+                        </ExitBtn>
+                    </BtnContainer>
+                </ModalBackground>
+            )}
+
+            {reportOpen && (
+                <ReportContainer>
+                    <Btn onClick={() => setReportOpen(false)}>닫기</Btn>
+                    <div>
+                        <div>{report.objectResult}</div>
+                        <div>{report.reportResult}</div>
+                    </div>
+                    <ImgContainer>
+                        <ImgH src={report.houseImage} />
+                        <ImgTP src={report.treeImage} />
+                        <ImgTP src={report.personImage} />
+                    </ImgContainer>
+                </ReportContainer>
             )}
         </>
     );
