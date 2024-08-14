@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CounselorUpdateRequestDto {
-    @Email(message = "유효한 이메일 형식이어야 합니다.")
+//    @Email(message = "유효한 이메일 형식이어야 합니다.")
     private String userEmail;
 
     @NotBlank(message = "이름은 필수입니다.")
