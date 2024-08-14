@@ -3,7 +3,7 @@ import Container from '../../../components/Container';
 
 const UserHomeContainer = styled(Container)`
     width: 100vw;
-    min-width: 1200px;
+    max-width: 1200px;
     height: calc(100vh - 80px);
 `;
 

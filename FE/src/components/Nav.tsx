@@ -16,6 +16,7 @@ const NavContainer = styled(Container)`
     justify-content: space-between;
     padding: 0px 10px;
     box-sizing: border-box;
+    background-color: ${colors.white};
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 `;
 

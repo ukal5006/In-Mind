@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from 'react';
-import styled from "styled-components";
-import Container from "../../../components/Container";
-import Wrapper from "../../../components/Wrapper";
-import ContainerTop from "../../../components/ContainerTop";
-import ContainerTopTitle from "../../../components/ContainerTopTitle";
-import ContainerTopLink from "../../../components/ContainerTopLink";
-import { FaPlus } from "react-icons/fa";
-import ActiveBtn from "../../../components/ActiveBtn";
-import reservationStore from "../../../stores/reservationStore";
-import userStore from '../../../stores/userStore';
-import axios from 'axios';
-import { READRESERVEALL } from '../../../apis/reserveApi';
-=======
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Container from '../../../components/Container';
@@ -29,7 +14,7 @@ import { READRESERVEALL } from '../../../apis/reserveApi';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
 import Btn from '../../../components/Btn';
 import { READREPORTS } from '../../../apis/reportsApi';
->>>>>>> d7357fa345fbc18536d91bb4b0d82041bd8d3422
+import Glass from '../../../components/Glass';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -50,31 +35,37 @@ export interface FacialInfo {
 }
 
 const ReservationHistoryContainer = styled(Container)`
+    margin-top: 40px;
     width: 100%;
-    height: 50%;
+    height: 40%;
+    ${Glass}
 `;
 
 const ReservationHistoryWrapper = styled(Wrapper)`
     width: 90%;
-    height: 70%;
+    height: 95%;
     border-radius: 10px;
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
+    justify-content: flex-start;
+    overflow-y: scroll;
 `;
 
 const ReservationHistoryList = styled.div`
     width: 100%;
-    height: 80px;
+    /* height: 80px; */
+    min-height: 65px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    margin-top: 20px;
 `;
 
 const ReservationHistoryItem = styled.div`
-    /* font-size: 19px; */
+    /* font-size: 12px; */
     /* font-weight: 700; */
 `;
 
@@ -153,7 +144,7 @@ function ReservationHistory() {
                                         {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
                                     </ReservationHistoryItem>
                                     <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
-                                    <ReservationHistoryItem>{e.childName} 어린이</ReservationHistoryItem>
+                                    <ReservationHistoryItem>{e.childName}</ReservationHistoryItem>
                                     <ReservationHistoryItem>
                                         <ActiveBtn
                                             onClick={() =>

@@ -11,6 +11,8 @@ import { READREPORTS, READREPORTSLIST } from '../../../apis/reportsApi';
 import { useEffect, useState } from 'react';
 import Btn from '../../../components/Btn';
 import moment from 'moment';
+import Glass from '../../../components/Glass';
+import { colors } from '../../../theme/colors';
 
 export interface Report {
     reportIdx: number;
@@ -33,28 +35,33 @@ export interface Detail {
 
 const TestHistoryContainer = styled(Container)`
     width: 100%;
-    height: 50%;
+    height: 40%;
+    ${Glass}
 `;
 
 const TestHistoryWrapper = styled(Wrapper)`
     width: 90%;
-    height: 70%;
+    height: 95%;
     border-radius: 10px;
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
     flex-direction: column;
     justify-content: flex-start;
     overflow-y: scroll;
 `;
-const DetailBtn = styled(Btn)``;
+const DetailBtn = styled(Btn)`
+background-color: ${colors.green};
+color: ${colors.lightWhite};
+`;
 
 const TestHistoryList = styled.div`
     width: 100%;
-    min-height: 70px;
+    min-height: 65px;
     display: flex;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     justify-content: space-evenly;
     align-items: center;
+    margin-top: 20px;
     margin-bottom: 18px;
 `;
 
