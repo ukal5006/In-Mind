@@ -28,9 +28,11 @@ public class ReportController {
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
     public ResponseEntity<ReportEndResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
-        String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
+        String fastApi = "https://i11b301.p.ssafy.io/yolo/analyze";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
-                .url(requestDto.getTreeImage())
+                .treeUrl(requestDto.getTreeImage())
+                .houseUrl(requestDto.getHouseImage())
+                .personUrl(requestDto.getHouseImage())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
