@@ -167,7 +167,7 @@ function ReservationHistory() {
                             childName={facialInfo?.childName}
                             reserveInfoIdx={facialInfo?.reserveInfoIdx}
                             reportIdx={facialInfo?.reportIdx}
-                            report={report}
+                            role={userInfo?.userRole}
                         />
                     </FacialContainer>
                     <Btn

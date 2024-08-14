@@ -27,9 +27,16 @@ class VideoRoomComponent extends Component {
 
         let sessionName = this.props ? `InMind${this.props.reserveInfoIdx}${this.props.reportIdx}` : 'SessionAB';
         // 여기도 바꿔줘야함.
-        let userName = this.props
-            ? `${this.props.userName}님(${this.props.childName} 어린이)`
-            : 'OpenVidu_User' + Math.floor(Math.random() * 100);
+        // let userName = this.props
+        //     ? `${this.props.userName}님(${this.props.childName} 어린이)`
+        //     : 'OpenVidu_User' + Math.floor(Math.random() * 100);
+        console.log('유저 역할');
+        console.log(this.props.role);
+
+        let userName =
+            this.props.role === 'USER'
+                ? `${this.props.userName}님(${this.props.childName} 어린이)`
+                : `${this.props.userName}상담가님`;
 
         this.remotes = [];
         this.localUserAccessAllowed = false;

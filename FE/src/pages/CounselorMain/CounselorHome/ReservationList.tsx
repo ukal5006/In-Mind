@@ -13,6 +13,8 @@ import userStore from '../../../stores/userStore';
 import { FacialContainer, FacialInfo } from '../../UserMain/UserHome/ReservationHistory';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
 import { READREPORTS } from '../../../apis/reportsApi';
+import { TbReportAnalytics } from 'react-icons/tb';
+import { FaPowerOff } from 'react-icons/fa';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -112,12 +114,59 @@ const CancelBtn = styled(Btn)`
     margin-top: 10px;
 `;
 
+const BtnContainer = styled.div`
+    position: fixed;
+    z-index: 999999;
+    top: 46px;
+    right: 570px;
+    display: flex;
+    align-items: center;
+`;
+
+const ReportBtn = styled.div`
+    font-size: 30px;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+`;
+
+const ExitBtn = styled.div`
+    font-size: 28px;
+    color: tomato;
+    cursor: pointer;
+`;
+
+const ReportContainer = styled.div`
+    position: fixed;
+    left: 0;
+    /* width: 300px; */
+    background-color: white;
+`;
+
+const ImgContainer = styled.div`
+    display: flex;
+`;
+
+const ImgTP = styled.img`
+    width: 300px;
+    height: 500px;
+`;
+const ImgH = styled.img`
+    width: 500px;
+    height: 300px;
+`;
+
 function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProps) {
     console.log(selectedDate);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<any>(null);
     const navigate = useNavigate();
     const { userInfo, token } = userStore((state) => state);
+    const [reportOpen, setReportOpen] = useState(false);
+
+    const handleReport = () => {
+        setReportOpen(true);
+    };
 
     const handleDetailClick = (reservation: ReservationInfo) => {
         setSelectedReservation(reservation);
@@ -243,21 +292,43 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                     <FacialContainer>
                         <VideoRoomComponent
                             userName={userInfo?.userName}
+                            role={userInfo?.userRole}
                             childName={facialInfo?.childName}
                             reserveInfoIdx={facialInfo?.reserveInfoIdx}
                             reportIdx={facialInfo?.reportIdx}
                             report={report}
                         />
                     </FacialContainer>
-                    <Btn
-                        onClick={() => {
-                            setIsFacial(false);
-                            setFacialInfo(null);
-                        }}
-                    >
-                        닫기
-                    </Btn>
+                    <BtnContainer>
+                        <ReportBtn onClick={handleReport}>
+                            <TbReportAnalytics />
+                        </ReportBtn>
+                        <ExitBtn
+                            onClick={() => {
+                                setIsFacial(false);
+                                setReportOpen(false);
+                                setFacialInfo(null);
+                            }}
+                        >
+                            <FaPowerOff />
+                        </ExitBtn>
+                    </BtnContainer>
                 </ModalBackground>
+            )}
+
+            {reportOpen && (
+                <ReportContainer>
+                    <Btn onClick={() => setReportOpen(false)}>닫기</Btn>
+                    <div>
+                        <div>{report.objectResult}</div>
+                        <div>{report.reportResult}</div>
+                    </div>
+                    <ImgContainer>
+                        <ImgH src={report.houseImage} />
+                        <ImgTP src={report.treeImage} />
+                        <ImgTP src={report.personImage} />
+                    </ImgContainer>
+                </ReportContainer>
             )}
         </>
     );
