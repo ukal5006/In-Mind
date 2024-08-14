@@ -43,6 +43,13 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                 ...prevInfo,
                 [name]: formattedDate,
             }));
+        } else if (name === 'childName') {
+            if (value.length <= 16) {
+                setChildInfo((prevInfo) => ({
+                    ...prevInfo,
+                    [name]: value,
+                }));
+            }
         } else {
             setChildInfo((prevInfo) => ({
                 ...prevInfo,
@@ -85,6 +92,11 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
 
         if (!childInfo.childName.trim()) {
             setError('이름을 입력해주세요.');
+            return;
+        }
+
+        if (childInfo.childName.length > 16) {
+            setError('이름은 16자를 초과할 수 없습니다.');
             return;
         }
 
@@ -135,6 +147,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                         name="childName"
                         value={childInfo.childName}
                         onChange={handleInputChange}
+                        maxLength={16}
                         required
                     />
                 </div>

@@ -132,6 +132,12 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
         setSelectedRating(score);
         setHoverRating(score);
     };
+    const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newContent = e.target.value;
+        if (newContent.length <= 250) {
+            setContent(newContent);
+        }
+    };
 
     const renderStars = () => {
         const stars = [];
@@ -168,13 +174,26 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
                         <div className="flex mb-4">{renderStars()}</div>
                         <p className="mb-2">만족도 : {selectedRating} / 5</p>
                         <br />
-                        <textarea
-                            className="w-3/4 p-2 border rounded mb-4 textArea"
-                            rows={6}
-                            placeholder="상담에 대해 리뷰를 남겨주세요."
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                        />
+                        <div style={{ position: 'relative', width: '75%' }}>
+                            <textarea
+                                className="w-full p-2 border rounded mb-4 textArea"
+                                rows={6}
+                                placeholder="상담에 대해 리뷰를 남겨주세요. (최대 250자)"
+                                value={content}
+                                onChange={handleContentChange}
+                                maxLength={250}
+                            />
+                            <p style={{
+                                position: 'absolute',
+                                bottom: '8px',
+                                right: '8px',
+                                fontSize: '0.7rem',
+                                color: '#888',
+                                margin: 0
+                            }}>
+                                {content.length}/250
+                            </p>
+                        </div>
                         <br />
                         <br />
                         <div className="contentSpaceBetween">
