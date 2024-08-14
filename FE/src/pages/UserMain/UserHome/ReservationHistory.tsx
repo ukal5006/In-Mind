@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Container from "../../../components/Container";
 import Wrapper from "../../../components/Wrapper";
@@ -8,28 +7,13 @@ import ContainerTopTitle from "../../../components/ContainerTopTitle";
 import ContainerTopLink from "../../../components/ContainerTopLink";
 import { FaPlus } from "react-icons/fa";
 import ActiveBtn from "../../../components/ActiveBtn";
-import reservationStore from "../../../stores/reservationStore";
-import userStore from '../../../stores/userStore';
-import axios from 'axios';
-import { READRESERVEALL } from '../../../apis/reserveApi';
-=======
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Container from '../../../components/Container';
-import Wrapper from '../../../components/Wrapper';
-import ContainerTop from '../../../components/ContainerTop';
-import ContainerTopTitle from '../../../components/ContainerTopTitle';
-import ContainerTopLink from '../../../components/ContainerTopLink';
-import { FaPlus } from 'react-icons/fa';
-import ActiveBtn from '../../../components/ActiveBtn';
 // import reservationStore from '../../../stores/reservationStore';
-import userStore from '../../../stores/userStore';
-import axios from 'axios';
-import { READRESERVEALL } from '../../../apis/reserveApi';
-import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
-import Btn from '../../../components/Btn';
-import { READREPORTS } from '../../../apis/reportsApi';
->>>>>>> d7357fa345fbc18536d91bb4b0d82041bd8d3422
+import userStore from "../../../stores/userStore";
+import axios from "axios";
+import { READRESERVEALL } from "../../../apis/reserveApi";
+import VideoRoomComponent from "../../FacialMeeting/components/VideoRoomComponent";
+import Btn from "../../../components/Btn";
+import { READREPORTS } from "../../../apis/reportsApi";
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -40,7 +24,7 @@ interface reservationInfo {
     reserveInfoStartTime: string;
     reserveInfoEndTime: string;
     reserveInfoCreateTime: string;
-    isEnd: 'Y' | 'N';
+    isEnd: "Y" | "N";
 }
 
 export interface FacialInfo {
@@ -109,8 +93,8 @@ function ReservationHistory() {
             .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    accept: '*/*',
-                    'Content-Type': 'application/json;charset=UTF-8',
+                    accept: "*/*",
+                    "Content-Type": "application/json;charset=UTF-8",
                 },
             })
             .then((response) => setReport(response.data))
@@ -123,8 +107,8 @@ function ReservationHistory() {
                 .get(READRESERVEALL(userInfo?.userIdx), {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
+                        accept: "*/*",
+                        "Content-Type": "application/json;charset=UTF-8",
                     },
                 })
                 .then((response) => setReservationHistory(response.data));
@@ -133,7 +117,7 @@ function ReservationHistory() {
     }, [userInfo, token]);
 
     // isEnd가 'N'인 예약 내역만 필터링
-    const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === 'N');
+    const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === "N");
 
     return (
         <ReservationHistoryContainer>
