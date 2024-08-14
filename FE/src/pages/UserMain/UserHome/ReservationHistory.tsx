@@ -111,7 +111,10 @@ function ReservationHistory() {
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
-                .then((response) => setReservationHistory(response.data));
+                .then((response) => setReservationHistory(response.data))
+                .catch((error) => {
+                    console.log(error);
+                });
             // .then((response) => console.log(response.data));
         }
     }, [userInfo, token]);
