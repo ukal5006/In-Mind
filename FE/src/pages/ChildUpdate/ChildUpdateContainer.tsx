@@ -2,6 +2,70 @@ import React, { useState } from 'react';
 import Btn from '../../components/Btn';
 import useChildStore from '../../stores/childStore';
 import userStore from '../../stores/userStore';
+import styled from'styled-components';
+
+const FormContainer = styled.div`
+    max-width: 500px; /* 폼 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 20px; /* 패딩 추가 */
+    background-color: #f9f9f9; /* 배경색 설정 */
+    border-radius: 12px; /* 둥근 모서리 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+`;
+
+
+const FormGroup = styled.div`
+    display: flex; /* Flexbox 사용 */
+    align-items: center; /* 수직 중앙 정렬 */
+    margin-bottom: 20px; /* 각 입력 항목 사이의 여백 */
+`;
+
+const Label = styled.label`
+    flex: 0 0 100px; /* 라벨의 너비를 고정 */
+    margin-right: 10px; /* 라벨과 입력 필드 사이의 여백 */
+    font-weight: bold; /* 라벨 글자 굵게 */
+    color: #333; /* 글자 색상 */
+`;
+
+const Input = styled.input`
+    flex: 1; /* 남은 공간을 모두 차지 */
+    padding: 10px; /* 내부 여백 */
+    border: 1px solid #ccc; /* 테두리 색상 */
+    border-radius: 8px; /* 둥근 모서리 */
+    font-size: 16px; /* 글자 크기 */
+    transition: border-color 0.3s; /* 테두리 색상 변화 효과 */
+
+    &:focus {
+        border-color: #007bff; /* 포커스 시 테두리 색상 변화 */
+        outline: none; /* 기본 아웃라인 제거 */
+    }
+`;
+
+const ErrorMessage = styled.div`
+    color: red; /* 오류 메시지 색상 */
+    margin-top: 5px; /* 위 여백 */
+`;
+
+const Button = styled.button`
+    background-color: #007bff; /* 버튼 배경색 */
+    color: white; /* 버튼 글자색 */
+    border: none; /* 테두리 없애기 */
+    border-radius: 8px; /* 둥근 버튼 */
+    padding: 12px 20px; /* 버튼 패딩 */
+    font-size: 16px; /* 버튼 글자 크기 */
+    cursor: pointer; /* 포인터 커서 */
+    transition: background-color 0.3s; /* 배경색 변화 효과 */
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+    
+    &:hover {
+        background-color: #0056b3; /* 호버 시 색상 변화 */
+    }
+
+    &:last-child {
+        margin-right: 0; /* 마지막 버튼의 오른쪽 여백 제거 */
+    }
+`;
+
 
 interface ChildInfo {
     childName: string;
@@ -137,11 +201,11 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
     }
 
     return (
-        <div>
+        <FormContainer>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="childName">이름</label>
-                    <input
+                <FormGroup>
+                    <Label htmlFor="childName">이름</Label>
+                    <Input
                         type="text"
                         id="childName"
                         name="childName"
@@ -150,10 +214,10 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                         maxLength={16}
                         required
                     />
-                </div>
-                <div>
-                    <label htmlFor="childBirth">생년월일</label>
-                    <input
+                </FormGroup>
+                <FormGroup>
+                    <Label htmlFor="childBirth">생년월일</Label>
+                    <Input
                         type="text"
                         id="childBirth"
                         name="childBirth"
@@ -163,11 +227,12 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
                         maxLength={10}
                         required
                     />
-                </div>
-                {error && <div style={{ color: 'red' }}>{error}</div>}
-                <Btn type="submit">{type === 'create' ? '아이 등록' : '아이 정보 수정'}</Btn>
+                </FormGroup>
+                {error && <ErrorMessage>{error}</ErrorMessage>}
+                <Button type="submit">{type === 'create' ? '아이 등록' : '아이 정보 수정'}</Button>
+                <Button onClick={closeModal}>닫기</Button>
             </form>
-        </div>
+        </FormContainer>
     );
 };
 
