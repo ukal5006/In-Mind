@@ -30,7 +30,7 @@ public class ReportController {
     public ResponseEntity<ReportEndResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
         String fastApi = "https://i11b301.p.ssafy.io/yolo/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
-                .treeUrl(requestDto.getTreeImage())
+                .url(requestDto.getTreeImage())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
