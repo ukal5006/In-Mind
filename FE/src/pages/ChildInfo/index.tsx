@@ -18,7 +18,10 @@ interface ChildData {
     childBirth: string;
 }
 
-const ChildInfoContainer = styled(Container)``;
+const ChildInfoContainer = styled(Container)`
+    border: 2px solid ${colors.gray};
+    border-radius: 10px;
+    background-color: #fff;`;
 
 const ChildAddWrapper = styled(Wrapper)`
     border: 1px solid black;
@@ -39,8 +42,9 @@ const AddBtn = styled(Btn)`
 
 const AddText = styled(Text)`
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 24px; /* 더 큰 폰트 크기 */
     font-weight: 700;
+    color: ${colors.black}; /* 좀 더 밝은 색상 */
 `;
 
 const ModalOverlay = styled.div`
@@ -49,18 +53,50 @@ const ModalOverlay = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7); /* 더 어두운 배경 */
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(5px); /* 배경 흐림 효과 추가 */
 `;
 
 const ModalContent = styled.div`
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    text-align: center;
+    background-color: #fff; /* 흰색 배경 */
+    padding: 40px; /* 패딩을 늘려 여유 공간 추가 */
+    border-radius: 15px; /* 둥근 모서리 */
+    width: 400px;
+    max-width: 90%; /* 화면 크기에 따라 반응형 */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* 더 부드러운 그림자 */
+    animation: fadeIn 0.3s; /* 애니메이션 효과 추가 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 버튼 스타일을 위한 추가 클래스 */
+    & button {
+        background-color: ${colors.green}; /* 버튼 배경색 */
+        color: ${colors.white}; /* 버튼 글자색 */
+        border: none; /* 테두리 없애기 */
+        border-radius: 10px; /* 둥근 버튼 */
+        padding: 10px 20px; /* 버튼 패딩 */
+        font-size: 18px; /* 버튼 글자 크기 */
+        margin-top: 20px; /* 버튼 위 여백 */
+        cursor: pointer; /* 커서 포인터로 변경 */
+        transition: background-color 0.3s; /* 배경색 변화 효과 */
+
+        &:hover {
+            background-color: ${colors.darkGreen}; /* 호버 시 색상 변화 */
+        }
+    }
 `;
 
 const SliderContainer = styled(Container)`
@@ -91,24 +127,28 @@ const ChildImage = styled.img`
 `;
 
 const ChildText = styled(Text)`
-    font-size: 20px;
+    font-size: 22px; /* 조금 더 큰 폰트 크기 */
+    color: ${colors.darkGray}; /* 색상 변경 */
 `;
+
 const ChildName = styled(Text)`
     color: ${colors.darkGreen};
     font-weight: 700;
     margin-right: 5px;
 `;
-
 const BtnWrapper = styled(Wrapper)`
     padding: 0px;
     width: 100%;
     justify-content: space-evenly;
+
     & > button {
         font-size: 20px;
         color: ${colors.white};
+        border-radius: 10px; /* 둥근 버튼 */
+        padding: 10px 15px; /* 버튼 안쪽 패딩 */
+        transition: background 0.3s; /* 배경색 변화 효과 */
     }
 `;
-
 const OtherChildWrapper = styled(Wrapper)`
     height: 450px;
     display: flex;
@@ -123,8 +163,11 @@ interface UpdateBtnProps {
 
 const StyledUpdateBtn = styled(Btn)`
     background-color: ${colors.green};
+    
+    &:hover {
+        background-color: ${colors.darkGreen}; /* 호버 시 색상 변화 */
+    }
 `;
-
 const UpdateBtn: React.FC<UpdateBtnProps> = ({ onClick, childId, children }) => {
     const handleClick = () => {
         onClick();
@@ -253,7 +296,6 @@ function ChildInfo() {
                             onClose={closeModal}
                             onSuccess={fetchChildren}
                         />
-                        <Btn onClick={closeModal}>닫기</Btn>
                     </ModalContent>
                 </ModalOverlay>
             )}
