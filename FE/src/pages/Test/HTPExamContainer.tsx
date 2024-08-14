@@ -6,24 +6,20 @@ import userStore from '../../stores/userStore';
 import AWS from 'aws-sdk';
 
 const HTPExamContainer = (): JSX.Element => {
-    const {
-        children,
-        selectedChild,
-        imageUrl,
-        drawingOrder,
-        background,
-        setChildren,
-        setSelectedChild,
-        setImageUrl,
-        setDrawingOrder,
-        setBackground,
-    } = useHTPExamStore();
+    const { children, selectedChild, background, setChildren, setSelectedChild, setImageUrl, setBackground } =
+        useHTPExamStore();
 
-    const [file, setFile] = useState<File | null>(null);
-    const [imageSrc, setImageSrc] = useState<string | null>(null);
-    const inputRef = useRef<HTMLInputElement[]>([]);
+    const [houseFile, setHouseFile] = useState<File | null>(null);
+    const [treeFile, setTreeFile] = useState<File | null>(null);
+    const [personFile, setPersonFile] = useState<File | null>(null);
 
-    const [result, setResult] = useState<string>('');
+    const [imageSrcH, setImageSrcH] = useState<string | null>(null);
+    const [imageSrcT, setImageSrcT] = useState<string | null>(null);
+    const [imageSrcP, setImageSrcP] = useState<string | null>(null);
+
+    const inputRefH = useRef<HTMLInputElement>(null);
+    const inputRefT = useRef<HTMLInputElement>(null);
+    const inputRefP = useRef<HTMLInputElement>(null);
 
     const childStore = useChildStore();
     const { userInfo, token } = userStore();
@@ -55,29 +51,28 @@ const HTPExamContainer = (): JSX.Element => {
         if (child) setSelectedChild(child);
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null;
-        const fileExt = file?.name.split('.').pop() || '';
+    const handleFileChange =
+        (
+            fileSetter: React.Dispatch<React.SetStateAction<File | null>>,
+            imageSetter: React.Dispatch<React.SetStateAction<string | null>>
+        ) =>
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files ? e.target.files[0] : null;
+            const fileExt = file?.name.split('.').pop() || '';
 
-        if (file && ['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                setImageSrc(reader.result as string);
-                setFile(file);
-            };
-        } else {
-            alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
-        }
-    };
+            if (file && ['jpeg', 'png', 'jpg', 'JPG', 'PNG', 'JPEG'].includes(fileExt)) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    imageSetter(reader.result as string);
+                    fileSetter(file);
+                };
+            } else {
+                alert('jpg, png, jpg 파일만 업로드가 가능합니다.');
+            }
+        };
 
-    const handleDrawingOrderChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        const newOrder = [...drawingOrder];
-        newOrder[index] = parseInt(e.target.value);
-        setDrawingOrder(newOrder);
-    };
-
-    const uploadS3 = async (): Promise<string> => {
+    const uploadS3 = async (file: File): Promise<string> => {
         const REGION = 'ap-northeast-2';
         const ACCESS_KEY_ID = 'AKIAZ3MGNEZEQYW7NK73';
         const SECRET_ACCESS_KEY_ID = 'vk21BsRBSgjmYpye4vmgogiAxd15AUu7eXSlZsbo';
@@ -104,30 +99,34 @@ const HTPExamContainer = (): JSX.Element => {
     };
 
     const handleSubmit = async () => {
-        if (!selectedChild || !file || drawingOrder.length !== 7 || !background) {
+        if (!selectedChild || !houseFile || !treeFile || !personFile || !background) {
             alert('모든 필드를 입력해주세요.');
             return;
         }
 
         try {
-            const uploadedImageUrl = await uploadS3();
-            setImageUrl(uploadedImageUrl);
-            console.log('Uploaded Image URL:', uploadedImageUrl);
+            const houseImageUrl = await uploadS3(houseFile);
+            const treeImageUrl = await uploadS3(treeFile);
+            const personImageUrl = await uploadS3(personFile);
+
+            setImageUrl(houseImageUrl);
+            console.log('Uploaded Image URLs:', houseImageUrl, treeImageUrl, personImageUrl);
+
             alert('검사가 시작되었습니다.');
             await axios
                 .post(
                     'https://i11b301.p.ssafy.io/api/reports/start',
                     {
                         childIdx: selectedChild.childIdx,
-                        houseImage: uploadedImageUrl,
-                        treeImage: uploadedImageUrl,
-                        personImage: uploadedImageUrl,
+                        houseImage: houseImageUrl,
+                        treeImage: treeImageUrl,
+                        personImage: personImageUrl,
                         background: background,
-                        drawingFlow: drawingOrder.join(','),
+                        drawingFlow: '1,2,3,4,5,6,7',
                     },
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`, // token 추가
+                            Authorization: `Bearer ${token}`,
                             accept: '*/*',
                             'Content-Type': 'application/json;charset=UTF-8',
                         },
@@ -164,31 +163,42 @@ const HTPExamContainer = (): JSX.Element => {
             </div>
 
             <div>
+                <label>집 그림 업로드:</label>
+                <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    ref={inputRefH}
+                    onChange={handleFileChange(setHouseFile, setImageSrcH)}
+                />
+                <button onClick={() => inputRefH.current?.click()}>이미지 선택</button>
+                {imageSrcH && <img src={imageSrcH} alt="uploaded" />}
+            </div>
+
+            <div>
                 <label>나무 그림 업로드:</label>
                 <input
                     hidden
                     accept="image/*"
-                    multiple
                     type="file"
-                    ref={(el) => (inputRef.current[0] = el!)}
-                    onChange={handleFileChange}
+                    ref={inputRefT}
+                    onChange={handleFileChange(setTreeFile, setImageSrcT)}
                 />
-                <button onClick={() => inputRef.current[0]?.click()}>이미지 선택</button>
-                {imageSrc && <img src={imageSrc} alt="uploaded" />}
+                <button onClick={() => inputRefT.current?.click()}>이미지 선택</button>
+                {imageSrcT && <img src={imageSrcT} alt="uploaded" />}
             </div>
 
             <div>
-                <p>그림을 그리는 순서는 어땠나요? 순서대로 번호를 입력해주세요.</p>
-                <p>1)뿌리 2)줄기 3)가지 4)수관 5)열매 6)지면 7)알 수 없음</p>
-                {['뿌리', '줄기', '가지', '수관', '열매', '지면', '알 수 없음'].map((item, index) => (
-                    <input
-                        key={index}
-                        type="number"
-                        min="1"
-                        max="7"
-                        onChange={(e) => handleDrawingOrderChange(e, index)}
-                    />
-                ))}
+                <label>사람 그림 업로드:</label>
+                <input
+                    hidden
+                    accept="image/*"
+                    type="file"
+                    ref={inputRefP}
+                    onChange={handleFileChange(setPersonFile, setImageSrcP)}
+                />
+                <button onClick={() => inputRefP.current?.click()}>이미지 선택</button>
+                {imageSrcP && <img src={imageSrcP} alt="uploaded" />}
             </div>
 
             <div>
