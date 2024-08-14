@@ -9,18 +9,49 @@ import Pagination from './Pagination';
 import Dot from './Dot';
 import BtnWrapper from './BtnWrapper';
 import userStore from '../../stores/userStore';
+import styled from 'styled-components';
+import Text from '../../components/Text';
+import { colors } from '../../theme/colors';
+
+const TextCard = styled.div`
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* 그림자 진하게 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 300px;
+    height: 60px;
+`;
+
+const TextPoint = styled(Text)`
+    color: ${colors.okGreen};
+    margin-left: 5px;
+`;
+
+const TextContainer = styled.div`
+    width: 400px;
+    display: flex;
+    justify-content: space-evenly;
+`;
+
+const TextWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 200px;
+`;
+
+const TextEmo = styled.div`
+    font-size: 70px;
+    margin-bottom: 10px;
+`;
 
 const Overview: React.FC = () => {
     const navigate = useNavigate();
-    const overviewText: string[][] = [
-        [
-            '아이의 마음을 깊이 이해하고 싶으신가요?',
-            'HTP 검사를 무료 받아보세요!',
-            '* HTP(House-Tree-Person) 검사는 아이의 성격, 정서, 인지능력을 종합적으로 파악할 수 있는 대표적인 심리검사입니다.',
-        ],
-        ['AI의 그림 분석을 통해 아이의 숨겨진 생각과', '감정을 이해할 수 있도록 도와드립니다.'],
-        ['아이의 건강한 성장을 위해', '지금 바로 검사를 받아보세요.'],
-    ];
     const [currentSection, setCurrentSection] = useState<number>(0);
 
     const handleLoginClick = () => {
@@ -84,13 +115,42 @@ const Overview: React.FC = () => {
     return (
         <OverviewContainer>
             <OnePageWrapper className="one-page" key={0}>
-                1
+                <BigText>
+                    아이의 <TextPoint>마음</TextPoint>을 깊이 이해하고 싶으신가요?
+                </BigText>
+                <BigText>
+                    <TextPoint>HTP 검사</TextPoint>를 무료 받아보세요!
+                </BigText>
+                <SmallText>* HTP(House-Tree-Person) 검사는 아이의 마음을 알 수 있는 대표적인 심리검사입니다.</SmallText>
             </OnePageWrapper>
             <OnePageWrapper className="one-page" key={1}>
-                2
+                <BigText>
+                    검사를 통해{''}
+                    <TextPoint> 이런 것</TextPoint>을 알 수 있어요.
+                </BigText>
+                <TextCard>아이의 욕구 🔥</TextCard>
+                <TextCard>아이의 감정과 생각 🧠</TextCard>
+                <TextCard>현재 아이의 심리상태 ❤️</TextCard>
+                <SmallText>* 약식으로 진행되는 검사로, 아이에게 더 깊이 알아보고 싶으시다면</SmallText>
+                <SmallText>검사 이후 개인 화상상담을 추가로 진행하시는 것을 추천드립니다.</SmallText>
             </OnePageWrapper>
             <OnePageWrapper className="one-page" key={2}>
-                3
+                <BigText>그림검사,</BigText>
+                <BigText>
+                    <TextPoint>이럴 때</TextPoint>이용하면 좋아요!
+                </BigText>
+                <TextContainer>
+                    <TextWrapper>
+                        <TextEmo>🐣</TextEmo>
+                        <SmallText>가볍게 아이의 마음을</SmallText>
+                        <SmallText>알아보고 싶을 때</SmallText>
+                    </TextWrapper>
+                    <TextWrapper>
+                        <TextEmo>🤷</TextEmo>
+                        <SmallText>심리상담을 받아야 할지</SmallText>
+                        <SmallText>고민하고 있을 때</SmallText>
+                    </TextWrapper>
+                </TextContainer>
             </OnePageWrapper>
             <BtnWrapper>
                 <SmallText>스크롤을 내려보세요!</SmallText>
