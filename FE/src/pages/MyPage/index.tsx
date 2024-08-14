@@ -14,15 +14,52 @@ const PasswordContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    justify-content: center;
+    margin: 50px auto; 
+    background-color: #ffffff; 
+    padding: 40px; 
+    border: 1px solid #ccc;
+    border-radius: 10px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+    width: 400px; 
+    text-align: center; 
+`;
+
+const Title = styled.h2`
+    font-size: 19px;
+    color: #333;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: center;
+    font-weight: bold;
 `;
 
 const Input = styled.input`
-    margin: 10px;
+    margin: 10px 0; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    width: 100%; 
+    font-size: 13px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    
+    &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+    }
 `;
 
 const Button = styled.button`
     margin-top: 20px;
+    padding: 10px; 
+    background-color: #10c263; 
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 100%; 
+    font-size: 17px;
+    font-weight: bold;
 `;
 
 function MyPage() {
@@ -127,21 +164,20 @@ function MyPage() {
             <MyPageContent>
                 {!isAuthenticated ? (
                     <PasswordContainer>
-                        <h2>비밀번호 확인</h2>
+                        <Title>개인 정보 조회를 위해서는 인증이 필요합니다.<br />
+                            비밀번호 입력 후 확인 버튼을 클릭해 주세요.</Title>
                         <Input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            placeholder="비밀번호를 입력하세요"
+                            placeholder="비밀번호"
                         />
                         {error && <span>{error}</span>}
                         <Button onClick={handleSubmit}>확인</Button>
                     </PasswordContainer>
                 ) : (
-                    <>
-                        <Outlet />
-                    </>
+                    <Outlet />
                 )}
             </MyPageContent>
         </MyPageContainer>
