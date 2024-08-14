@@ -83,26 +83,24 @@ const Overview: React.FC = () => {
 
     return (
         <OverviewContainer>
-            {overviewText.map((section, sectionIndex) => (
-                <OnePageWrapper className="one-page" key={sectionIndex}>
-                    {section.map((text, textIndex) => {
-                        // 첫 번째 섹션의 마지막 텍스트는 SmallText로, 나머지는 BigText로
-                        if (sectionIndex === 0 && textIndex === section.length - 1) {
-                            return <SmallText key={textIndex}>{text}</SmallText>;
-                        }
-                        return <BigText key={textIndex}>{text}</BigText>;
-                    })}
-                </OnePageWrapper>
-            ))}
+            <OnePageWrapper className="one-page" key={0}>
+                1
+            </OnePageWrapper>
+            <OnePageWrapper className="one-page" key={1}>
+                2
+            </OnePageWrapper>
+            <OnePageWrapper className="one-page" key={2}>
+                3
+            </OnePageWrapper>
             <BtnWrapper>
-                <SmallText>⇩ Scroll ⇩</SmallText>
+                <SmallText>스크롤을 내려보세요!</SmallText>
                 <LoginBtn onClick={handleLoginClick}>로그인 하고 무료로 검사받기</LoginBtn>
             </BtnWrapper>
 
             <Pagination>
-                {overviewText.map((_, index) => (
-                    <Dot key={index} active={index === currentSection} />
-                ))}
+                <Dot key={0} active={0 === currentSection} />
+                <Dot key={1} active={1 === currentSection} />
+                <Dot key={2} active={2 === currentSection} />
             </Pagination>
         </OverviewContainer>
     );
