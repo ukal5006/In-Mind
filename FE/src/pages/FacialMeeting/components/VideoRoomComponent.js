@@ -113,29 +113,29 @@ class VideoRoomComponent extends Component {
         );
     }
 
-    async connectToSession() {
-        if (this.props.token !== undefined) {
-            console.log('token received: ', this.props.token);
-            this.connect(this.props.token);
-        } else {
-            try {
-                var token = await this.getToken();
-                console.log(token);
-                this.connect(token);
-            } catch (error) {
-                console.error('There was an error getting the token:', error.code, error.message);
-                if (this.props.error) {
-                    this.props.error({
-                        error: error.error,
-                        messgae: error.message,
-                        code: error.code,
-                        status: error.status,
-                    });
-                }
-                alert('There was an error getting the token:', error.message);
-            }
-        }
-    }
+    // async connectToSession() {
+    //     if (this.props.token !== undefined) {
+    //         console.log('token received: ', this.props.token);
+    //         this.connect(this.props.token);
+    //     } else {
+    //         try {
+    //             var token = await this.getToken();
+    //             console.log(token);
+    //             this.connect(token);
+    //         } catch (error) {
+    //             console.error('There was an error getting the token:', error.code, error.message);
+    //             if (this.props.error) {
+    //                 this.props.error({
+    //                     error: error.error,
+    //                     messgae: error.message,
+    //                     code: error.code,
+    //                     status: error.status,
+    //                 });
+    //             }
+    //             alert('There was an error getting the token:', error.message);
+    //         }
+    //     }
+    // }
 
     connect(token) {
         this.state.session
