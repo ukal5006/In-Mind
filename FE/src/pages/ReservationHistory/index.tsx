@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { READRESERVEALL } from '../../apis/reserveApi';
 import axios from 'axios';
 import Btn from '../../components/Btn';
+import Glass from '../../components/Glass';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -27,7 +28,7 @@ const ReservationHistoryContainer = styled(Container)`
 const HistoryContainer = styled(Container)`
     margin-top: 20px;
     height: calc(100vh - 120px);
-    width: 500px;
+    width: 570px;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     border-radius: 10px;
     flex-direction: column;
@@ -35,18 +36,18 @@ const HistoryContainer = styled(Container)`
     box-sizing: border-box;
     overflow-y: scroll;
     position: relative;
+    ${Glass}
 `;
 
 const Title = styled(Text)`
     padding: 10px 0;
-    width: 500px;
+    width: 570px;
     font-size: 20px;
     font-weight: 700;
     position: fixed;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    background-color: white;
 `;
 
 const List = styled.ul`
@@ -56,15 +57,21 @@ const List = styled.ul`
 const Card = styled.div`
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     border-radius: 10px;
-    width: 450px;
+    width: 500px;
     height: 100px;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    ${Glass}
 `;
 
 const Item = styled.div``;
+
+const CancleBtn = styled(Btn)`
+    background-color: tomato;
+    color: white;
+`;
 
 function ReservationHistory() {
     const { userInfo, token } = userStore();
@@ -118,12 +125,14 @@ function ReservationHistory() {
                         upcomingReservations.map((e: reservationInfo) => (
                             <Card key={e.reserveInfoIdx}>
                                 <Item>
-                                    {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
+                                    {e.reserveInfoDate} {e.reserveInfoStartTime.substring(0, 5)}
+                                    {'~'}
+                                    {e.reserveInfoEndTime.substring(0, 5)}
                                 </Item>
                                 <Item>{e.coName} 상담가님</Item>
-                                <Item>{e.childName} 어린이</Item>
+                                <Item>{e.childName}</Item>
                                 <Item>
-                                    <Btn>입장하기</Btn>
+                                    <CancleBtn>예약 취소</CancleBtn>
                                 </Item>
                             </Card>
                         ))

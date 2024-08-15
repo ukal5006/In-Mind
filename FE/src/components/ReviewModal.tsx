@@ -1,106 +1,107 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import axios from 'axios';
 import { reservations, username } from '../testData/ReviewModal';
-import '../theme/class.css';
 import styled from 'styled-components';
 import userStore from '../stores/userStore';
+import { useNavigate } from 'react-router-dom';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api';
-// const apiUrl = 'http://localhost:5000'
 
-interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: ReactNode;
-}
-// 내부 backend 서버(ssh npm start) >> openvidu도 쓸 수 있음
-// http://localhost:5000/
-
-// 외부 backend 서버(로컬 npm start) >> openvidu는 못 씀
-// https://i11b301.p.ssafy.io/api/
-
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
-    if (!isOpen) return null;
-    return (
-        <div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <div
-                style={{
-                    background: 'white',
-                    padding: '0px',
-                    borderRadius: '5px',
-                    width: '600px',
-                    height: '500px',
-                }}
-            >
-                {children}
-            </div>
-        </div>
-    );
-};
-
-interface ReviewModalButtonProps {
-    children: ReactNode;
-}
-
-interface GreenHeaderProps {
-    className?: string;
-}
-
-const GreenHeader: React.FC<GreenHeaderProps> = ({ className }) => <div id="greenHeader" className={className} />;
-
-const StyledGreenHeader = styled.div`
-    background-color: #10c263;
-    width: 100%;
-    font-size: 45px;
-    height: 10vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+const ModalContent = styled.div`
+    background: white;
+    border-radius: 10px;
+    width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 `;
 
-const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [hoverRating, setHoverRating] = useState<number>(0);
-    const [selectedRating, setSelectedRating] = useState<number>(0);
-    const [content, setContent] = useState<string>('');
-    const { reserveIdx, coIdx } = reservations;
-    const { name } = username;
-    const { token } = userStore();
+const ModalHeader = styled.div`
+    background-color: #10c263;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+`;
 
-    const openModal = () => setIsOpen(true);
-    const closeModal = () => setIsOpen(false);
+const ModalBody = styled.div`
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+`;
+
+const StarContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+`;
+
+const TextArea = styled.textarea`
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 20px;
+    resize: none;
+`;
+
+const CharCount = styled.p`
+    text-align: right;
+    color: #888;
+    font-size: 0.8rem;
+    position: absolute;
+    bottom: 100px;
+    right: 30px;
+`;
+
+const ButtonContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+`;
+
+const Button = styled.button`
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        opacity: 0.9;
+    }
+`;
+
+const SubmitButton = styled(Button)`
+    background-color: #10c263;
+    color: white;
+`;
+
+const CloseButton = styled(Button)`
+    background-color: #ff4d4d;
+    color: white;
+`;
+
+// ReviewModalButton 컴포넌트
+const ReviewModal = (props: any) => {
+    const [hoverRating, setHoverRating] = useState(0);
+    const [selectedRating, setSelectedRating] = useState(0);
+    const { reserveInfoIdx, coIdx } = props;
+    const [content, setContent] = useState('');
+    const { userInfo, token } = userStore();
+    const navigate = useNavigate();
 
     const handleSubmit = async () => {
         try {
-            console.log({
-                reserveIdx,
-                coIdx,
-                name,
-                score: selectedRating,
-                content,
-            });
             await axios.post(
-                apiUrl + '/reviews',
-                {
-                    reserveIdx,
-                    coIdx,
-                    name,
-                    score: selectedRating,
-                    content,
-                },
+                `${apiUrl}/reviews`,
+                { reserveIdx: reserveInfoIdx, coIdx, name: userInfo?.userName, score: selectedRating, content },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -109,112 +110,60 @@ const ReviewModalButton: React.FC<ReviewModalButtonProps> = ({ children }) => {
                     },
                 }
             );
-            console.log('리뷰가 성공적으로 제출되었습니다.');
-            closeModal();
+            alert('리뷰를 남겨주셔서 감사합니다!');
+            navigate('/');
         } catch (error) {
             console.error('리뷰 제출 중 오류 발생:', error);
         }
     };
 
-    const handleMouseEnter = (score: number) => {
-        if (selectedRating === 0) {
+    const handleStarInteraction = (score: any, action: any) => {
+        if (action === 'enter' && selectedRating === 0) {
+            setHoverRating(score);
+        } else if (action === 'leave' && selectedRating === 0) {
+            setHoverRating(0);
+        } else if (action === 'click') {
+            setSelectedRating(score);
             setHoverRating(score);
         }
     };
 
-    const handleMouseLeave = () => {
-        if (selectedRating === 0) {
-            setHoverRating(0);
-        }
-    };
-
-    const handleClick = (score: number) => {
-        setSelectedRating(score);
-        setHoverRating(score);
-    };
-    const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newContent = e.target.value;
-        if (newContent.length <= 250) {
-            setContent(newContent);
-        }
-    };
-
     const renderStars = () => {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-            const currentRating = selectedRating || hoverRating;
-            stars.push(
-                <Star
-                    key={i}
-                    size={24}
-                    fill={currentRating >= i ? 'gold' : 'none'}
-                    stroke={currentRating >= i ? 'gold' : 'gray'}
-                    onClick={() => handleClick(i)}
-                    onMouseEnter={() => handleMouseEnter(i)}
-                    onMouseLeave={handleMouseLeave}
-                    style={{ cursor: 'pointer' }}
-                />
-            );
-        }
-        return stars;
+        return Array.from({ length: 5 }, (_, i) => i + 1).map((score) => (
+            <Star
+                key={score}
+                size={32}
+                fill={(selectedRating || hoverRating) >= score ? 'gold' : 'none'}
+                stroke={(selectedRating || hoverRating) >= score ? 'gold' : '#ddd'}
+                onClick={() => handleStarInteraction(score, 'click')}
+                onMouseEnter={() => handleStarInteraction(score, 'enter')}
+                onMouseLeave={() => handleStarInteraction(score, 'leave')}
+                style={{ cursor: 'pointer', marginRight: '5px' }}
+            />
+        ));
     };
 
     return (
-        <div className="rounded">
-            <button onClick={openModal}>{children}</button>
-            <Modal isOpen={isOpen} onClose={closeModal}>
-                <div className="bg-white p-6 rounded-lg max-w-md w-full">
-                    <StyledGreenHeader id="greenHeader" className="rounded">
-                        <h2 className="text-xl font-bold mb-4">상담 후기 작성</h2>
-                    </StyledGreenHeader>
-                    <div className="PD20FS30">
-                        <p className="mb-4">상담은 만족하셨나요?</p>
-                        <br />
-                        <br />
-                        <div className="flex mb-4">{renderStars()}</div>
-                        <p className="mb-2">만족도 : {selectedRating} / 5</p>
-                        <br />
-                        <div style={{ position: 'relative', width: '75%' }}>
-                            <textarea
-                                className="w-full p-2 border rounded mb-4 textArea"
-                                rows={6}
-                                placeholder="상담에 대해 리뷰를 남겨주세요. (최대 250자)"
-                                value={content}
-                                onChange={handleContentChange}
-                                maxLength={250}
-                            />
-                            <p style={{
-                                position: 'absolute',
-                                bottom: '8px',
-                                right: '8px',
-                                fontSize: '0.7rem',
-                                color: '#888',
-                                margin: 0
-                            }}>
-                                {content.length}/250
-                            </p>
-                        </div>
-                        <br />
-                        <br />
-                        <div className="contentSpaceBetween">
-                            <button
-                                className="bg-green-500 text-white px-4 py-2 rounded lightGreenBGC"
-                                onClick={handleSubmit}
-                            >
-                                리뷰 남기기
-                            </button>
-                            <button
-                                onClick={closeModal}
-                                className="bg-red-500 text-white px-4 py-2 rounded ml-2 lightRedBGC"
-                            >
-                                닫기
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </Modal>
-        </div>
+        <ModalContent>
+            <ModalHeader>상담 후기 작성</ModalHeader>
+            <ModalBody>
+                <h3 style={{ textAlign: 'center', marginBottom: '20px' }}>상담은 만족하셨나요?</h3>
+                <StarContainer>{renderStars()}</StarContainer>
+                <p style={{ textAlign: 'center', marginBottom: '20px' }}>만족도: {selectedRating} / 5</p>
+                <TextArea
+                    placeholder="상담에 대해 리뷰를 남겨주세요. (최대 200자)"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value.slice(0, 250))}
+                    maxLength={200}
+                />
+                <CharCount>{content.length}/200</CharCount>
+                <ButtonContainer>
+                    <SubmitButton onClick={handleSubmit}>리뷰 남기기</SubmitButton>
+                    <CloseButton onClick={() => navigate('/user')}>닫기</CloseButton>
+                </ButtonContainer>
+            </ModalBody>
+        </ModalContent>
     );
 };
 
-export default ReviewModalButton;
+export default ReviewModal;
