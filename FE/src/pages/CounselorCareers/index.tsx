@@ -21,6 +21,11 @@ const CounselorCareerContainer = styled(Container)`
     overflow-y: auto; /* 필요시 스크롤 추가 */
 `;
 
+const UpdateDiv = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 const Line = styled.div`
     height: 1px;
     width: 100%;
@@ -65,7 +70,7 @@ const CareerListItem = styled.li`
     width: 100%;
     margin-top: 25px;
     display: flex;
-    flex-direction: column;
+    /* flex-direction: column; */
     box-sizing: border-box;
     padding: 0px 10px;
 `;
@@ -83,6 +88,8 @@ const UpdateBtn = styled(Btn)`
     background-color: ${colors.darkGreen};
     color: ${colors.white};
     font-size: 14px;
+    width: 60px;
+    height: 30px;
 `;
 
 const DeleteBtn = styled(Btn)`
@@ -124,7 +131,16 @@ const Input = styled.input`
         margin-left: 10px;
     }
     position: fixed;
-    bottom: 0px;
+    bottom: 60px;
+`;
+const UpdateInput = styled.input`
+    width: 470px;
+    padding: 5px;
+    margin: 10px 0;
+    display: inline-block;
+    & + ${UpdateBtn} {
+        margin-left: 10px;
+    }
 `;
 
 const CareerButton = styled.button`
@@ -338,14 +354,14 @@ function CounselorCareer() {
                                                 {...provided.dragHandleProps}
                                             >
                                                 {editingIndex === index ? (
-                                                    <>
-                                                        <Input
+                                                    <UpdateDiv>
+                                                        <UpdateInput
                                                             type="text"
                                                             value={editingCareer}
                                                             onChange={(e) => setEditingCareer(e.target.value)}
                                                         />
                                                         <UpdateBtn onClick={handleUpdateCareer}>확인</UpdateBtn>
-                                                    </>
+                                                    </UpdateDiv>
                                                 ) : (
                                                     <CareerItemContainer>
                                                         <ItemContent>

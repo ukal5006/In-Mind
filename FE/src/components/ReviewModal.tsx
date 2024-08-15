@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import axios from 'axios';
-import { reservations, username } from '../testData/ReviewModal';
 import styled from 'styled-components';
 import userStore from '../stores/userStore';
 import { useNavigate } from 'react-router-dom';

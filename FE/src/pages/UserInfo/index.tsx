@@ -135,6 +135,7 @@ const ModalOverlay = styled.div`
     align-items: center;
     justify-content: center;
     z-index: 999; /* 다른 요소 위에 표시되도록 z-index 추가 */
+    background-color: rgba(0, 0, 0, 0.6);
 `;
 
 const ModalContainer = styled.div`

@@ -27,7 +27,6 @@ const TitleContainer = styled(Container)`
     border-top-left-radius: 10px;
     position: fixed;
     height: 40px;
-    background-color: white;
     width: 299px;
     border-bottom: 1px solid black;
 `;
@@ -40,20 +39,31 @@ const TitleBtn = styled(Text)`
     height: 100%;
     font-size: 14px;
     font-weight: 700;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.2); /* 반투명 흰색 배경 */
+    border-radius: 10px; /* 모서리 둥글게 */
+    backdrop-filter: blur(10px); /* 배경 블러 처리 */
+    -webkit-backdrop-filter: blur(10px); /* 사파리 지원을 위한 처리 */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 테두리 */
 `;
 const List = styled.ul`
     margin-top: 50px;
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
 `;
 const Item = styled.li`
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     border-radius: 10px;
     width: 280px;
     height: 150px;
     margin-bottom: 10px;
     padding: 10px 15px;
     box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.2); /* 반투명 흰색 배경 */
+    border-radius: 15px; /* 모서리 둥글게 */
+    backdrop-filter: blur(10px); /* 배경 블러 처리 */
+    -webkit-backdrop-filter: blur(10px); /* 사파리 지원을 위한 처리 */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* 테두리 */
 `;
 
 const Detail = styled(Text)`
@@ -110,10 +120,6 @@ const ModalContent = styled.div`
     text-align: center;
 `;
 
-const CancelBtn = styled(Btn)`
-    margin-top: 10px;
-`;
-
 const BtnContainer = styled.div`
     position: fixed;
     z-index: 999999;
@@ -156,13 +162,31 @@ const ImgH = styled.img`
     height: 300px;
 `;
 
+const BtnDiv = styled.div`
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    & > button {
+        color: white;
+    }
+    align-items: center;
+`;
+
 function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProps) {
-    console.log(selectedDate);
+    const filteredReservations = reservationList
+        ?.filter((reservation) => reservation.reserveInfoDate === selectedDate)
+        .sort((a: any, b: any) => {
+            const dateA = new Date(a.reserveInfoDate + ' ' + a.reserveInfoStartTime);
+            const dateB = new Date(b.reserveInfoDate + ' ' + b.reserveInfoStartTime);
+            return dateA.getTime() - dateB.getTime();
+        });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedReservation, setSelectedReservation] = useState<any>(null);
     const navigate = useNavigate();
     const { userInfo, token } = userStore((state) => state);
     const [reportOpen, setReportOpen] = useState(false);
+    // const filteredReservations = reservations.filter(reservation => reservation.reserveInfoDate === targetDate);
 
     const handleReport = () => {
         setReportOpen(true);
@@ -194,20 +218,6 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
             });
     };
 
-    const currentDateTime = new Date();
-
-    // 현재 날짜와 시간 이후의 예약만 필터링하고 시간순으로 정렬
-    const filteredReservations = reservationList
-        ?.filter((reservation: any) => {
-            const reservationDateTime = new Date(reservation.reserveInfoDate + ' ' + reservation.reserveInfoStartTime);
-            return reservationDateTime > currentDateTime;
-        })
-        .sort((a: any, b: any) => {
-            const dateA = new Date(a.reserveInfoDate + ' ' + a.reserveInfoStartTime);
-            const dateB = new Date(b.reserveInfoDate + ' ' + b.reserveInfoStartTime);
-            return dateA.getTime() - dateB.getTime();
-        });
-
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
     const [report, setReport] = useState<any>();
@@ -229,9 +239,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
     return (
         <>
             <TitleContainer>
-                <TitleBtn>오늘</TitleBtn>
                 <Title>상담 예약 내역</Title>
-                <TitleBtn>전체</TitleBtn>
             </TitleContainer>
             <List>
                 {filteredReservations?.length === 0 ? (
@@ -280,10 +288,14 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                                 </p>
                             </>
                         )}
-                        <CancelBtn onClick={() => handleCancelReservation(selectedReservation?.reserveInfoIdx)}>
-                            예약 취소
-                        </CancelBtn>
-                        <Btn onClick={handleCloseModal}>닫기</Btn>
+                        <BtnDiv>
+                            <button onClick={() => handleCancelReservation(selectedReservation?.reserveInfoIdx)}>
+                                예약 취소
+                            </button>
+                            <button style={{ backgroundColor: 'tomato' }} onClick={handleCloseModal}>
+                                닫기
+                            </button>
+                        </BtnDiv>
                     </ModalContent>
                 </ModalBackground>
             )}

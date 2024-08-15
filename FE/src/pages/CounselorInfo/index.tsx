@@ -74,7 +74,7 @@ const InfoContainer = styled(Container)`
     box-sizing: border-box;
     margin-top: 15px;
     ${Glass}
-    padding: 15px 20px;
+    padding: 10px 20px;
 `;
 
 const InfoContainerHeader = styled(Text)`
@@ -104,6 +104,7 @@ const UpdateBtn = styled(Btn)`
     background-color: ${colors.darkGreen};
     color: ${colors.white};
     font-size: 14px;
+    margin-top: 10px;
 `;
 
 const DeleteIdLink = styled(Link)`
@@ -430,7 +431,6 @@ function CounselorInfo() {
                     </InfoListItem>
                     <Line />
                     <InfoListItem>한줄소개 : {userInfo?.userIntro}</InfoListItem>
-                    <Line />
                     <InfoListItem>
                         <UpdateBtn
                             onClick={() => {
@@ -449,7 +449,6 @@ function CounselorInfo() {
                     <InfoListItem>
                         상담 가능 시간 : {startTime}시 ~ {endTime}시
                     </InfoListItem>
-                    <Line />
                     <InfoListItem>
                         <UpdateBtn
                             onClick={() => {
@@ -476,7 +475,6 @@ function CounselorInfo() {
                             수정하기
                         </UpdateBtn>
                     </InfoListItem>
-                    <Line />
                     <InfoListItem>
                         <DeleteBtn onClick={handleSignOut}>회원탈퇴</DeleteBtn>
                     </InfoListItem>

@@ -58,6 +58,7 @@ const ModalOverlay = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
 `;
 
 const ModalContent = styled.div`
@@ -102,7 +103,6 @@ const ModalContent = styled.div`
 const SliderContainer = styled(Container)`
     width: 400px;
     height: 500px;
-    border: 1px solid black;
     border-radius: 10px;
 `;
 

@@ -8,6 +8,7 @@ const CounselorContainer = styled(Container)`
     justify-content: start;
     box-sizing: border-box;
     background: linear-gradient(to bottom right, #87ceeb, #a8e063);
+    height: 100vh;
 `;
 
 export default CounselorContainer;

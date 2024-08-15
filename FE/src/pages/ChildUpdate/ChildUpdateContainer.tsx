@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Btn from '../../components/Btn';
 import useChildStore from '../../stores/childStore';
 import userStore from '../../stores/userStore';
-import styled from'styled-components';
+import styled from 'styled-components';
 
 const FormContainer = styled.div`
     max-width: 500px; /* 폼 최대 너비 설정 */
@@ -12,7 +12,6 @@ const FormContainer = styled.div`
     border-radius: 12px; /* 둥근 모서리 */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
 `;
-
 
 const FormGroup = styled.div`
     display: flex; /* Flexbox 사용 */
@@ -56,7 +55,7 @@ const Button = styled.button`
     cursor: pointer; /* 포인터 커서 */
     transition: background-color 0.3s; /* 배경색 변화 효과 */
     margin-right: 10px; /* 오른쪽 여백 추가 */
-    
+
     &:hover {
         background-color: #0056b3; /* 호버 시 색상 변화 */
     }
@@ -65,7 +64,6 @@ const Button = styled.button`
         margin-right: 0; /* 마지막 버튼의 오른쪽 여백 제거 */
     }
 `;
-
 
 interface ChildInfo {
     childName: string;
@@ -150,8 +148,7 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
         onClose();
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
         setError('');
 
         if (!childInfo.childName.trim()) {
@@ -202,36 +199,34 @@ const ChildInfoEdit: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose }):
 
     return (
         <FormContainer>
-            <form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label htmlFor="childName">이름</Label>
-                    <Input
-                        type="text"
-                        id="childName"
-                        name="childName"
-                        value={childInfo.childName}
-                        onChange={handleInputChange}
-                        maxLength={16}
-                        required
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label htmlFor="childBirth">생년월일</Label>
-                    <Input
-                        type="text"
-                        id="childBirth"
-                        name="childBirth"
-                        value={childInfo.childBirth}
-                        onChange={handleInputChange}
-                        placeholder="YYYY-MM-DD"
-                        maxLength={10}
-                        required
-                    />
-                </FormGroup>
-                {error && <ErrorMessage>{error}</ErrorMessage>}
-                <Button type="submit">{type === 'create' ? '아이 등록' : '아이 정보 수정'}</Button>
-                <Button onClick={closeModal}>닫기</Button>
-            </form>
+            <FormGroup>
+                <Label htmlFor="childName">이름</Label>
+                <Input
+                    type="text"
+                    id="childName"
+                    name="childName"
+                    value={childInfo.childName}
+                    onChange={handleInputChange}
+                    maxLength={16}
+                    required
+                />
+            </FormGroup>
+            <FormGroup>
+                <Label htmlFor="childBirth">생년월일</Label>
+                <Input
+                    type="text"
+                    id="childBirth"
+                    name="childBirth"
+                    value={childInfo.childBirth}
+                    onChange={handleInputChange}
+                    placeholder="YYYY-MM-DD"
+                    maxLength={10}
+                    required
+                />
+            </FormGroup>
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            <Button onClick={handleSubmit}>{type === 'create' ? '아이 등록' : '아이 정보 수정'}</Button>
+            <Button onClick={closeModal}>닫기</Button>
         </FormContainer>
     );
 };

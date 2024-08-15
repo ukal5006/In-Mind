@@ -7,6 +7,7 @@ import { READRESERVEALL } from '../../apis/reserveApi';
 import axios from 'axios';
 import Btn from '../../components/Btn';
 import Glass from '../../components/Glass';
+import { useNavigate } from 'react-router-dom';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -74,21 +75,24 @@ const CancleBtn = styled(Btn)`
 `;
 
 function ReservationHistory() {
+    const navigate = useNavigate();
     const { userInfo, token } = userStore();
     const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
 
+    const loadData = () => {
+        axios
+            .get(READRESERVEALL(userInfo?.userIdx), {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                },
+            })
+            .then((response) => setReservationHistory(response.data));
+    };
+
     useEffect(() => {
-        if (userInfo?.userIdx) {
-            axios
-                .get(READRESERVEALL(userInfo?.userIdx), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                })
-                .then((response) => setReservationHistory(response.data));
-        }
+        loadData();
     }, [userInfo, token]);
 
     // isEnd가 'Y'인 예약과 'N'인 예약을 분리
@@ -104,13 +108,11 @@ function ReservationHistory() {
                         pastReservations.map((e: reservationInfo) => (
                             <Card key={e.reserveInfoIdx}>
                                 <Item>
-                                    {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
+                                    {e.reserveInfoDate} {e.reserveInfoStartTime.substring(0, 5)}~
+                                    {e.reserveInfoEndTime.substring(0, 5)}
                                 </Item>
                                 <Item>{e.coName} 상담가님</Item>
                                 <Item>{e.childName} 어린이</Item>
-                                <Item>
-                                    <Btn>상담 내역 보기</Btn>
-                                </Item>
                             </Card>
                         ))
                     ) : (
@@ -132,7 +134,29 @@ function ReservationHistory() {
                                 <Item>{e.coName} 상담가님</Item>
                                 <Item>{e.childName}</Item>
                                 <Item>
-                                    <CancleBtn>예약 취소</CancleBtn>
+                                    <CancleBtn
+                                        onClick={() => {
+                                            // eslint-disable-next-line no-restricted-globals
+                                            const command = confirm('정말 상담을 취소하시겠습니까?');
+                                            if (command) {
+                                                axios
+                                                    .delete(
+                                                        `https://i11b301.p.ssafy.io/api/reserve?reserveId=${e.reserveInfoIdx}`,
+                                                        {
+                                                            headers: {
+                                                                Authorization: `Bearer ${token}`,
+                                                                accept: '*/*',
+                                                                'Content-Type': 'application/json;charset=UTF-8',
+                                                            },
+                                                        }
+                                                    )
+                                                    .then(() => loadData())
+                                                    .then(() => alert('상담이 취소되었습니다.'));
+                                            }
+                                        }}
+                                    >
+                                        예약 취소
+                                    </CancleBtn>
                                 </Item>
                             </Card>
                         ))
