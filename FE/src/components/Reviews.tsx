@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Container from '../../components/Container';
-import { colors } from '../../theme/colors';
-import Text from '../../components/Text';
-import useReviewStore from '../../stores/reviewStore';
-import userStore from '../../stores/userStore';
-
+import Container from './Container';
+import { colors } from '../theme/colors';
+import Text from './Text';
+import userStore from '../stores/userStore';
+import useReviewStore from '../stores/reviewStore';
 const CounselorReviewsContainer = styled(Container)`
-    padding: 30px 20px;
+    padding: 20px 20px;
     box-sizing: border-box;
     width: 100%;
     flex-direction: column;
@@ -55,10 +54,11 @@ const ReviewListContainer = styled.div`
     width: 100%; // 전체 너비 사용
     padding: 0 20px; // 좌우 패딩 추가
     box-sizing: border-box;
+    overflow-y: scroll;
 `;
 
 const ReviewList = styled.ul`
-    width: 95%;
+    width: 600px;
     list-style-type: none;
     padding: 0;
 `;
@@ -98,15 +98,15 @@ const StarRating = styled.div`
     font-size: 18px;
 `;
 
-function CounselorReviews() {
-    const { userInfo, token } = userStore((state) => state);
+function Reviews({ counselorIdx }: any) {
+    const { token } = userStore();
     const { reviews, fetchReviews } = useReviewStore();
 
     useEffect(() => {
-        if (userInfo?.userIdx && token) {
-            fetchReviews(userInfo.userIdx, token);
+        if (token) {
+            fetchReviews(counselorIdx, token);
         }
-    }, [userInfo, token, fetchReviews]);
+    }, [counselorIdx, token, fetchReviews]);
 
     const averageScore =
         reviews.length > 0
@@ -144,4 +144,4 @@ function CounselorReviews() {
     );
 }
 
-export default CounselorReviews;
+export default Reviews;

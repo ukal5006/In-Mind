@@ -14,7 +14,7 @@ import { IoClose } from 'react-icons/io5';
 import Glass from '../../components/Glass';
 
 const TestContainer = styled.div`
-    margin-top: 100px;
+    margin-top: 20px;
     width: 500px;
     padding: 20px 0px;
     display: flex;
@@ -317,8 +317,8 @@ const HTPExamContainer = (): JSX.Element => {
 
     const uploadS3 = async (file: File): Promise<string> => {
         const REGION = 'ap-northeast-2';
-        const ACCESS_KEY_ID = 'AKIAZ3MGNEZEQYW7NK73';
-        const SECRET_ACCESS_KEY_ID = 'vk21BsRBSgjmYpye4vmgogiAxd15AUu7eXSlZsbo';
+        const ACCESS_KEY_ID = 'AKIAZ3MGNEZEQHHBEFD4';
+        const SECRET_ACCESS_KEY_ID = 'PZiiiPJTOyvI9yfYZPta0acFHWWCSimkpHUWNhUk';
 
         AWS.config.update({
             region: REGION,
