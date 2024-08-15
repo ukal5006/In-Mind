@@ -11,7 +11,4 @@ import java.time.LocalTime;
 public class ReserveUpdateDto {
 
     private Long reserveInfoIdx;
-    private LocalDate reserveInfoDate;
-    private LocalTime reserveInfoStartTime;
-    private LocalTime reserveInfoEndTime;
 }
