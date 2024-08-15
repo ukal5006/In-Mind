@@ -4,8 +4,8 @@ import Container from '../../components/Container';
 const UserContainer = styled(Container)`
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
-    min-width: 750px;
+    /* height: 100vh; */
+    min-width: 700px;
     justify-content: start;
     box-sizing: border-box;
 `;

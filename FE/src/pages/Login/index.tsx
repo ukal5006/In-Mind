@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LoginBtn from './LoginBtn';
 import LoginContainer from './LoginContainer';
 import LoginInput from './LoginInput';
@@ -7,23 +7,52 @@ import loginLinkInfo from './loginLinkInfo';
 import LoginLinkWrapper from './LoginLinkWrapper';
 import LoginWrapper from './LoginWrapper';
 import BigLogo from '../../components/BigLogo';
-import userInfo from '../../testData/userInfo';
 import { useNavigate } from 'react-router-dom';
+import ReviewModalButton from '../../components/ReviewModal';
+import axios from 'axios';
+import { LOGIN } from '../../apis/userApi';
+import userStore from '../../stores/userStore';
+import useChildStore from '../../stores/childStore';
+import styled from 'styled-components';
+import useNotificationStore from '../../stores/notificationStore';
+
+interface ChildData {
+    childIdx: number;
+    childName: string;
+    childBirth: string;
+}
 
 function Login() {
+    const notificationStore = useNotificationStore();
+    // const childStore = useChildStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { setToken, setUserInfo } = userStore((state) => state);
 
-    const handleLogin = () => {
-        if (email === userInfo.email) {
-            if (userInfo.role === 'user') {
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post(LOGIN, {
+                email,
+                password,
+            });
+
+            // 로그인 성공 시 JWT 저장 및 사용자 정보 설정
+            const { token, userInfo } = response.data; // 서버에서 반환된 JWT 및 사용자 정보
+            localStorage.setItem('jwt', token); // JWT를 localStorage에 저장
+            localStorage.setItem('userInfo', JSON.stringify(userInfo)); // 사용자 정보를 JSON 문자열로 저장
+            setToken(token); // Zustand에 사용자 정보 저장
+            setUserInfo(userInfo);
+
+            if (userInfo.userRole === 'USER') {
                 navigate('/user');
             } else {
                 navigate('/counselor');
             }
-        } else {
-            alert('이메일 또는 비밀번호가 일치하지 않습니다.'); // 알림창 추가
+        } catch (error) {
+            // 오류 처리
+            console.log(error);
+            alert('로그인 실패했습니다.');
         }
     };
 
@@ -35,6 +64,7 @@ function Login() {
 
     return (
         <LoginContainer>
+            <ReviewModalButton>리뷰모달</ReviewModalButton>
             <BigLogo />
             <LoginWrapper>
                 <LoginInput

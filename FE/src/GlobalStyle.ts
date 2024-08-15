@@ -1,6 +1,14 @@
 import { createGlobalStyle } from 'styled-components';
+import NanumGothic from '../src/fonts/NanumGothic.ttf';
 
 export const GlobalStyle = createGlobalStyle`
+
+@font-face {
+        font-family: 'NanumGothic';
+        src: local('NanumGothic'), local('NanumGothic');
+        font-style: normal;
+        src: url(${NanumGothic}) format('truetype');
+  }
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -25,9 +33,10 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
-	overflow: hidden;
+	/* -ms-overflow-style: none; */
 
-}
+}::-webkit-scrollbar {
+  display: none;}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {

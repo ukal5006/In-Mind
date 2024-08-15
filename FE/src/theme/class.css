@@ -1,0 +1,28 @@
+.greenHeader{
+    background-color: #10c263;
+    width: 100%;
+    font-size: 45px;
+    height:10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* PaDding 20 FontSize 30 */
+.PD20FS30{
+    padding: 20px;
+    font-size: 30px;
+}
+.contentSpaceBetween {
+    display:flex;
+    justify-content:space-between
+}
+.textArea {
+    height: 110px;
+    width: 85%;
+}
+.lightGreenBGC{
+    background-color: #c6eedb;
+}
+.lightRedBGC{
+    background-color: #FF7F7F;
+}

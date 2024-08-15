@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import Container from '../../components/Container';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Text from '../../components/Text';
+import defaultImage from './defaultImg.png';
+import userStore from '../../stores/userStore';
+import { colors } from '../../theme/colors';
 
 const MyPageListContainer = styled(Container)`
     height: 95%;
@@ -9,6 +12,9 @@ const MyPageListContainer = styled(Container)`
     border: 1px solid black;
     border-radius: 10px;
     flex-direction: column;
+    border: 3px solid ${colors.gray};
+    border-radius: 10px;
+    background-color: #fff;
 `;
 
 const ProfileContainer = styled(Container)`
@@ -16,8 +22,7 @@ const ProfileContainer = styled(Container)`
     height: 50%;
     flex-direction: column;
 `;
-const ProfileImage = styled.div`
-    background-color: tomato;
+const ProfileImage = styled.img`
     width: 200px;
     height: 200px;
     border-radius: 50%;
@@ -43,15 +48,22 @@ const ListItem = styled(Link)`
 `;
 
 function MyPageList() {
+    const { userInfo } = userStore((state) => state);
+    const location = useLocation();
+
     return (
         <MyPageListContainer>
             <ProfileContainer>
-                <ProfileImage />
-                <ProfileName>김싸피</ProfileName>
+                <ProfileImage src={defaultImage} />
+                <ProfileName>{userInfo?.userName}</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
-                <ListItem to="userInfo">내 정보</ListItem>
-                <ListItem to="childInfo">아이 정보</ListItem>
+                <ListItem as={Link} to="/user/mypage/userInfo" state={{ userInfo }} style={{ color: location.pathname === '/user/mypage/userInfo' ? '#10c263' : 'black' }}>
+                    내 정보
+                </ListItem>
+                <ListItem as={Link} to="/user/mypage/childInfo" state={{ userInfo }} style={{ color: location.pathname === '/user/mypage/childInfo' ? '#10c263' : 'black' }}>
+                    아이 정보
+                </ListItem>
             </ListItemContainer>
         </MyPageListContainer>
     );

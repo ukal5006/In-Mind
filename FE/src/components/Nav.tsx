@@ -1,64 +1,49 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 import Container from './Container';
 import SmallLogo from './SmallLogo';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { colors } from '../theme/colors';
-import { IoMenu } from 'react-icons/io5';
 import Btn from './Btn';
+import Wrapper from './Wrapper';
+import userStore from '../stores/userStore';
+import useNotificationStore from '../stores/notificationStore';
+import { useSSE } from '../stores/useSSE';
 
 const NavContainer = styled(Container)`
     width: 100vw;
-    height: 80px;
     min-width: 700px;
+    height: 60px;
     justify-content: space-between;
     padding: 0px 10px;
     box-sizing: border-box;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
 `;
 
-const Menu = styled.div`
+const LogoWrapper = styled(Wrapper)`
     width: 33%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    font-size: 40px;
-    padding-left: 10px;
-    box-sizing: border-box;
-    cursor: pointer; /* 클릭 가능하게 표시 */
+    justify-content: flex-start;
 `;
 
-const DropdownMenu = styled.div`
-    position: absolute;
-    top: 80px; /* 네비게이션 아래에 위치 */
-    background-color: ${colors.white};
-    border: 1px solid ${colors.gray};
-    box-shadow: 0 4px 4px -4px black;
-    z-index: 1; /* 다른 요소 위에 표시 */
+const MenuContainer = styled(Container)`
+    width: 33%;
+    justify-content: space-evenly;
 `;
 
 const MenuItem = styled(Link)`
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    color: ${colors.black};
-
+    font-size: 16px;
+    font-weight: 700;
     &:hover {
-        background-color: ${colors.lightGray};
+        border-bottom: 2px solid black;
     }
 `;
 
-const UserInfoContainer = styled.div`
+const UserInfoContainer = styled(Container)`
     width: 33%;
     height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
     padding-right: 20px;
     box-sizing: border-box;
+    justify-content: flex-end;
 `;
-
-const UserInfoWrapper = styled(Link)``;
 
 const LogoutBtn = styled(Btn)`
     margin-left: 10px;
@@ -68,30 +53,84 @@ const LogoutBtn = styled(Btn)`
     color: ${colors.white};
 `;
 
-function Nav() {
-    const [menuOpen, setMenuOpen] = useState(false); // 메뉴 열림 상태
+const LoginBtn = styled(Btn)`
+    margin-left: 10px;
+    font-size: 16px;
+    padding: 5px;
+    background-color: ${colors.green};
+    color: ${colors.white};
+`;
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen); // 메뉴 상태 토글
+const NotificationLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+`;
+
+const NotificationBadge = styled.span`
+    background-color: ${colors.red};
+    color: ${colors.white};
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: ${colors.darkGray};
+    }
+`;
+
+function Nav() {
+    const navigate = useNavigate();
+    const { userInfo, setToken, setUserInfo } = userStore((state) => state);
+    const { unreadCount } = useNotificationStore();
+
+    const handleLogout = () => {
+        // 상태 및 localStorage 초기화
+        localStorage.removeItem('jwt');
+        localStorage.removeItem('userInfo');
+        setToken('');
+        setUserInfo(null); // 사용자 정보를 초기화
+
+        // 로그인 페이지로 리다이렉트
+        navigate('/login');
     };
+
+    useSSE();
+    console.log('Nav component rendering');
 
     return (
         <NavContainer>
-            <Menu onClick={toggleMenu}>
-                <IoMenu />
-            </Menu>
-            <SmallLogo />
+            <LogoWrapper>
+                <SmallLogo />
+            </LogoWrapper>
+            <MenuContainer>
+                {userInfo?.userRole === 'USER' ? (
+                    <>
+                        <MenuItem to="test">검사하기</MenuItem>
+                        <MenuItem to="counselorSearch"> 상담사 예약하기</MenuItem>
+                    </>
+                ) : null}
+            </MenuContainer>
             <UserInfoContainer>
-                <UserInfoWrapper to="mypage">user님, 환영합니다!</UserInfoWrapper>
-                <LogoutBtn>로그아웃</LogoutBtn>
+                {userInfo !== null ? (
+                    <>
+                        <NotificationLink to="/notifications">
+                            <NotificationBadge>{unreadCount}</NotificationBadge>
+                        </NotificationLink>
+                        <Link to="mypage">{userInfo.userName}님, 환영합니다!</Link>
+
+                        <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>
+                    </>
+                ) : (
+                    <>
+                        {' '}
+                        <LoginBtn onClick={() => navigate('/login')}>로그인</LoginBtn>
+                    </>
+                )}
             </UserInfoContainer>
-            {menuOpen && (
-                <DropdownMenu>
-                    <MenuItem to="/item1">메뉴 아이템 1</MenuItem>
-                    <MenuItem to="/item2">메뉴 아이템 2</MenuItem>
-                    <MenuItem to="/item3">메뉴 아이템 3</MenuItem>
-                </DropdownMenu>
-            )}
         </NavContainer>
     );
 }

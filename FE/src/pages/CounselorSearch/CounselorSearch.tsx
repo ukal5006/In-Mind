@@ -7,10 +7,11 @@ interface CounselorSearchProps {
 
 const CounselorSearchContainer: React.FC<CounselorSearchProps> = ({ children }) => {
   const { fetchCounselors, isLoading, error } = useCounselorStore();
-
   useEffect(() => {
-    fetchCounselors();
+    fetchCounselors(null);
   }, [fetchCounselors]);
+  
+  
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

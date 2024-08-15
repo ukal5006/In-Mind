@@ -1,0 +1,102 @@
+.container {
+	display: flex;
+	height: 90vh;
+	background-color: #f0f0f0;
+  }
+  
+  #session {
+	display: flex;
+	width: 100%;
+	height: 100%;
+  }
+  
+  .main-video-container {
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	display: flex;
+	justify-content: left;
+	/* align-items: center; */
+  }
+  
+  .main-video-container .streamcomponent {
+	width: 100%;
+	height: 100%;
+  }
+  
+  .main-video-container video {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+  }
+  
+  .sidebar {
+	width: 46%;
+	height: 100%;
+	background-color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar-video {
+	height: 100%;
+	width: 100%;
+	background-color: #000;
+  }
+  
+  .sidebar-content {
+	height: 100%;
+	padding: 20px;
+	overflow-y: auto;
+  }
+  
+  .footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 10vh;
+	background-color: #333;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 0 20px;
+  }
+  
+  .footer button {
+	padding: 10px 20px;
+	color: white;
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: background-color 0.3s;
+  }
+  
+  .footer button:hover {
+	opacity: 0.9;
+  }
+  
+  /* Leave Session 버튼 스타일 */
+  .footer button.leave-session {
+	background-color: #ff4d4d; /* 빨간색 */
+  }
+  
+  /* 음소거 버튼 스타일 */
+  .footer button.audio-toggle {
+	background-color: #4CAF50; /* 기본 초록색 */
+  }
+  
+  .footer button.audio-toggle.muted {
+	background-color: #ff4d4d; /* 음소거 시 빨간색 */
+  }
+  
+  /* 비디오 토글 버튼 스타일 */
+  .footer button.video-toggle {
+	background-color: #4CAF50; /* 기본 초록색 */
+  }
+  
+  .footer button.video-toggle.muted {
+	background-color: #ff4d4d; /* 비디오 오프 시 빨간색 */
+  }
+  

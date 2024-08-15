@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import userStore from './userStore';
 
-const API_BASE_URL = 'your_api_base_url';  //api 확정 후 변경 필요
+const API_BASE_URL = 'https://i11b301.p.ssafy.io/api'; //api 확정 후 변경 필요
+const { token } = userStore((state) => state);
 
 interface Report {
   reportCreatedAt: string;
@@ -27,11 +29,22 @@ export const useReportStore = create<ReportStore>((set) => ({
   fetchReports: async (userId) => {
     set({ isLoading: true, error: null });
     try {
-      const response = await axios.get(`${API_BASE_URL}/reports?userId=${userId}`);
+      const response = await axios.get(
+        `${API_BASE_URL}/reports?userId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            accept: '*/*',
+            'Content-Type': 'application/json;charset=UTF-8',
+          },
+        }
+      );
       const data = response.data;
       set({
         reports: data.children.flatMap((child: any) => child.reports),
-        totalPages: Math.ceil(data.children.flatMap((child: any) => child.reports).length / 5),
+        totalPages: Math.ceil(
+          data.children.flatMap((child: any) => child.reports).length / 5
+        ),
         isLoading: false,
       });
     } catch (error) {
