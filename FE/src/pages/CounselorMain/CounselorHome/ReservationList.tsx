@@ -216,6 +216,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
     const [report, setReport] = useState<any>();
+    const [objectResult, setObjectResult] = useState();
 
     const handleFacial = (facialInfo: FacialInfo) => {
         setFacialInfo(facialInfo);
@@ -228,7 +229,31 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                 },
             })
             .then((response) => setReport(response.data))
-            .then(() => setIsFacial(true));
+            .then(() => {
+                // console.log('★★★★★★★★★★★★★★★★★★');
+                // console.log(report);
+                const jsonDataString = report.objectResult.match(/data=\{(.*)\}/)[1];
+                // console.log(jsonDataString);
+
+                // 중괄호와 괄호를 적절히 수정하여 JSON 형태로 변환
+                const formattedString = jsonDataString
+                    .replace(/=/g, ':') // '='를 ':'로 변경
+                    .replace(/(\w+)\{/g, '"$1":{') // 키를 따옴표로 감싸기
+                    .replace(/(\w+):/g, '"$1":') // 키를 따옴표로 감싸기
+                    .replace(/,\s*([^\{])/g, '$1') // 중괄호 앞의 쉼표 제거
+                    .replace(/,}/g, '}') // 마지막 쉼표 처리
+                    .replace(/}\s*,\s*{/g, '},{') // 중괄호 그룹 사이의 쉼표 처리
+                    .replace(/(\w+)\s*:\s*\"/g, '"$1": "') // 값을 따옴표로 감싸기
+                    .replace(/:\s*([^,}]+)/g, ': "$1"'); // 값에 대한 따옴표 추가
+                setObjectResult(formattedString);
+                // console.log(formattedString);
+
+                // JSON 객체로 파싱
+                // const jsonData = JSON.parse(`{${formattedString}}`);
+                // console.log(jsonData);
+
+                setIsFacial(true);
+            });
     };
 
     return (
@@ -330,7 +355,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                                 <ImgWrapper src={report?.treeImage} />
                                 <ImgWrapper src={report?.personImage} />
                             </ImgContainer>
-                            {/* <ResultDiv>{report.objectResult}</ResultDiv> */}
+                            <ResultDiv>{objectResult}</ResultDiv>
                             <ResultDiv>{report.reportResult}</ResultDiv>
                             <CloseBtn onClick={() => setReportOpen(false)}>
                                 <IoClose />

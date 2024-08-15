@@ -107,8 +107,8 @@ export const ImgContainer = styled.div`
 `;
 
 export const ImgWrapper = styled.img`
-    width: 210px;
-    height: 297px;
+    width: 160px;
+    height: 237px;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* 그림자 진하게 */
     margin-bottom: 20px;
 `;
@@ -118,6 +118,9 @@ export const ResultDiv = styled.div`
     border-radius: 10px;
     background-color: white;
     padding: 10px;
+    height: 100px;
+    overflow-y: scroll;
+    margin-top: 10px;
 `;
 
 const TestHistoryItem = styled.div``;
