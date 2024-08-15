@@ -7,7 +7,7 @@ import { useOrganization } from './OrganizationContext';
 import userStore from '../../../stores/userStore';
 import './CounselingOrganizationModal.css';
 
-const apiUrl = 'https://i11b301.p.ssafy.io/api/org';
+const apiUrl = 'https://i11b301.p.ssafy.io/api/orgs';
 
 interface ModalProps {
     isOpen: boolean;
