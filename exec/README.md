@@ -4,8 +4,7 @@
 3. 개발 환경
 4. 환경 변수 형태
 5. CI/CD 구축
-6. 빌드 및 실행
-7. 외부 서비스 사용
+6. 시연 시나리오
 
 # 1. 사용 도구
 - 이슈 관리 : Jira
@@ -608,5 +607,21 @@ docker exec openvidu-jenkins-1 cat /var/jenkins_home/secrets/initialAdminPasswor
 ![image](/uploads/c67e88e57e78d6a01f391b26ccdd6f28/image.png)
 ![image](/uploads/a7234c7a0adc42623bb46913f9d62537/image.png)
 
-# 6. 빌드 및 실행
+### 10. mysql 설정
+```
+git clone https://lab.ssafy.com/s11-webmobile1-sub2/S11P12B301.git
+cd S11P12B301/mysql
+
+docker exec -i openvidu-mysql-1 mysql -u root -ppw1 inmind < Dump.sql
+```
+
+### 11. Fastapi-server 추가
+```
+cd S11P12B301/AI
+sudo docker build --no-cache -t inmind-python-image .
+sudo docker run -d --network host --name inmind-python inmind-python-image
+```
+
+# 6. 시연 시나리오
+
 
