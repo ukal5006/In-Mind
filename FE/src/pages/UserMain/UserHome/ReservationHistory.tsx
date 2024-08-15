@@ -245,10 +245,7 @@ function ReservationHistory() {
                                                 return;
                                             }
                                             axios.put(
-                                                'https://i11b301.p.ssafy.io/api/reserve',
-                                                {
-                                                    reserveInfoIdx: facialInfo?.reserveInfoIdx,
-                                                },
+                                                `https://i11b301.p.ssafy.io/api/reserve?reserveInfoIdx=${facialInfo?.reserveInfoIdx}`,
                                                 {
                                                     headers: {
                                                         Authorization: `Bearer ${token}`,
