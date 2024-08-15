@@ -1,13 +1,13 @@
-import React, { useState, useEffect, ReactNode, useCallback } from 'react';
-import { Search } from 'lucide-react';
-import debounce from 'lodash/debounce';
-import axios from 'axios';
-import '../../../theme/class.css';
-import { useOrganization } from './OrganizationContext';
-import userStore from '../../../stores/userStore';
-import './CounselingOrganizationModal.css';
+import React, { useState, useEffect, ReactNode, useCallback } from "react";
+import { Search } from "lucide-react";
+import debounce from "lodash/debounce";
+import axios from "axios";
+import "../../../theme/class.css";
+import { useOrganization } from "./OrganizationContext";
+import userStore from "../../../stores/userStore";
+import "./CounselingOrganizationModal.css";
 
-const apiUrl = 'https://i11b301.p.ssafy.io/api/orgs';
+const apiUrl = "https://i11b301.p.ssafy.io/api/orgs";
 
 interface ModalProps {
     isOpen: boolean;
@@ -36,10 +36,10 @@ interface Organization {
 
 const CounselingOrganizationModal: React.FC = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [activeTab, setActiveTab] = useState<'search' | 'add' | 'freelance'>('search');
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [activeTab, setActiveTab] = useState<"search" | "add" | "freelance">("search");
+    const [searchTerm, setSearchTerm] = useState<string>("");
     const [organizations, setOrganizations] = useState<Organization[]>([]);
-    const [newOrg, setNewOrg] = useState({ name: '', addr: '', tel: '' });
+    const [newOrg, setNewOrg] = useState({ name: "", addr: "", tel: "" });
     const [filteredOrganizations, setFilteredOrganizations] = useState<Organization[]>([]);
     const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
     const { setOrganization } = useOrganization();
@@ -67,20 +67,16 @@ const CounselingOrganizationModal: React.FC = () => {
     const searchOrganizations = async () => {
         try {
             const response = await axios.get(`${apiUrl}?type=name&keyword=${searchTerm}`, {
-                params: {
-                    type: 'name', // 여기에 type 값을 넣습니다.
-                    keyword: searchTerm, // 여기에 keyword 값을 넣습니다.
-                },
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    accept: '*/*',
-                    'Content-Type': 'application/json;charset=UTF-8',
+                    accept: "*/*",
+                    "Content-Type": "application/json;charset=UTF-8",
                 },
             });
             setOrganizations(response.data);
             filterOrganizations(response.data, searchTerm);
         } catch (error) {
-            console.error('Error searching organizations:', error);
+            console.error("Error searching organizations:", error);
             setOrganizations([]);
             setFilteredOrganizations([]);
         }
@@ -112,22 +108,22 @@ const CounselingOrganizationModal: React.FC = () => {
             const response = await axios.post(`${apiUrl}/orgs`, newOrg, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    accept: '*/*',
-                    'Content-Type': 'application/json;charset=UTF-8',
+                    accept: "*/*",
+                    "Content-Type": "application/json;charset=UTF-8",
                 },
             });
-            alert('상담기관이 추가되었습니다.');
+            alert("상담기관이 추가되었습니다.");
             setOrganization(response.data.name, response.data.id);
-            setNewOrg({ name: '', addr: '', tel: '' });
-            setActiveTab('search');
+            setNewOrg({ name: "", addr: "", tel: "" });
+            setActiveTab("search");
         } catch (error) {
-            console.error('Error adding organization:', error);
-            alert('상담기관 추가에 실패하였습니다.');
+            console.error("Error adding organization:", error);
+            alert("상담기관 추가에 실패하였습니다.");
         }
     };
 
     const selectFreelance = () => {
-        setOrganization('프리랜서', 0);
+        setOrganization("프리랜서", 0);
         closeModal();
     };
 
@@ -138,21 +134,21 @@ const CounselingOrganizationModal: React.FC = () => {
             </button>
             <Modal isOpen={isOpen} onClose={closeModal}>
                 <div className="tab-buttons mb-4">
-                    <button className={activeTab === 'search' ? 'active' : ''} onClick={() => setActiveTab('search')}>
+                    <button className={activeTab === "search" ? "active" : ""} onClick={() => setActiveTab("search")}>
                         상담기관 검색
                     </button>
-                    <button className={activeTab === 'add' ? 'active' : ''} onClick={() => setActiveTab('add')}>
+                    <button className={activeTab === "add" ? "active" : ""} onClick={() => setActiveTab("add")}>
                         상담기관 추가
                     </button>
                     <button
-                        className={activeTab === 'freelance' ? 'active' : ''}
-                        onClick={() => setActiveTab('freelance')}
+                        className={activeTab === "freelance" ? "active" : ""}
+                        onClick={() => setActiveTab("freelance")}
                     >
                         프리랜서 선택
                     </button>
                 </div>
 
-                {activeTab === 'search' && (
+                {activeTab === "search" && (
                     <div>
                         <div className="flex mb-4">
                             <input
@@ -171,7 +167,7 @@ const CounselingOrganizationModal: React.FC = () => {
                                 <div
                                     key={org.id}
                                     className={`p-2 border-b cursor-pointer ${
-                                        selectedOrg?.id === org.id ? 'bg-blue-100' : ''
+                                        selectedOrg?.id === org.id ? "bg-blue-100" : ""
                                     }`}
                                     onClick={() => handleOrgClick(org)}
                                 >
@@ -185,7 +181,7 @@ const CounselingOrganizationModal: React.FC = () => {
                     </div>
                 )}
 
-                {activeTab === 'add' && (
+                {activeTab === "add" && (
                     <div>
                         <input
                             type="text"
@@ -214,7 +210,7 @@ const CounselingOrganizationModal: React.FC = () => {
                     </div>
                 )}
 
-                {activeTab === 'freelance' && (
+                {activeTab === "freelance" && (
                     <div>
                         <p>프리랜서로 선택하시겠습니까?</p>
                         <button onClick={selectFreelance} className="secondary-button mt-4">
