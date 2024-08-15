@@ -5,7 +5,6 @@ import Text from '../../components/Text';
 import defaultImage from './defaultImg.png';
 import userStore from '../../stores/userStore';
 import { colors } from '../../theme/colors';
-import Glass from '../../components/Glass';
 
 const MyPageListContainer = styled(Container)`
     height: 95%;
@@ -16,7 +15,6 @@ const MyPageListContainer = styled(Container)`
     border: 3px solid ${colors.gray};
     border-radius: 10px;
     background-color: #fff;
-    ${Glass}
 `;
 
 const ProfileContainer = styled(Container)`
@@ -29,7 +27,6 @@ const ProfileImage = styled.img`
     height: 200px;
     border-radius: 50%;
     margin-bottom: 30px;
-    background-color: white;
 `;
 const ProfileName = styled(Text)`
     font-size: 30px;
@@ -61,20 +58,10 @@ function MyPageList() {
                 <ProfileName>{userInfo?.userName}</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
-                <ListItem
-                    as={Link}
-                    to="/user/mypage/userInfo"
-                    state={{ userInfo }}
-                    style={{ color: location.pathname === '/user/mypage/userInfo' ? '#10c263' : 'black' }}
-                >
+                <ListItem as={Link} to="/user/mypage/userInfo" state={{ userInfo }} style={{ color: location.pathname === '/user/mypage/userInfo' ? '#10c263' : 'black' }}>
                     내 정보
                 </ListItem>
-                <ListItem
-                    as={Link}
-                    to="/user/mypage/childInfo"
-                    state={{ userInfo }}
-                    style={{ color: location.pathname === '/user/mypage/childInfo' ? '#10c263' : 'black' }}
-                >
+                <ListItem as={Link} to="/user/mypage/childInfo" state={{ userInfo }} style={{ color: location.pathname === '/user/mypage/childInfo' ? '#10c263' : 'black' }}>
                     아이 정보
                 </ListItem>
             </ListItemContainer>

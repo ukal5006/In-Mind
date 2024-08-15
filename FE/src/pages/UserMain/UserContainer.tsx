@@ -9,7 +9,7 @@ const UserContainer = styled(Container)`
     justify-content: start;
     box-sizing: border-box;
     background: linear-gradient(to bottom right, #87ceeb, #a8e063);
-    position: relative;
+    background-color: #001e2b;
 `;
 
 export default UserContainer;

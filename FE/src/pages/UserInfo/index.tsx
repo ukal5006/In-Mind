@@ -9,7 +9,6 @@ import userStore from '../../stores/userStore';
 import axios from 'axios';
 import { CHANGEPW, CHECKPW, DELETEUSER, LOADUSERINFO, UPDATEUSERINFO } from '../../apis/userApi';
 import { useNavigate } from 'react-router-dom';
-import Glass from '../../components/Glass';
 
 const UserInfoContainer = styled(Container)`
     padding: 40px 20px;
@@ -18,6 +17,7 @@ const UserInfoContainer = styled(Container)`
     height: 100%;
     flex-direction: column;
     justify-content: start;
+    
 `;
 
 const ProfileContainer = styled(Container)`
@@ -26,16 +26,14 @@ const ProfileContainer = styled(Container)`
     box-sizing: border-box;
     padding-left: 10px;
     margin-bottom: 15px;
-    ${Glass}
-    height: 200px;
 `;
 
-const ProfileImage = styled.img`
+const ProfileImage = styled.div`
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    background-color: ${colors.gray};
     margin-right: 30px;
-    background-color: white;
 `;
 
 const ProfileInfoWrapper = styled(Wrapper)`
@@ -59,13 +57,11 @@ const Line = styled.div`
 const ProfileEmail = styled(Text)``;
 
 const InfoContainer = styled(Container)`
-    padding: 20px 20px;
-    width: 100%;
+    width: 90%;
     flex-direction: column;
     align-items: flex-start;
     box-sizing: border-box;
     margin: 20px;
-    ${Glass}
 `;
 
 const InfoContainerHeader = styled(Text)`
@@ -95,8 +91,8 @@ const InfoListItem = styled.li`
 `;
 
 const UpdateBtn = styled(Btn)`
-    color: white; /* 배경 제거 */
-    background-color: ${colors.okGreen}; /* 글자색을 다크 그린으로 설정 */
+     background: none; /* 배경 제거 */
+    color: ${colors.darkGreen}; /* 글자색을 다크 그린으로 설정 */
     font-size: 14px; /* 폰트 크기 유지 */
     font-weight: 550; /* 폰트 두께 설정 */
     border: none; /* 테두리 제거 */
@@ -104,7 +100,6 @@ const UpdateBtn = styled(Btn)`
     padding-top: 5px;
     transition: color 0.3s; /* 색상 변화에 대한 부드러운 효과 */
     margin-right: 63px; /* 오른쪽 여백 유지 */
-    padding: 5px 5px;
 
     &:hover {
         color: ${colors.lightGreen}; /* 호버 시 색상 변화 */
@@ -126,16 +121,19 @@ const DeleteBtn = styled(Btn)`
     transition: color 0.3s; /* 색상 변화에 대한 부드러운 효과 */
 `;
 
+
+
 const ModalOverlay = styled.div`
-    position: fixed; /* fixed로 설정하여 화면에 고정 */
-    top: 0; /* 화면 상단 */
-    left: 0; /* 화면 좌측 */
-    right: 0; /* 화면 우측 */
-    bottom: 0; /* 화면 하단 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7); /* 더 어두운 배경 */
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 999; /* 다른 요소 위에 표시되도록 z-index 추가 */
+    backdrop-filter: blur(5px); /* 배경 흐림 효과 추가 */
 `;
 
 const ModalContainer = styled.div`
@@ -220,7 +218,7 @@ const ModalButton = styled(Btn)`
     cursor: pointer; /* 포인터 커서 */
     transition: background-color 0.3s; /* 배경색 변화 효과 */
     margin-right: 10px; /* 오른쪽 여백 추가 */
-
+    
     &:last-child {
         margin-right: 0; /* 마지막 버튼의 오른쪽 여백 제거 */
     }
@@ -351,142 +349,138 @@ function UserInfo() {
     };
 
     return (
-        <>
-            <UserInfoContainer>
-                <ProfileContainer>
-                    <ProfileImage src="https://in-mind-image.s3.ap-northeast-2.amazonaws.com/upload/defaultImg.png" />
-                    <ProfileInfoWrapper>
-                        <ProfileName>{userInfo?.userName}</ProfileName>
-                        <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
-                    </ProfileInfoWrapper>
-                </ProfileContainer>
-                <InfoContainer>
-                    <InfoContainerHeader>기본정보</InfoContainerHeader>
-                    <InfoList>
-                        <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
-                        <Line />
-                        <InfoListItem>이메일 : {userInfo?.userEmail}</InfoListItem>
-                        <Line />
-                        <InfoListItem>
-                            전화번호 : {userInfo?.userTel}
-                            <UpdateBtn
-                                onClick={() => {
-                                    setModalType('info');
-                                    setIsModalOpen(true);
-                                }}
-                            >
-                                수정하기
-                            </UpdateBtn>
-                        </InfoListItem>
-                        <Line />
-                    </InfoList>
-                </InfoContainer>
-                <InfoContainer>
-                    <InfoContainerHeader>보안설정</InfoContainerHeader>
-                    <InfoList>
-                        <InfoListItem>
-                            비밀번호
-                            <UpdateBtn
-                                onClick={() => {
-                                    setModalType('password');
-                                    setIsModalOpen(true);
-                                }}
-                            >
-                                수정하기
-                            </UpdateBtn>
-                        </InfoListItem>
-                        <Line />
-                        <InfoListItem>
-                            <DeleteBtn onClick={handleSignOut}>회원탈퇴▶</DeleteBtn>
-                        </InfoListItem>
-                    </InfoList>
-                </InfoContainer>
-            </UserInfoContainer>
+        <UserInfoContainer>
+            <ProfileContainer>
+                <ProfileImage />
+                <ProfileInfoWrapper>
+                    <ProfileName>{userInfo?.userName}</ProfileName>
+                    <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
+                </ProfileInfoWrapper>
+            </ProfileContainer>
+            <Line />
+            <InfoContainer>
+                <InfoContainerHeader>기본정보</InfoContainerHeader>
+                <InfoList>
+                    <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
+                    <Line />
+                    <InfoListItem>이메일 : {userInfo?.userEmail}</InfoListItem>
+                    <Line />
+                    <InfoListItem>전화번호 : {userInfo?.userTel}
+                        <UpdateBtn
+                            onClick={() => {
+                                setModalType('info');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
+                    </InfoListItem>
+                    <Line />
+                </InfoList>
+            </InfoContainer>
+            <Line />
+            <InfoContainer>
+                <InfoContainerHeader>보안설정</InfoContainerHeader>
+                <InfoList>
+                    <InfoListItem>
+                        비밀번호
+                        <UpdateBtn
+                            onClick={() => {
+                                setModalType('password');
+                                setIsModalOpen(true);
+                            }}
+                        >
+                            수정하기
+                        </UpdateBtn>
+                    </InfoListItem>
+                    <Line />
+                    <InfoListItem>
+                        <DeleteBtn onClick={handleSignOut}>회원탈퇴▶</DeleteBtn>
+                    </InfoListItem>
+                </InfoList>
+            </InfoContainer>
 
             {isModalOpen && (
                 <ModalOverlay onClick={handleOverlayClick}>
-                    {modalType === 'info' ? (
-                        <ModalContainer onClick={(e) => e.stopPropagation()}>
-                            <ModalTitle>기본정보 수정</ModalTitle>
-                            <FormContainer>
-                                <FormGroup>
-                                    <Label htmlFor="userName">이름</Label>
-                                    <ModalInput type="text" value={userInfo?.userName} placeholder="이름" disabled />
-                                    <br />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label htmlFor="email">이메일</Label>
-                                    <ModalInput type="text" value={userInfo?.userEmail} placeholder="이메일" disabled />
-                                    <br />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label htmlFor="tel">전화번호</Label>
-                                    <ModalInput
-                                        type="text"
-                                        value={changePhone}
-                                        onChange={(e) => setChangePhone(e.target.value)}
-                                        placeholder="전화번호"
-                                    />
-                                </FormGroup>
-                            </FormContainer>
-                            <ButtonContainer>
-                                <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
-                                <ModalButton
-                                    onClick={() => {
-                                        setChangePhone(userInfo?.userTel);
-                                        setIsModalOpen(false);
-                                    }}
-                                >
-                                    취소하기
-                                </ModalButton>
-                            </ButtonContainer>
-                        </ModalContainer>
-                    ) : (
-                        <ModalContainer onClick={(e) => e.stopPropagation()}>
-                            <ModalTitle>비밀번호 변경</ModalTitle>
-                            <FormContainer>
-                                <FormGroup>
-                                    <Label htmlFor="beforePw">이전 비밀번호</Label>
-                                    <ModalInput
-                                        id="beforePw"
-                                        type="password"
-                                        value={beforePw}
-                                        onChange={(e) => setbeforePw(e.target.value)}
-                                        placeholder="이전 비밀번호"
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label htmlFor="changePw">비밀번호</Label>
-                                    <ModalInput
-                                        id="changePw"
-                                        type="password"
-                                        value={changePw}
-                                        onChange={(e) => setChangePw(e.target.value)}
-                                        placeholder="변경할 비밀번호"
-                                    />
-                                </FormGroup>
-                                <FormGroup>
-                                    <Label htmlFor="changePwCheck">비밀번호 확인</Label>
-                                    <ModalInput
-                                        id="changePwCheck"
-                                        type="password"
-                                        value={changePwCheck}
-                                        onChange={(e) => setChangePwCheck(e.target.value)}
-                                        placeholder="변경할 비밀번호 확인"
-                                    />
-                                </FormGroup>
-                            </FormContainer>
-                            <ButtonContainer>
-                                <ModalButton type="submit" onClick={handleUpdatePW}>
-                                    저장하기
-                                </ModalButton>
-                                <ModalButton onClick={() => setIsModalOpen(false)}>취소하기</ModalButton>
-                            </ButtonContainer>
-                        </ModalContainer>
-                    )}
-                </ModalOverlay>
+                {modalType === 'info' ? (
+                    <ModalContainer onClick={(e) => e.stopPropagation()}>
+                        <ModalTitle>기본정보 수정</ModalTitle>
+                        <FormContainer>
+                        <FormGroup>
+                        <Label htmlFor="userName">이름</Label>
+                        <ModalInput type="text" value={userInfo?.userName} placeholder="이름" disabled /><br />
+                        </FormGroup>
+                        <FormGroup>
+                        <Label htmlFor="email">이메일</Label>
+                        <ModalInput type="text" value={userInfo?.userEmail} placeholder="이메일" disabled /><br />
+                        </FormGroup>
+                        <FormGroup>
+                        <Label htmlFor="tel">전화번호</Label>
+                        <ModalInput
+                            type="text"
+                            value={changePhone}
+                            onChange={(e) => setChangePhone(e.target.value)}
+                            placeholder="전화번호"
+                    /></FormGroup>
+                </FormContainer>
+                    <ButtonContainer>
+                        <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                        <ModalButton
+                            onClick={() => {
+                                setChangePhone(userInfo?.userTel);
+                                setIsModalOpen(false);
+                            }}
+                        >
+                            취소하기
+                        </ModalButton>
+                    </ButtonContainer>
+                    </ModalContainer>
+                ) : (
+                    <ModalContainer onClick={(e) => e.stopPropagation()}>
+                        <ModalTitle>비밀번호 변경</ModalTitle>
+                        <FormContainer>
+                            <FormGroup>
+                                <Label htmlFor="beforePw">이전 비밀번호</Label>
+                                <ModalInput
+                                    id="beforePw"
+                                    type="password"
+                                    value={beforePw}
+                                    onChange={(e) => setbeforePw(e.target.value)}
+                                    placeholder="이전 비밀번호"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="changePw">비밀번호</Label>
+                                <ModalInput
+                                    id="changePw"
+                                    type="password"
+                                    value={changePw}
+                                    onChange={(e) => setChangePw(e.target.value)}
+                                    placeholder="변경할 비밀번호"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="changePwCheck">비밀번호 확인</Label>
+                                <ModalInput
+                                    id="changePwCheck"
+                                    type="password"
+                                    value={changePwCheck}
+                                    onChange={(e) => setChangePwCheck(e.target.value)}
+                                    placeholder="변경할 비밀번호 확인"
+                                />
+                            </FormGroup>
+                        </FormContainer>
+                        <ButtonContainer>
+                            <ModalButton type="submit" onClick={handleUpdatePW}>저장하기</ModalButton>
+                            <ModalButton onClick={() => setIsModalOpen(false)}>취소하기</ModalButton>
+                        </ButtonContainer>
+                    </ModalContainer>
+
+
+                )}
+            </ModalOverlay>
             )}
-        </>
+        </UserInfoContainer>
     );
 }
 

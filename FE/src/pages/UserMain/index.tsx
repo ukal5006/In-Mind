@@ -9,7 +9,6 @@ import { useEffect } from 'react';
 
 const UserWrapper = styled(Wrapper)`
     max-width: 1200px;
-    position: relative;
 `;
 
 function UserMain() {

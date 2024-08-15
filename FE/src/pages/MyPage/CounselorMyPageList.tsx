@@ -5,10 +5,9 @@ import Container from '../../components/Container';
 import { Link, useLocation } from 'react-router-dom';
 import Text from '../../components/Text';
 import userStore from '../../stores/userStore';
-import { colors } from '../../theme/colors';
-import { FaUser } from 'react-icons/fa';
+import {colors} from '../../theme/colors'
+import { FaUser } from "react-icons/fa";
 import { useEffect } from 'react';
-import Glass from '../../components/Glass';
 
 const CounselorMyPageListContainer = styled(Container)`
     height: 95%;
@@ -16,7 +15,6 @@ const CounselorMyPageListContainer = styled(Container)`
     border: 1px solid black;
     border-radius: 10px;
     flex-direction: column;
-    ${Glass}
 `;
 
 const ProfileContainer = styled(Container)`
@@ -36,8 +34,8 @@ const ProfileImage = styled.div`
 `;
 
 const StyledFaUser = styled(FaUser)`
-    font-size: 100px;
-    color: white;
+    font-size: 100px; 
+    color: white;  
 `;
 
 const ProfileName = styled(Text)`
@@ -54,25 +52,25 @@ const ListItemContainer = styled(Container)`
 
 interface ListItemProps {
     $isActive: boolean;
-}
+  }
 
 const ListItem = styled(Link)<ListItemProps>`
-    border-bottom: ${(props) => (props.$isActive ? '2px solid black' : `2px solid ${colors.lightGray}`)};
-    padding-bottom: 10px;
-    font-size: ${(props) => (props.$isActive ? '28px' : '25px')};
-    font-weight: 700;
-    color: ${(props) => (props.$isActive ? `${colors.darkGreen}` : `${colors.lightGray}`)};
-    transition: color 0.3s, font-size 0.3s;
+  border-bottom: ${props => props.$isActive ? '2px solid black' : `2px solid ${colors.lightGray}`};
+  padding-bottom: 10px;
+  font-size: ${props => props.$isActive ? '28px' : '25px'};
+  font-weight: 700;
+  color: ${props => props.$isActive ? `${colors.darkGreen}` : `${colors.lightGray}`};
+  transition: color 0.3s, font-size 0.3s;
 `;
 
 function CounselorMyPageList() {
     const location = useLocation();
     const { userInfo, token } = userStore((state) => state);
     const { counselor, fetchCounselor } = useCounselorStore();
-    const { fetchReviews } = useReviewStore();
+    const {fetchReviews} = useReviewStore();
 
     useEffect(() => {
-        if (userInfo?.userIdx && token) {
+        if (userInfo?.userIdx&&token) {
             fetchCounselor(userInfo.userIdx, token);
             fetchReviews(userInfo.userIdx, token);
         }
@@ -81,9 +79,9 @@ function CounselorMyPageList() {
     return (
         <CounselorMyPageListContainer>
             <ProfileContainer>
-                <ProfileImage>
-                    <StyledFaUser />
-                </ProfileImage>
+                    <ProfileImage>
+                        <StyledFaUser />
+                    </ProfileImage>
                 <ProfileName>{userInfo?.userName}</ProfileName>
             </ProfileContainer>
             <ListItemContainer>
