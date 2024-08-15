@@ -46,7 +46,7 @@ public class ReserveController {
 
     @Operation(summary = "상담 예약 수정", description = "유저가 예약 내역을 수정합니다.")
     @PutMapping
-    public ResponseEntity<Void> updateReserve(@Validated @RequestParam Long reserveInfoIdx){
+    public ResponseEntity<Void> updateReserve(@Validated @RequestParam("reserveInfoIdx") Long reserveInfoIdx){
         reserveService.updateReserve(reserveInfoIdx);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
