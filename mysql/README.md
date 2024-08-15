@@ -1,1 +1,1 @@
-# mysql
+# Dump.sql 이 가장 최신의 mysql dump 파일입니다.
