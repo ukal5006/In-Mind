@@ -7,6 +7,7 @@ const CounselorContainer = styled(Container)`
     min-width: 700px;
     justify-content: start;
     box-sizing: border-box;
+    background: linear-gradient(to bottom right, #87ceeb, #a8e063);
 `;
 
 export default CounselorContainer;
