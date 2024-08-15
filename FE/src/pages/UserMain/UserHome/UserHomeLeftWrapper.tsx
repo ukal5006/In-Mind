@@ -7,5 +7,4 @@ const UserHomeLeftWrapper = styled(Wrapper)`
     height: 100%;
     box-sizing: border-box;
 `;
-
 export default UserHomeLeftWrapper;

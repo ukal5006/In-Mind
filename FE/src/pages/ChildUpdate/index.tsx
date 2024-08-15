@@ -1,6 +1,6 @@
 import React from 'react';
 import ChildInfoEdit from './ChildUpdateContainer';
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const Header = styled.header`
     text-align: center; /* 중앙 정렬 */
@@ -13,7 +13,7 @@ const Title = styled.h1`
     position: relative; /* 포지션 설정 */
     padding-bottom: 10px; /* 아래 패딩 */
     font-weight: 700;
-    
+
     &::after {
         content: ''; /* 가상 요소 생성 */
         display: block; /* 블록 요소로 설정 */
@@ -29,7 +29,7 @@ const Title = styled.h1`
     }
 `;
 
-
+const UpdateDiv = styled.div``;
 
 export interface ChildUpdateProps {
     type: 'create' | 'update';
@@ -45,14 +45,12 @@ const ChildUpdate: React.FC<ChildUpdateProps> = ({ type, childIdx, onClose, onSu
     };
 
     return (
-        <div>
+        <UpdateDiv>
             <Header>
                 <Title>{type === 'create' ? '아이 등록' : '아이 정보 수정'}</Title>
             </Header>
-            <main>
-                <ChildInfoEdit type={type} childIdx={childIdx} onClose={handleSuccess} />
-            </main>
-        </div>
+            <ChildInfoEdit type={type} childIdx={childIdx} onClose={handleSuccess} />
+        </UpdateDiv>
     );
 };
 
