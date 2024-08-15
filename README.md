@@ -173,10 +173,12 @@
 
 
 ## :sparkles: 시연
-  ### 추후 시연영상 추가
-
-
-
+  ![login](/uploads/e5e48345b69d7fb3ff8fc1b619ba8862/login.gif)  
+  ![아이정보_등록](/uploads/9c95745f6d2c3f5f7941c2884b6d5526/아이정보_등록.gif)  
+  ![3](/uploads/53ed74b2eafff58d6ad26dbf207674f9/3.gif)  
+  ![4](/uploads/0efc85dd76c9662eac43420193ec7e43/4.gif)
+  ![5](/uploads/7c032a197510ce292a7591aed3433c4e/5.gif)
+  ![6](/uploads/3dc21005d231b2213616fa8f4914abdf/6.gif)  
 
 
 
@@ -243,11 +245,6 @@
     - **모델**: YOLOv8
     - **프로그래밍 언어**: Python
     - **배포 환경**: Fast API
-
-
-
-#### 데이터 전처리
-  # 사진 업로드
 
 
 

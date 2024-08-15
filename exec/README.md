@@ -623,5 +623,20 @@ sudo docker run -d --network host --name inmind-python inmind-python-image
 ```
 
 # 6. 시연 시나리오
+![image](/uploads/67cb4f84697474afa77181a54880164c/image.png)  
+![image](/uploads/c4886fe4ef125dc9ebc0f042282276ad/image.png)  
+![image](/uploads/76008ffe800889cbebda424d39d5dfbb/image.png)  
+![image](/uploads/e96f5345618aed23a767f0b6f5ce2811/image.png)  
+![image](/uploads/7b7db7b061d5e1f7aa956ced4e283971/image.png)  
+![image](/uploads/f7fcae1e1808857cd6c8f987b35ab7a8/image.png)  
+![image](/uploads/16f5b346bc57f2ba2fc546d7f03b5c1f/image.png)  
+
+
+
+
+
+
+
+
 
 
