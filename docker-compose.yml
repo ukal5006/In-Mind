@@ -1,10 +1,10 @@
 version: "2.1"
 
 services:
-    frontend:
-        image: frontend:latest
+    backend:
+        image: backend:latest
+        network_mode: host
         build:
-            context: ./openvidu-react
+            context: ./BE
             dockerfile: Dockerfile
-        ports:
-            - "5442:3000"
+        container_name: inmind-server

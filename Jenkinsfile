@@ -1,46 +1,53 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJs 18'
-    }
-
     stages {
         stage('BE Build') {
             steps {
                 sh 'chmod -R 777 .'
-                dir('openvidu'){
-                    dir('inmind'){
-                        sh './gradlew clean build'
-                    }
-                }
-            }
-        }
-        
-        stage('FE Build') {
-            steps {
-                sh 'chmod -R 777 .'
-                dir('openvidu') {
-                    dir('react'){
-                        sh 'npm install'
-                        // Node.js 버전 호환성 문제 해결
-                        sh 'export NODE_OPTIONS=--openssl-legacy-provider && npm run build'
-                    }
+                dir('BE'){
+                    sh './gradlew clean build'
                 }
             }
         }
         
         stage('Docker Compose Down') {
             steps {
-                echo 'Stopping and removing existing Docker containers...'
-                sh 'docker-compose down || true'
+                echo 'Stopping and removing the Docker container named inmind-server...'
+                sh '''
+                docker rm -f inmind-server || true
+                '''
             }
         }
         
         stage('Docker Compose Up') {
             steps {
                 echo 'Deploying Docker containers...'
-                sh 'docker-compose up -d'
+                sh 'docker-compose up --build -d'
+            }
+        }
+
+        stage('Check Dump File') {
+            steps {
+                echo 'Checking if Dump.sql file exists...'
+                sh 'ls -la $WORKSPACE'
+                sh 'ls -la $WORKSPACE/mysql'
+            }
+        }
+
+        stage('Restore MySQL Dump') {
+            steps {
+                echo 'Restoring MySQL dump file to the MySQL container...'
+                sh '''                
+                # 덤프 파일을 복사하여 컨테이너 내부로 이동
+                docker cp $WORKSPACE/mysql/Dump.sql openvidu-mysql-1:/Dump.sql
+                
+                # 덤프 파일을 MySQL 데이터베이스로 복원
+                docker exec openvidu-mysql-1 bash -c "mysql -u root -p1234 inmind < Dump.sql"
+                
+                # 덤프 파일 삭제 (선택 사항)
+                docker exec openvidu-mysql-1 rm Dump.sql
+                '''
             }
         }
     }
