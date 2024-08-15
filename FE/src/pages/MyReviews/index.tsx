@@ -15,6 +15,7 @@ const CounselorReviewsContainer = styled(Container)`
     height: 100%;
     border-radius: 10px; // 전체 컴포넌트의 radius 설정
     overflow: hidden; // 내부 요소가 radius를 벗어나지 않도록 설정
+    justify-content: flex-start;
 `;
 
 const ReviewHeader = styled.div`
@@ -107,9 +108,10 @@ function CounselorReviews() {
         }
     }, [userInfo, token, fetchReviews]);
 
-    const averageScore = reviews.length > 0
-        ? (reviews.reduce((sum, review) => sum + review.reviewScore, 0) / reviews.length).toFixed(1)
-        : 0;
+    const averageScore =
+        reviews.length > 0
+            ? (reviews.reduce((sum, review) => sum + review.reviewScore, 0) / reviews.length).toFixed(1)
+            : 0;
 
     const renderStars = (score: number) => {
         return '★'.repeat(Math.floor(score)) + '☆'.repeat(5 - Math.floor(score));

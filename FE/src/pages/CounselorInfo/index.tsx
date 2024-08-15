@@ -10,11 +10,12 @@ import userStore from '../../stores/userStore';
 import axios from 'axios';
 import { CHANGEPW, CHECKPW, LOADUSERINFO, UPDATECOUNSELORINFO, DELETEUSER } from '../../apis/userApi';
 import { RDDEFAULTTIME, UPDATEDEFAULTTIME } from '../../apis/managementApi';
-import { FaUser } from "react-icons/fa";
+import { FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import Glass from '../../components/Glass';
 
 const CounselorInfoContainer = styled(Container)`
-    padding: 30px 20px;
+    padding: 20px 20px;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -27,7 +28,8 @@ const ProfileContainer = styled(Container)`
     justify-content: start;
     box-sizing: border-box;
     padding-left: 10px;
-    margin-bottom: 15px;
+    ${Glass}
+    padding: 10px;
 `;
 
 const ProfileImage = styled.div`
@@ -39,10 +41,10 @@ const ProfileImage = styled.div`
 `;
 
 const StyledFaUser = styled(FaUser)`
-    font-size: 50px; 
-    color: white;  
-    margin-left:25px;
-    margin-top:25px;
+    font-size: 50px;
+    color: white;
+    margin-left: 25px;
+    margin-top: 25px;
 `;
 
 const ProfileInfoWrapper = styled(Wrapper)`
@@ -66,11 +68,13 @@ const Line = styled.div`
 const ProfileEmail = styled(Text)``;
 
 const InfoContainer = styled(Container)`
-    width: 90%;
+    width: 100%;
     flex-direction: column;
     align-items: flex-start;
     box-sizing: border-box;
-    margin: 20px;
+    margin-top: 15px;
+    ${Glass}
+    padding: 15px 20px;
 `;
 
 const InfoContainerHeader = styled(Text)`
@@ -93,7 +97,7 @@ const InfoListItem = styled.li`
     justify-content: space-between;
     position: relative;
     align-items: center;
-    margin-left:15px;
+    margin-left: 15px;
 `;
 
 const UpdateBtn = styled(Btn)`
@@ -158,21 +162,22 @@ const ModalButton = styled(Btn)`
 
 const ModalDeleteButton = styled(Btn)`
     background-color: tomato;
-    color: ${colors.white};
+    color: white;
     width: 120px; // 고정 너비
     height: 40px;
     font-size: 15px;
 `;
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px; // 버튼 사이의 간격
-  margin-top: 20px; // 위 요소와의 간격
+    display: flex;
+    justify-content: center;
+    gap: 20px; // 버튼 사이의 간격
+    margin-top: 20px; // 위 요소와의 간격
 `;
 
 const DeleteBtn = styled(Btn)`
     background-color: ${colors.red};
+    color: white;
 `;
 
 const formatPhoneNumber = (phoneNumber: string) => {
@@ -231,12 +236,10 @@ function CounselorInfo() {
         fetchCounTime();
     }, []);
 
-
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.slice(0, 16);  // 최대 16자로 제한
+        const value = e.target.value.slice(0, 16); // 최대 16자로 제한
         setName(value);
     };
-
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 11);
@@ -255,7 +258,7 @@ function CounselorInfo() {
     };
 
     const handleIntroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value.slice(0, 40);  // 최대 40자로 제한
+        const value = e.target.value.slice(0, 40); // 최대 40자로 제한
         setIntro(value);
     };
 
@@ -263,8 +266,6 @@ function CounselorInfo() {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     };
-
-
 
     const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewStartTime(e.target.value);
@@ -301,8 +302,6 @@ function CounselorInfo() {
         }
     };
     const handleUpdate = () => {
-        
-
         if (phone.replace(/-/g, '').length < 10) {
             alert('전화번호는 10자리 이상이어야 합니다.');
             return;
@@ -315,7 +314,7 @@ function CounselorInfo() {
                     {
                         userEmail: email,
                         userName: name,
-                        userTel: phone.replace(/-/g, ''),  // 하이픈 제거
+                        userTel: phone.replace(/-/g, ''), // 하이픈 제거
                         userProfile: profile,
                         intro,
                         userRole: 'COUNSELOR',
@@ -413,21 +412,22 @@ function CounselorInfo() {
     return (
         <CounselorInfoContainer>
             <ProfileContainer>
-                    <ProfileImage>
-                        <StyledFaUser />
-                    </ProfileImage>
+                <ProfileImage>
+                    <StyledFaUser />
+                </ProfileImage>
                 <ProfileInfoWrapper>
                     <ProfileName>{userInfo?.userName}</ProfileName>
                     <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
                 </ProfileInfoWrapper>
             </ProfileContainer>
-            <Line />
             <InfoContainer>
                 <InfoContainerHeader>기본정보</InfoContainerHeader>
                 <InfoList>
                     <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
                     <Line />
-                    <InfoListItem>전화번호 : {userInfo?.userTel ? formatPhoneNumber(userInfo.userTel) : ''}</InfoListItem>
+                    <InfoListItem>
+                        전화번호 : {userInfo?.userTel ? formatPhoneNumber(userInfo.userTel) : ''}
+                    </InfoListItem>
                     <Line />
                     <InfoListItem>한줄소개 : {userInfo?.userIntro}</InfoListItem>
                     <Line />
@@ -443,7 +443,6 @@ function CounselorInfo() {
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
-            <Line />
             <InfoContainer>
                 <InfoContainerHeader>상담시간</InfoContainerHeader>
                 <InfoList>
@@ -463,7 +462,6 @@ function CounselorInfo() {
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
-            <Line />
             <InfoContainer>
                 <InfoContainerHeader>보안설정</InfoContainerHeader>
                 <InfoList>
@@ -489,48 +487,47 @@ function CounselorInfo() {
                 <ModalOverlay>
                     <ModalContainer>
                         {type === 'info' ? (
-                           <>
-                           <ModalTitle>기본정보 수정</ModalTitle>
-                           <ModalInput
-                               type="text"
-                               value={name}
-                               onChange={handleNameChange}
-                               placeholder="이름 (최대 16자)"
-                               maxLength={16}
-                           />
-                           <ModalInput
-                               type="tel"
-                               value={phone}
-                               onChange={handlePhoneChange}
-                               placeholder="전화번호"
-                           />
-                           <ModalInput
-                               type="text"
-                               value={intro}
-                               onChange={handleIntroChange}
-                               placeholder="한줄소개 (최대 40자)"
-                               maxLength={40}
-                           />
-                           <ButtonContainer>
-                                <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
-                                <ModalDeleteButton
-                                    onClick={() => {
-                                        setName(userInfo?.userName || '');
-                                        setEmail(userInfo?.userEmail || '');
-                                        setPhone(userInfo?.userTel || '');
-                                        setIntro(userInfo?.userIntro || '');
-                                        setIsModalOpen(false);
+                            <>
+                                <ModalTitle>기본정보 수정</ModalTitle>
+                                <ModalInput
+                                    type="text"
+                                    value={name}
+                                    onChange={handleNameChange}
+                                    placeholder="이름 (최대 16자)"
+                                    maxLength={16}
+                                />
+                                <ModalInput
+                                    type="tel"
+                                    value={phone}
+                                    onChange={handlePhoneChange}
+                                    placeholder="전화번호"
+                                />
+                                <ModalInput
+                                    type="text"
+                                    value={intro}
+                                    onChange={handleIntroChange}
+                                    placeholder="한줄소개 (최대 40자)"
+                                    maxLength={40}
+                                />
+                                <ButtonContainer>
+                                    <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
+                                    <ModalDeleteButton
+                                        onClick={() => {
+                                            setName(userInfo?.userName || '');
+                                            setEmail(userInfo?.userEmail || '');
+                                            setPhone(userInfo?.userTel || '');
+                                            setIntro(userInfo?.userIntro || '');
+                                            setIsModalOpen(false);
                                         }}
-                                        >
-                                    취소하기
-                                </ModalDeleteButton>
-                            </ButtonContainer>
-                       </>
+                                    >
+                                        취소하기
+                                    </ModalDeleteButton>
+                                </ButtonContainer>
+                            </>
                         ) : type === 'time' ? (
                             <>
                                 <ModalWrapper>
                                     <ModalTitle>상담 시간 수정</ModalTitle>
-                                    
                                     <ModalInput
                                         type="text"
                                         value={newStartTime}
@@ -547,15 +544,15 @@ function CounselorInfo() {
                                     시
                                 </ModalWrapper>
                                 <ButtonContainer>
-                                <ModalButton onClick={handleSaveTime}>저장하기</ModalButton>
-                                <ModalDeleteButton
-                                    onClick={() => {
-                                        setIsModalOpen(false);
-                                    }}
+                                    <ModalButton onClick={handleSaveTime}>저장하기</ModalButton>
+                                    <ModalDeleteButton
+                                        onClick={() => {
+                                            setIsModalOpen(false);
+                                        }}
                                     >
-                                    취소하기
-                                </ModalDeleteButton>
-                                    </ButtonContainer>
+                                        취소하기
+                                    </ModalDeleteButton>
+                                </ButtonContainer>
                             </>
                         ) : (
                             <>
@@ -579,14 +576,14 @@ function CounselorInfo() {
                                     placeholder="변경할 비밀번호 확인"
                                 />
                                 <ButtonContainer>
-                                <ModalButton onClick={handleUpdatePW}>저장하기</ModalButton>
-                                <ModalDeleteButton
-                                    onClick={() => {
-                                        setIsModalOpen(false);
-                                    }}
+                                    <ModalButton onClick={handleUpdatePW}>저장하기</ModalButton>
+                                    <ModalDeleteButton
+                                        onClick={() => {
+                                            setIsModalOpen(false);
+                                        }}
                                     >
-                                    취소하기
-                                </ModalDeleteButton>
+                                        취소하기
+                                    </ModalDeleteButton>
                                 </ButtonContainer>
                             </>
                         )}

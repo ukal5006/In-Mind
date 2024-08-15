@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import Glass from '../../components/Glass';
 
 const UserInfoContainer = styled(Container)`
-    padding: 40px 20px;
+    padding: 30px 20px;
     box-sizing: border-box;
     width: 100%;
     height: 100%;
@@ -24,8 +24,7 @@ const ProfileContainer = styled(Container)`
     width: 100%;
     justify-content: start;
     box-sizing: border-box;
-    padding-left: 10px;
-    margin-bottom: 15px;
+    padding: 10px;
     ${Glass}
     height: 200px;
 `;
