@@ -162,6 +162,7 @@ public class ReserveService {
                 .reserveInfoStartTime(reservation.getStartTime())
                 .reserveInfoEndTime(reservation.getEndTime())
                 .reserveInfoCreateTime(reservation.getCreatedAt())
+                .isEnd(reservation.getIsEnd())
                 .build();
     }
 
@@ -172,11 +173,13 @@ public class ReserveService {
 
         Reservation updatedReservation = Reservation.builder()
                 .id(reservation.getId())
+                .reportIdx(reservation.getId())
+                .isEnd("Y")
                 .user(reservation.getUser())
                 .counselor(reservation.getCounselor())
-                .localDate(request.getReserveInfoDate())
-                .startTime(request.getReserveInfoStartTime())
-                .endTime(request.getReserveInfoEndTime())
+                .localDate(reservation.getLocalDate())
+                .startTime(reservation.getStartTime())
+                .endTime(reservation.getEndTime())
                 .build();
 
         reserveRepository.save(updatedReservation);
