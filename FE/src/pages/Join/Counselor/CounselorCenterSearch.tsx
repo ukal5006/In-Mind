@@ -3,9 +3,9 @@ import { Search } from 'lucide-react';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
 import '../../../theme/class.css';
-// import { JOINCOUNSELOR } from '../../../apis/userApi';
 import { useOrganization } from './OrganizationContext';
 import userStore from '../../../stores/userStore';
+import './CounselingOrganizationModal.css';
 
 const apiUrl = 'https://i11b301.p.ssafy.io/api';
 
@@ -18,28 +18,9 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
     return (
-        <div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
-        >
-            <div
-                style={{
-                    background: 'white',
-                    padding: '0px',
-                    borderRadius: '5px',
-                    width: '600px',
-                    height: '500px',
-                }}
-            >
+        <div className="modal-overlay">
+            <div className="modal-container">
+                <button className="close-button" onClick={onClose}>×</button>
                 {children}
             </div>
         </div>
@@ -49,7 +30,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 interface Organization {
     id: number;
     name: string;
-    // Add other relevant fields
 }
 
 const CounselingOrganizationModal: React.FC = () => {
@@ -152,23 +132,21 @@ const CounselingOrganizationModal: React.FC = () => {
                 상담기관 선택
             </button>
             <Modal isOpen={isOpen} onClose={closeModal}>
-                <div className="flex mb-4">
+                <div className="tab-buttons mb-4">
                     <button
-                        className={`mr-2 px-4 py-2 ${
-                            activeTab === 'search' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                        }`}
+                        className={activeTab === 'search' ? 'active' : ''}
                         onClick={() => setActiveTab('search')}
                     >
                         상담기관 검색
                     </button>
                     <button
-                        className={`mr-2 px-4 py-2 ${activeTab === 'add' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                        className={activeTab === 'add' ? 'active' : ''}
                         onClick={() => setActiveTab('add')}
                     >
                         상담기관 추가
                     </button>
                     <button
-                        className={`px-4 py-2 ${activeTab === 'freelance' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                        className={activeTab === 'freelance' ? 'active' : ''}
                         onClick={() => setActiveTab('freelance')}
                     >
                         프리랜서 선택
@@ -189,7 +167,7 @@ const CounselingOrganizationModal: React.FC = () => {
                                 <Search size={20} />
                             </button>
                         </div>
-                        <div className="h-64 overflow-y-auto">
+                        <div className="content h-64 overflow-y-auto">
                             {filteredOrganizations.map((org) => (
                                 <div
                                     key={org.id}
@@ -204,7 +182,7 @@ const CounselingOrganizationModal: React.FC = () => {
                         </div>
                         <button
                             onClick={selectOrganization}
-                            className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+                            className="primary-button mt-4"
                             disabled={!selectedOrg}
                         >
                             상담기관 선택하기
@@ -235,7 +213,7 @@ const CounselingOrganizationModal: React.FC = () => {
                             className="border p-2 mb-2 w-full"
                             placeholder="전화번호"
                         />
-                        <button onClick={addOrganization} className="bg-green-500 text-white px-4 py-2 rounded">
+                        <button onClick={addOrganization} className="primary-button">
                             상담기관 추가
                         </button>
                     </div>
@@ -244,7 +222,7 @@ const CounselingOrganizationModal: React.FC = () => {
                 {activeTab === 'freelance' && (
                     <div>
                         <p>프리랜서로 선택하시겠습니까?</p>
-                        <button onClick={selectFreelance} className="bg-yellow-500 text-white px-4 py-2 rounded mt-4">
+                        <button onClick={selectFreelance} className="secondary-button mt-4">
                             프리랜서 선택
                         </button>
                     </div>

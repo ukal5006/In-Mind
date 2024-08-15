@@ -14,7 +14,6 @@ import useChildStore from '../../../stores/childStore';
 import moment from 'moment';
 import Btn from '../../../components/Btn';
 import { useNavigate } from 'react-router-dom';
-import Glass from '../../../components/Glass';
 // import { useNavigate } from 'react-router-dom';
 
 interface Reports {
@@ -32,8 +31,8 @@ const ChildTestContainer = styled(Container)`
     width: 400px;
     height: 600px;
     border-radius: 10px;
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     position: relative;
-    ${Glass}
 `;
 
 const CustomSlider = styled(Slider)`
@@ -56,7 +55,6 @@ const ChildInfoContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px;
 `;
 const ChildImage = styled.img`
     width: 100px;
@@ -66,7 +64,7 @@ const ChildImage = styled.img`
     align-items: center;
     border-radius: 50%;
     background-color: ${colors.darkGray};
-    margin-right: 10px;
+    margin-right: 20px;
 `;
 
 const ChildInfo = styled.div`
@@ -97,15 +95,13 @@ const TestDate = styled(Text)`
 
 const ResultContainer = styled(Container)`
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    width: 330px;
+    width: 320px;
     border-radius: 10px;
     height: 400px;
     margin-top: 20px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 20px 10px;
-    background-color: white;
 `;
 
 const ResultText = styled(Text)`
@@ -117,31 +113,19 @@ const NoChild = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    height: 100px;
-    padding: 20px;
+    background-color: tomato;
+    height: 400px;
 `;
 
 const NoChildText = styled(Text)`
-    font-size: 15px;
+    font-size: 30px;
     font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 20px;
 `;
 
 const AddChildBtn = styled(Btn)`
-    padding: 12px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    background-color: ${colors.okGreen};
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-
-    &:hover {
-        background-color: rgb(96, 241, 157);
-    }
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 700;
 `;
 
 function ChildTestResult() {

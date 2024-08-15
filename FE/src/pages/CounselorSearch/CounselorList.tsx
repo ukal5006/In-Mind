@@ -6,13 +6,11 @@ import Btn from '../../components/Btn';
 import Container from '../../components/Container';
 import Calendar from 'react-calendar';
 import './Calendar.css';
-import { SelectedDate } from '../CounselorMain/CounselorHome/ScheduleCalendar';
 import moment from 'moment';
 import axios from 'axios';
 import { RDDEFAULTTIME, READUNAVAILABLETIME } from '../../apis/managementApi';
 import ReservationTime from './ReservationTime';
 import userStore from '../../stores/userStore';
-import { Interface } from 'readline';
 
 interface DateSet {
     date: any;
@@ -24,106 +22,116 @@ const ModalBackground = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 1000;
 `;
 
 const CounselorDetail = styled.div`
-    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
     border-radius: 10px;
     width: 700px;
-    height: 700px;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-sizing: border-box;
-    background-color: white;
+    gap: 20px;
+    position: relative; /* position: relative 설정을 통해 닫기 버튼의 위치를 조정 */
+`;
+
+const CloseBtn = styled(Btn)`
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
 `;
 
 const Title = styled(Text)`
-    padding: 10px 0;
-    width: 100%;
-    font-size: 20px;
-    font-weight: 700;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
-    /* background-color: tomato; */
-    /* background-color: white; */
-    border-bottom: 1px solid black;
-    margin-bottom: 10px;
-`;
-
-const ReviewContainer = styled(Container)`
-    background-color: turquoise;
-    width: 600px;
-    height: 300px;
-`;
-
-// const CloseBtn = styled.div`
-//   width: 10px;
-//   height: 10px;
-//   border-radius: 50%;
-//   background-color: tomato;
-// `;
-
-const Reservation = styled.div`
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
-    width: 450px;
-    height: 700px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: white;
-`;
-
-// const ListContainer = styled(Container)`
-//     overflow-y: scroll;
-//     flex-direction: column;
-//     height: 400px;
-// `;
-
-const Card = styled.div`
-    margin-top: 10px;
-    width: 600px;
-    height: 200px;
-    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    box-sizing: border-box;
-`;
-
-const ItemWrapper = styled.div`
-    width: 400px;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
 `;
 
 const Profile = styled.div`
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    background-color: tomato;
+    background-color: #ddd;
+    margin-bottom: 20px;
 `;
 
 const Name = styled(Text)`
+    font-size: 22px;
     font-weight: 700;
-    font-size: 24px;
-    margin-bottom: 10px;
+    color: #333;
+`;
+
+const TextStyled = styled(Text)`
+    font-size: 16px;
+    color: #666;
+    margin: 4px 0;
+`;
+
+const ReviewContainer = styled(Container)`
+    background-color: #f5f5f5;
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 10px;
+`;
+
+const Reservation = styled.div`
+    border-radius: 10px;
+    width: 450px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+`;
+
+const Card = styled.div`
+    width: 600px;
+    padding: 20px;
+    margin: 10px auto;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+`;
+
+const ItemWrapper = styled.div`
+    flex: 1;
+`;
+
+const ProfileSmall = styled(Profile)`
+    width: 100px;
+    height: 100px;
 `;
 
 const CounselorList: React.FC = () => {
     const { counselors } = useCounselorStore();
-    // const { filteredCounselors, currentPage } = useCounselorStore();
     const [detail, setDetail] = useState<Counselor>();
-    // const counselorsPerPage = 5;
-    // const startIndex = (currentPage - 1) * counselorsPerPage;
-    // const endIndex = startIndex + counselorsPerPage;
-    // const displayedCounselors = filteredCounselors.slice(startIndex, endIndex);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isReserve, setIsReserve] = useState(false);
     const [availableTimes, setAvailableTimes] = useState();
@@ -140,10 +148,10 @@ const CounselorList: React.FC = () => {
         setIsReserve(false);
     };
 
-    const [selectedDate, setSelectedDate] = useState<SelectedDate>(new Date());
+    const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
     useEffect(() => {
-        if (detail !== undefined && selectedDate) {
+        if (detail && selectedDate) {
             axios
                 .get(READUNAVAILABLETIME(detail?.userIdx, moment(selectedDate).format('YYYY-MM-DD')), {
                     headers: {
@@ -158,13 +166,11 @@ const CounselorList: React.FC = () => {
 
     const tileClassName = ({ date }: DateSet) => {
         const today = new Date();
-        // 과거 날짜인지 확인
         if (date < today) {
-            return 'disabled-date'; // 스타일 클래스명
+            return 'disabled-date';
         }
-        // 주말인지 확인
         if (date.getDay() === 0 || date.getDay() === 6) {
-            return 'weekend-date'; // 주말 스타일 클래스명
+            return 'weekend-date';
         }
         return '';
     };
@@ -173,6 +179,7 @@ const CounselorList: React.FC = () => {
         <div>
             {counselors.map((counselor) => (
                 <Card
+                    key={counselor.userIdx}
                     onClick={() => {
                         handleDetail(counselor);
                         axios
@@ -186,31 +193,32 @@ const CounselorList: React.FC = () => {
                             .then((response) => setAbleTime(response.data));
                     }}
                 >
-                    <Profile />
+                    <ProfileSmall />
                     <ItemWrapper>
                         <Name>{counselor.name}</Name>
-                        <Text>{counselor.intro}</Text>
-                        <Text>{counselor.tel}</Text>
-                        <Text>{counselor.organizationName} 소속</Text>
-                        <Text>{counselor.organizationTel}</Text>
-                        <Text>리뷰 평점 : {counselor.reviewAverage}/5</Text>
-                        <Text>{counselor.reviewCount}개의 리뷰</Text>
+                        <TextStyled>{counselor.intro}</TextStyled>
+                        <TextStyled>{counselor.tel}</TextStyled>
+                        <TextStyled>{counselor.organizationName} 소속</TextStyled>
+                        <TextStyled>{counselor.organizationTel}</TextStyled>
+                        <TextStyled>리뷰 평점 : {counselor.reviewAverage}/5</TextStyled>
+                        <TextStyled>{counselor.reviewCount}개의 리뷰</TextStyled>
                     </ItemWrapper>
                 </Card>
             ))}
             {isModalOpen && (
                 <ModalBackground>
                     <CounselorDetail>
+                        <CloseBtn onClick={handleCloseModal}>닫기</CloseBtn> {/* 닫기 버튼 위치 조정 */}
                         <Title>상담사 자세히 보기</Title>
                         <Profile />
                         <Name>{detail?.name}</Name>
-                        <Text>{detail?.intro}</Text>
-                        <Text>{detail?.tel}</Text>
-                        <Text>{detail?.organizationName} 기관소속</Text>
-                        <Text>{detail?.organizationTel} 기관번호</Text>
-                        <Text>리뷰 평점 : {detail?.reviewAverage}/5</Text>
-                        <Text>{detail?.reviewCount}개의 리뷰</Text>
-                        <Text>{detail?.userIdx}</Text>
+                        <TextStyled>{detail?.intro}</TextStyled>
+                        <TextStyled>{detail?.tel}</TextStyled>
+                        <TextStyled>{detail?.organizationName} 기관소속</TextStyled>
+                        <TextStyled>{detail?.organizationTel} 기관번호</TextStyled>
+                        <TextStyled>리뷰 평점 : {detail?.reviewAverage}/5</TextStyled>
+                        <TextStyled>{detail?.reviewCount}개의 리뷰</TextStyled>
+                        <TextStyled>상담사 ID: {detail?.userIdx}</TextStyled>
                         <ReviewContainer>리뷰 칸</ReviewContainer>
                         <Btn onClick={() => setIsReserve(true)}>예약하기</Btn>
                     </CounselorDetail>
@@ -218,21 +226,20 @@ const CounselorList: React.FC = () => {
                     {isReserve && (
                         <Reservation>
                             <Calendar
-                                onChange={setSelectedDate}
+                                onChange={(date) => setSelectedDate(date as Date | null)}
                                 value={selectedDate}
                                 calendarType="gregory"
                                 view="month"
-                                next2Label={null} // +1년 & +10년 이동 버튼 숨기기
-                                prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
-                                minDetail="year" // 10년단위 년도 숨기기
+                                next2Label={null}
+                                prev2Label={null}
+                                minDetail="year"
                                 formatDay={(locale, date) => moment(date).format('D')}
-                                formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
-                                formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
+                                formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')}
+                                formatYear={(locale, date) => moment(date).format('YYYY')}
                                 locale="kr"
-                                minDate={new Date()} // 오늘 날짜 이후의 날짜만 선택 가능
-                                tileClassName={tileClassName} // 커스텀 클래스 추가
+                                minDate={new Date()}
+                                tileClassName={tileClassName}
                             />
-                            {/* {ableTime.availableTimeStartTime} */}
                             <ReservationTime
                                 date={moment(selectedDate).format('YYYY-MM-DD')}
                                 ableTime={ableTime}
@@ -240,7 +247,6 @@ const CounselorList: React.FC = () => {
                             />
                         </Reservation>
                     )}
-                    <Btn onClick={handleCloseModal}>닫기</Btn>
                 </ModalBackground>
             )}
         </div>
