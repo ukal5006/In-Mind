@@ -11,6 +11,7 @@ import Slider from 'react-slick';
 import profileImage from './profile.png';
 import useChildStore from '../../stores/childStore';
 import userStore from '../../stores/userStore';
+import Glass from '../../components/Glass';
 
 interface ChildData {
     childIdx: number;
@@ -19,12 +20,12 @@ interface ChildData {
 }
 
 const ChildInfoContainer = styled(Container)`
-    border: 2px solid ${colors.gray};
     border-radius: 10px;
-    background-color: #fff;`;
+    background-color: #fff;
+    ${Glass}
+`;
 
 const ChildAddWrapper = styled(Wrapper)`
-    border: 1px solid black;
     border-radius: 10px;
     width: 400px;
     height: 500px;
@@ -38,6 +39,7 @@ const AddBtn = styled(Btn)`
     width: 100px;
     height: 100px;
     margin-bottom: 10px;
+    color: white;
 `;
 
 const AddText = styled(Text)`
@@ -53,11 +55,9 @@ const ModalOverlay = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.7); /* 더 어두운 배경 */
     display: flex;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(5px); /* 배경 흐림 효과 추가 */
 `;
 
 const ModalContent = styled.div`
@@ -163,7 +163,7 @@ interface UpdateBtnProps {
 
 const StyledUpdateBtn = styled(Btn)`
     background-color: ${colors.green};
-    
+
     &:hover {
         background-color: ${colors.darkGreen}; /* 호버 시 색상 변화 */
     }
@@ -245,48 +245,49 @@ function ChildInfo() {
     };
 
     return (
-        <ChildInfoContainer>
-            {children.length === 0 ? (
-                <ChildAddWrapper>
-                    <AddBtn onClick={handleAddChild}>
-                        <IoPersonAdd />
-                    </AddBtn>
-                    <AddText>등록된 아이가 없습니다.</AddText>
-                    <AddText>버튼을 눌러 아이를 등록해주세요.</AddText>
-                </ChildAddWrapper>
-            ) : (
-                <SliderContainer>
-                    <CustomSlider {...settings}>
-                        {children.map((child: ChildData) => (
-                            <Slide key={child.childIdx}>
-                                <ChildImage src={profileImage} alt="" />
-                                <ChildText>
-                                    <ChildName>{child.childName}</ChildName>어린이
-                                </ChildText>
-                                <ChildText>생일 : {child.childBirth}</ChildText>
-                                <BtnWrapper>
-                                    <UpdateBtn
-                                        onClick={() => handleUpdateChild(child.childIdx)}
-                                        childId={child.childIdx}
-                                    >
-                                        수정
-                                    </UpdateBtn>
-                                    <DeleteBtn onClick={() => handleDeleteChild(child.childIdx)}>삭제</DeleteBtn>
-                                </BtnWrapper>
+        <>
+            <ChildInfoContainer>
+                {children.length === 0 ? (
+                    <ChildAddWrapper>
+                        <AddBtn onClick={handleAddChild}>
+                            <IoPersonAdd />
+                        </AddBtn>
+                        <AddText>등록된 아이가 없습니다.</AddText>
+                        <AddText>버튼을 눌러 아이를 등록해주세요.</AddText>
+                    </ChildAddWrapper>
+                ) : (
+                    <SliderContainer>
+                        <CustomSlider {...settings}>
+                            {children.map((child: ChildData) => (
+                                <Slide key={child.childIdx}>
+                                    <ChildImage src={profileImage} alt="" />
+                                    <ChildText>
+                                        <ChildName>{child.childName}</ChildName>어린이
+                                    </ChildText>
+                                    <ChildText>생일 : {child.childBirth}</ChildText>
+                                    <BtnWrapper>
+                                        <UpdateBtn
+                                            onClick={() => handleUpdateChild(child.childIdx)}
+                                            childId={child.childIdx}
+                                        >
+                                            수정
+                                        </UpdateBtn>
+                                        <DeleteBtn onClick={() => handleDeleteChild(child.childIdx)}>삭제</DeleteBtn>
+                                    </BtnWrapper>
+                                </Slide>
+                            ))}
+                            <Slide key="otherAdd">
+                                <OtherChildWrapper>
+                                    <AddBtn onClick={handleAddChild}>
+                                        <IoPersonAdd />
+                                    </AddBtn>
+                                    <AddText>버튼을 눌러 아이를 등록해주세요.</AddText>
+                                </OtherChildWrapper>
                             </Slide>
-                        ))}
-                        <Slide key="otherAdd">
-                            <OtherChildWrapper>
-                                <AddBtn onClick={handleAddChild}>
-                                    <IoPersonAdd />
-                                </AddBtn>
-                                <AddText>버튼을 눌러 아이를 등록해주세요.</AddText>
-                            </OtherChildWrapper>
-                        </Slide>
-                    </CustomSlider>
-                </SliderContainer>
-            )}
-
+                        </CustomSlider>
+                    </SliderContainer>
+                )}
+            </ChildInfoContainer>
             {isModalOpen && (
                 <ModalOverlay onClick={closeModal}>
                     <ModalContent onClick={(e) => e.stopPropagation()}>
@@ -299,7 +300,7 @@ function ChildInfo() {
                     </ModalContent>
                 </ModalOverlay>
             )}
-        </ChildInfoContainer>
+        </>
     );
 }
 
