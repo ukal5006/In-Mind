@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import Text from '../../components/Text';
 import { colors } from '../../theme/colors';
 import Loader from '../../components/Loader';
-import Btn from '../../components/Btn';
 import { useNavigate } from 'react-router-dom';
+import WarnModal from './WarnModal';
+import { IoClose } from 'react-icons/io5';
 
 const TestContainer = styled.div`
     margin-top: 100px;
@@ -223,6 +224,18 @@ const ResultWrapper = styled.div`
     margin: 20px 0; /* 상하 여백 추가 */
 `;
 
+const WarnBtn = styled.div`
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+`;
+
+const ModalWrapper = styled.div`
+    position: relative;
+`;
+
 const HTPExamContainer = (): JSX.Element => {
     const { children, selectedChild, background, setChildren, setSelectedChild, setImageUrl, setBackground } =
         useHTPExamStore();
@@ -248,6 +261,8 @@ const HTPExamContainer = (): JSX.Element => {
     const [isModal, setIsModal] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isResult, setIsResult] = useState(false);
+
+    const [warn, setWarn] = useState(true);
 
     const navigate = useNavigate();
 
@@ -365,9 +380,14 @@ const HTPExamContainer = (): JSX.Element => {
                     setResult(response.data.reportResult);
                     setIsResult(true);
                 });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to start HTP exam:', error);
-            alert('검사 시작에 실패했습니다.');
+            if (error?.response?.status) {
+                alert('업로드한 사진을 확인해주세요.');
+            } else {
+                alert('서버에러.');
+            }
+            setIsModal(false);
         } finally {
             setLoading(false); // 로딩 종료
         }
@@ -467,6 +487,16 @@ const HTPExamContainer = (): JSX.Element => {
                             </BtnContainer>
                         </ResultContainer>
                     )}
+                </ModalBackground>
+            )}
+            {warn && (
+                <ModalBackground>
+                    <ModalWrapper>
+                        <WarnModal />
+                        <WarnBtn onClick={() => setWarn(false)}>
+                            <IoClose />
+                        </WarnBtn>
+                    </ModalWrapper>
                 </ModalBackground>
             )}
         </TestContainer>
