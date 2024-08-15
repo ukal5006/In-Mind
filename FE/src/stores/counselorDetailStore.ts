@@ -1,11 +1,9 @@
-// store.ts
+// counselorDetailStore.ts
 import { create } from 'zustand';
 import axios from 'axios';
-import userStore from './userStore';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api'; //나중에 api연결시 제대로 된 주소 연결 필요
-const { token } = userStore((state) => state);
-// Counselor 인터페이스를 직접 정의
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+
 interface Counselor {
     userName: string;
     userTel: string;
@@ -26,14 +24,14 @@ interface CounselorStore {
     counselor: Counselor | null;
     loading: boolean;
     error: string | null;
-    fetchCounselor: (userId: number) => Promise<void>;
+    fetchCounselor: (userId: number, token: string) => Promise<void>;
 }
 
 export const useCounselorStore = create<CounselorStore>((set) => ({
     counselor: null,
     loading: false,
     error: null,
-    fetchCounselor: async (userId: number) => {
+    fetchCounselor: async (userId: number, token: string) => {
         set({ loading: true });
         try {
             const response = await axios.get<Counselor>(`${API_BASE_URL}/users/${userId}`, {

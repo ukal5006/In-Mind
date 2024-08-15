@@ -8,8 +8,10 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import userStore from '../../stores/userStore';
 import axios from 'axios';
-import { CHANGEPW, CHECKPW, LOADUSERINFO, UPDATECOUNSELORINFO } from '../../apis/userApi';
+import { CHANGEPW, CHECKPW, LOADUSERINFO, UPDATECOUNSELORINFO, DELETEUSER } from '../../apis/userApi';
 import { RDDEFAULTTIME, UPDATEDEFAULTTIME } from '../../apis/managementApi';
+import { FaUser } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 const CounselorInfoContainer = styled(Container)`
     padding: 30px 20px;
@@ -29,11 +31,18 @@ const ProfileContainer = styled(Container)`
 `;
 
 const ProfileImage = styled.div`
+    background-color: ${colors.lightGray};
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background-color: ${colors.gray};
     margin-right: 30px;
+`;
+
+const StyledFaUser = styled(FaUser)`
+    font-size: 50px; 
+    color: white;  
+    margin-left:25px;
+    margin-top:25px;
 `;
 
 const ProfileInfoWrapper = styled(Wrapper)`
@@ -84,6 +93,7 @@ const InfoListItem = styled.li`
     justify-content: space-between;
     position: relative;
     align-items: center;
+    margin-left:15px;
 `;
 
 const UpdateBtn = styled(Btn)`
@@ -141,18 +151,51 @@ const ModalWrapper = styled.div`
 const ModalButton = styled(Btn)`
     background-color: ${colors.darkGreen};
     color: ${colors.white};
-    width: 100%;
+    width: 120px; // 고정 너비
+    height: 40px;
+    font-size: 15px;
 `;
+
+const ModalDeleteButton = styled(Btn)`
+    background-color: tomato;
+    color: ${colors.white};
+    width: 120px; // 고정 너비
+    height: 40px;
+    font-size: 15px;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 20px; // 버튼 사이의 간격
+  margin-top: 20px; // 위 요소와의 간격
+`;
+
+const DeleteBtn = styled(Btn)`
+    background-color: ${colors.red};
+`;
+
+const formatPhoneNumber = (phoneNumber: string) => {
+    const cleaned = phoneNumber.replace(/\D/g, '');
+    let formatted = cleaned;
+    if (cleaned.length > 3) {
+        formatted = cleaned.slice(0, 3) + '-' + cleaned.slice(3);
+        if (cleaned.length > 7) {
+            formatted = formatted.slice(0, 8) + '-' + formatted.slice(8);
+        }
+    }
+    return formatted;
+};
 
 function CounselorInfo() {
     const { userInfo, setUserInfo, token } = userStore((state) => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [type, setType] = useState('');
-    const [name, setName] = useState(userInfo?.userName);
-    const [email, setEmail] = useState(userInfo?.userEmail);
-    const [phone, setPhone] = useState(userInfo?.userTel);
-    const [intro, setIntro] = useState(userInfo?.userIntro);
-    const [profile, setProfile] = useState(userInfo?.userProfile);
+    const [name, setName] = useState(userInfo?.userName || '');
+    const [email, setEmail] = useState(userInfo?.userEmail || '');
+    const [phone, setPhone] = useState(userInfo?.userTel || '');
+    const [intro, setIntro] = useState(userInfo?.userIntro || '');
+    const [profile, setProfile] = useState(userInfo?.userProfile || '');
     const [beforePw, setbeforePw] = useState('');
     const [changePw, setChangePw] = useState('');
     const [changePwCheck, setChangePwCheck] = useState('');
@@ -161,6 +204,7 @@ function CounselorInfo() {
     const [endTime, setEndTime] = useState('');
     const [newStartTime, setNewStartTime] = useState('');
     const [newEndTime, setNewEndTime] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         // 상담사의 기본 상담 시간 조회
@@ -186,6 +230,41 @@ function CounselorInfo() {
 
         fetchCounTime();
     }, []);
+
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.slice(0, 16);  // 최대 16자로 제한
+        setName(value);
+    };
+
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.replace(/[^0-9]/g, '').slice(0, 11);
+        let formattedValue = '';
+        if (value.length > 3) {
+            formattedValue += value.slice(0, 3) + '-';
+            if (value.length > 7) {
+                formattedValue += value.slice(3, 7) + '-' + value.slice(7);
+            } else {
+                formattedValue += value.slice(3);
+            }
+        } else {
+            formattedValue = value;
+        }
+        setPhone(formattedValue);
+    };
+
+    const handleIntroChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value.slice(0, 40);  // 최대 40자로 제한
+        setIntro(value);
+    };
+
+    const isValidEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+
 
     const handleStartTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewStartTime(e.target.value);
@@ -222,6 +301,13 @@ function CounselorInfo() {
         }
     };
     const handleUpdate = () => {
+        
+
+        if (phone.replace(/-/g, '').length < 10) {
+            alert('전화번호는 10자리 이상이어야 합니다.');
+            return;
+        }
+
         if (userInfo?.userIdx) {
             axios
                 .put(
@@ -229,7 +315,7 @@ function CounselorInfo() {
                     {
                         userEmail: email,
                         userName: name,
-                        userTel: phone,
+                        userTel: phone.replace(/-/g, ''),  // 하이픈 제거
                         userProfile: profile,
                         intro,
                         userRole: 'COUNSELOR',
@@ -253,9 +339,9 @@ function CounselorInfo() {
                 )
                 .then((response) => {
                     setUserInfo(response.data);
-                    localStorage.setItem('userInfo', JSON.stringify(response.data)); // 사용자 정보를 JSON 문자열로 저장
+                    localStorage.setItem('userInfo', JSON.stringify(response.data));
                     alert('정보가 수정되었습니다.');
-                    setIsModalOpen(false); // 모달 닫기
+                    setIsModalOpen(false);
                 })
                 .catch((error) => alert('에러발생'));
         }
@@ -306,11 +392,30 @@ function CounselorInfo() {
                 alert('비밀번호가 일치하지 않습니다.');
             });
     };
+    const handleSignOut = () => {
+        const check = window.confirm('정말 회원탈퇴를 하시겠습니까?');
+        if (check === true && userInfo?.userIdx) {
+            axios
+                .put(DELETEUSER(userInfo?.userIdx), {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
+                    },
+                })
+                .then()
+                .catch((error) => console.log(error));
+            alert('회원 탈퇴가 완료되었습니다.');
+            navigate('/');
+        }
+    };
 
     return (
         <CounselorInfoContainer>
             <ProfileContainer>
-                <ProfileImage />
+                    <ProfileImage>
+                        <StyledFaUser />
+                    </ProfileImage>
                 <ProfileInfoWrapper>
                     <ProfileName>{userInfo?.userName}</ProfileName>
                     <ProfileEmail>{userInfo?.userEmail}</ProfileEmail>
@@ -322,9 +427,7 @@ function CounselorInfo() {
                 <InfoList>
                     <InfoListItem>이름 : {userInfo?.userName}</InfoListItem>
                     <Line />
-                    <InfoListItem>이메일 : {userInfo?.userEmail}</InfoListItem>
-                    <Line />
-                    <InfoListItem>전화번호 : {userInfo?.userTel}</InfoListItem>
+                    <InfoListItem>전화번호 : {userInfo?.userTel ? formatPhoneNumber(userInfo.userTel) : ''}</InfoListItem>
                     <Line />
                     <InfoListItem>한줄소개 : {userInfo?.userIntro}</InfoListItem>
                     <Line />
@@ -377,7 +480,7 @@ function CounselorInfo() {
                     </InfoListItem>
                     <Line />
                     <InfoListItem>
-                        <DeleteIdLink to="deleteId">회원탈퇴▶</DeleteIdLink>
+                        <DeleteBtn onClick={handleSignOut}>회원탈퇴</DeleteBtn>
                     </InfoListItem>
                 </InfoList>
             </InfoContainer>
@@ -386,49 +489,48 @@ function CounselorInfo() {
                 <ModalOverlay>
                     <ModalContainer>
                         {type === 'info' ? (
-                            <>
-                                <ModalTitle>기본정보 수정</ModalTitle>
-                                <ModalInput
-                                    type="text"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="이름"
-                                />
-                                <ModalInput
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="이메일"
-                                />
-                                <ModalInput
-                                    type="text"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    placeholder="전화번호"
-                                />
-                                <ModalInput
-                                    type="text"
-                                    value={intro}
-                                    onChange={(e) => setIntro(e.target.value)}
-                                    placeholder="한줄소개"
-                                />
+                           <>
+                           <ModalTitle>기본정보 수정</ModalTitle>
+                           <ModalInput
+                               type="text"
+                               value={name}
+                               onChange={handleNameChange}
+                               placeholder="이름 (최대 16자)"
+                               maxLength={16}
+                           />
+                           <ModalInput
+                               type="tel"
+                               value={phone}
+                               onChange={handlePhoneChange}
+                               placeholder="전화번호"
+                           />
+                           <ModalInput
+                               type="text"
+                               value={intro}
+                               onChange={handleIntroChange}
+                               placeholder="한줄소개 (최대 40자)"
+                               maxLength={40}
+                           />
+                           <ButtonContainer>
                                 <ModalButton onClick={handleUpdate}>저장하기</ModalButton>
-                                <ModalButton
+                                <ModalDeleteButton
                                     onClick={() => {
-                                        setName(userInfo?.userName);
-                                        setEmail(userInfo?.userEmail);
-                                        setPhone(userInfo?.userTel);
-                                        setIntro(userInfo?.userIntro);
+                                        setName(userInfo?.userName || '');
+                                        setEmail(userInfo?.userEmail || '');
+                                        setPhone(userInfo?.userTel || '');
+                                        setIntro(userInfo?.userIntro || '');
                                         setIsModalOpen(false);
-                                    }}
-                                >
+                                        }}
+                                        >
                                     취소하기
-                                </ModalButton>
-                            </>
+                                </ModalDeleteButton>
+                            </ButtonContainer>
+                       </>
                         ) : type === 'time' ? (
                             <>
                                 <ModalWrapper>
                                     <ModalTitle>상담 시간 수정</ModalTitle>
+                                    
                                     <ModalInput
                                         type="text"
                                         value={newStartTime}
@@ -444,14 +546,16 @@ function CounselorInfo() {
                                     />
                                     시
                                 </ModalWrapper>
+                                <ButtonContainer>
                                 <ModalButton onClick={handleSaveTime}>저장하기</ModalButton>
-                                <ModalButton
+                                <ModalDeleteButton
                                     onClick={() => {
                                         setIsModalOpen(false);
                                     }}
-                                >
+                                    >
                                     취소하기
-                                </ModalButton>
+                                </ModalDeleteButton>
+                                    </ButtonContainer>
                             </>
                         ) : (
                             <>
@@ -474,14 +578,16 @@ function CounselorInfo() {
                                     onChange={(e) => setChangePwCheck(e.target.value)}
                                     placeholder="변경할 비밀번호 확인"
                                 />
+                                <ButtonContainer>
                                 <ModalButton onClick={handleUpdatePW}>저장하기</ModalButton>
-                                <ModalButton
+                                <ModalDeleteButton
                                     onClick={() => {
                                         setIsModalOpen(false);
                                     }}
-                                >
+                                    >
                                     취소하기
-                                </ModalButton>
+                                </ModalDeleteButton>
+                                </ButtonContainer>
                             </>
                         )}
                     </ModalContainer>
