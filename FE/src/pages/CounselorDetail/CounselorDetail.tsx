@@ -11,11 +11,11 @@ const CounselorDetailPage: React.FC<CounselorDetailProps> = ({ userId }): JSX.El
   const { counselor, loading, error, fetchCounselor } = useCounselorStore();
   const [activeTab, setActiveTab] = useState<'info' | 'reviews'>('info');
 
-  useEffect(() => {
-    if (userId) {
-      fetchCounselor(parseInt(userId));
-    }
-  }, [userId, fetchCounselor]);
+  // useEffect(() => {
+  //   if (userId) {
+  //     fetchCounselor(parseInt(userId));
+  //   }
+  // }, [userId, fetchCounselor]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
