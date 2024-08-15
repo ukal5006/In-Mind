@@ -9,10 +9,11 @@ import axios from 'axios';
 import userStore from '../../../stores/userStore';
 import { READREPORTS, READREPORTSLIST } from '../../../apis/reportsApi';
 import { useEffect, useState } from 'react';
-import Btn from '../../../components/Btn';
 import moment from 'moment';
 import Glass from '../../../components/Glass';
 import { colors } from '../../../theme/colors';
+import { IoClose } from 'react-icons/io5';
+import Btn from '../../../components/Btn';
 
 export interface Report {
     reportIdx: number;
@@ -49,8 +50,8 @@ const TestHistoryWrapper = styled(Wrapper)`
     overflow-y: scroll;
 `;
 const DetailBtn = styled(Btn)`
-background-color: ${colors.green};
-color: ${colors.lightWhite};
+    background-color: ${colors.green};
+    color: ${colors.lightWhite};
 `;
 
 const TestHistoryList = styled.div`
@@ -63,6 +64,7 @@ const TestHistoryList = styled.div`
     align-items: center;
     margin-top: 20px;
     margin-bottom: 18px;
+    ${Glass}
 `;
 
 const ModalBackground = styled.div`
@@ -77,6 +79,7 @@ const ModalBackground = styled.div`
     align-items: center;
     /* width: 100vw;
     height: 100vh; */
+    z-index: 1;
 `;
 
 const DetailContainer = styled.div`
@@ -84,19 +87,48 @@ const DetailContainer = styled.div`
     flex-direction: column;
     justify-content: space-evenly;
     width: 700px;
-    background-color: white;
+    background-color: whitesmoke;
+    position: relative;
+    padding: 20px;
+    align-items: center;
+    border-radius: 10px;
 `;
 
-const ImgContainer = styled.div``;
+export const DetailTitle = styled.div`
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 700;
+`;
 
-const ImgWrapper = styled.img`
+export const ImgContainer = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+`;
+
+export const ImgWrapper = styled.img`
     width: 210px;
     height: 297px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* 그림자 진하게 */
+    margin-bottom: 20px;
 `;
 
-const ResultDiv = styled.div``;
+export const ResultDiv = styled.div`
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* 그림자 진하게 */
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+`;
 
 const TestHistoryItem = styled.div``;
+
+export const CloseBtn = styled.div`
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 17px;
+    cursor: pointer;
+`;
 function TestHistory() {
     const { userInfo, token } = userStore();
     const [testHistory, setTestHistory] = useState<Child[]>(); // Child 타입 배열로 초기화
@@ -140,45 +172,50 @@ function TestHistory() {
     }, [userInfo, token]); // token도 의존성 배열에 추가
 
     return (
-        <TestHistoryContainer>
-            <TestHistoryWrapper>
-                <ContainerTop>
-                    <ContainerTopTitle>검사 내역</ContainerTopTitle>
-                    <ContainerTopLink to="/user/testHistory">
-                        <FaPlus />
-                    </ContainerTopLink>
-                </ContainerTop>
+        <>
+            <TestHistoryContainer>
+                <TestHistoryWrapper>
+                    <ContainerTop>
+                        <ContainerTopTitle>검사 내역</ContainerTopTitle>
+                        <ContainerTopLink to="/user/testHistory">
+                            <FaPlus />
+                        </ContainerTopLink>
+                    </ContainerTop>
 
-                {testHistory?.length !== 0 && testHistory !== undefined ? (
-                    testHistory.map((child) =>
-                        child.reports.map((report) => (
-                            <TestHistoryList>
-                                <TestHistoryItem key={report.reportCreatedAt}>
-                                    검사일: {moment(report.reportCreatedAt).format('YYYY-MM-DD')}
-                                </TestHistoryItem>
-                                <TestHistoryItem>이름: {child.childInfoName}</TestHistoryItem>
-                                <DetailBtn onClick={() => handleDetail(report.reportIdx)}>자세히 보기</DetailBtn>
-                            </TestHistoryList>
-                        ))
-                    )
-                ) : (
-                    <>검사 내역이 없습니다</>
-                )}
-            </TestHistoryWrapper>
+                    {testHistory?.length !== 0 && testHistory !== undefined ? (
+                        testHistory.map((child) =>
+                            child.reports.map((report) => (
+                                <TestHistoryList>
+                                    <TestHistoryItem key={report.reportCreatedAt}>
+                                        검사일: {moment(report.reportCreatedAt).format('YYYY-MM-DD')}
+                                    </TestHistoryItem>
+                                    <TestHistoryItem>이름: {child.childInfoName}</TestHistoryItem>
+                                    <DetailBtn onClick={() => handleDetail(report.reportIdx)}>자세히 보기</DetailBtn>
+                                </TestHistoryList>
+                            ))
+                        )
+                    ) : (
+                        <>검사 내역이 없습니다</>
+                    )}
+                </TestHistoryWrapper>
+            </TestHistoryContainer>
             {isDetail && (
                 <ModalBackground>
                     <DetailContainer>
+                        <DetailTitle>검사 자세히보기</DetailTitle>
                         <ImgContainer>
                             <ImgWrapper src={detail?.houseImage} />
                             <ImgWrapper src={detail?.treeImage} />
                             <ImgWrapper src={detail?.personImage} />
                         </ImgContainer>
                         <ResultDiv>{detail?.reportResult}</ResultDiv>
+                        <CloseBtn onClick={() => setIsDetail(false)}>
+                            <IoClose />
+                        </CloseBtn>
                     </DetailContainer>
-                    <Btn onClick={() => setIsDetail(false)}>닫기</Btn>
                 </ModalBackground>
             )}
-        </TestHistoryContainer>
+        </>
     );
 }
 

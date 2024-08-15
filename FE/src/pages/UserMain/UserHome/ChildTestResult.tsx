@@ -96,7 +96,6 @@ const TestDate = styled(Text)`
 `;
 
 const ResultContainer = styled(Container)`
-    background-color: ${colors.lightWhite};
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     width: 330px;
     border-radius: 10px;
@@ -105,6 +104,8 @@ const ResultContainer = styled(Container)`
     box-sizing: border-box;
     flex-direction: column;
     justify-content: flex-start;
+    padding: 20px 10px;
+    background-color: white;
 `;
 
 const ResultText = styled(Text)`

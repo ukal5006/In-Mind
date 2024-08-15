@@ -89,11 +89,11 @@ const CloseButton = styled(Button)`
 `;
 
 // ReviewModalButton 컴포넌트
-const ReviewModal = ({ children }: any) => {
+const ReviewModal = (props: any) => {
     const [hoverRating, setHoverRating] = useState(0);
     const [selectedRating, setSelectedRating] = useState(0);
+    const { reserveInfoIdx, coIdx } = props;
     const [content, setContent] = useState('');
-    const { reserveIdx, coIdx } = reservations;
     const { userInfo, token } = userStore();
     const navigate = useNavigate();
 
@@ -101,7 +101,7 @@ const ReviewModal = ({ children }: any) => {
         try {
             await axios.post(
                 `${apiUrl}/reviews`,
-                { reserveIdx, coIdx, name: userInfo?.userName, score: selectedRating, content },
+                { reserveIdx: reserveInfoIdx, coIdx, name: userInfo?.userName, score: selectedRating, content },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

@@ -11,6 +11,7 @@ import Loader from '../../components/Loader';
 import { useNavigate } from 'react-router-dom';
 import WarnModal from './WarnModal';
 import { IoClose } from 'react-icons/io5';
+import Glass from '../../components/Glass';
 
 const TestContainer = styled.div`
     margin-top: 100px;
@@ -21,6 +22,7 @@ const TestContainer = styled.div`
     align-items: center;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* 그림자 진하게 */
     border-radius: 10px;
+    ${Glass}
 `;
 
 const TestTitle = styled(Text)`
@@ -394,80 +396,82 @@ const HTPExamContainer = (): JSX.Element => {
     };
 
     return (
-        <TestContainer>
-            <TestTitle>HTP 검사</TestTitle>
-            <ChildContainer>
-                <label>자녀 선택:</label>
-                <select onChange={handleChildSelect}>
-                    <option value="">선택하세요</option>
-                    {children.length > 0 ? (
-                        children.map((child) => (
-                            <option key={child.childIdx} value={child.childIdx}>
-                                {child.childName}
+        <>
+            <TestContainer>
+                <TestTitle>HTP 검사</TestTitle>
+                <ChildContainer>
+                    <label>자녀 선택:</label>
+                    <select onChange={handleChildSelect}>
+                        <option value="">선택하세요</option>
+                        {children.length > 0 ? (
+                            children.map((child) => (
+                                <option key={child.childIdx} value={child.childIdx}>
+                                    {child.childName}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="" disabled>
+                                자녀 정보가 없습니다
                             </option>
-                        ))
-                    ) : (
-                        <option value="" disabled>
-                            자녀 정보가 없습니다
-                        </option>
-                    )}
-                </select>
-            </ChildContainer>
+                        )}
+                    </select>
+                </ChildContainer>
 
-            <ImgContainer>
-                <label>집 그림 업로드:</label>
-                <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    ref={inputRefH}
-                    onChange={handleFileChange(setHouseFile, setImageSrcH)}
-                />
-                <button onClick={() => inputRefH.current?.click()}>이미지 선택</button>
-                {houseFile && <span>{houseFile.name}</span>} {/* 파일명 표시 */}
-            </ImgContainer>
+                <ImgContainer>
+                    <label>집 그림 업로드:</label>
+                    <input
+                        hidden
+                        accept="image/*"
+                        type="file"
+                        ref={inputRefH}
+                        onChange={handleFileChange(setHouseFile, setImageSrcH)}
+                    />
+                    <button onClick={() => inputRefH.current?.click()}>이미지 선택</button>
+                    {houseFile && <span>{houseFile.name}</span>} {/* 파일명 표시 */}
+                </ImgContainer>
 
-            <ImgContainer>
-                <label>나무 그림 업로드:</label>
-                <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    ref={inputRefT}
-                    onChange={handleFileChange(setTreeFile, setImageSrcT)}
-                />
-                <button onClick={() => inputRefT.current?.click()}>이미지 선택</button>
-                {treeFile && <span>{treeFile.name}</span>} {/* 파일명 표시 */}
-            </ImgContainer>
+                <ImgContainer>
+                    <label>나무 그림 업로드:</label>
+                    <input
+                        hidden
+                        accept="image/*"
+                        type="file"
+                        ref={inputRefT}
+                        onChange={handleFileChange(setTreeFile, setImageSrcT)}
+                    />
+                    <button onClick={() => inputRefT.current?.click()}>이미지 선택</button>
+                    {treeFile && <span>{treeFile.name}</span>} {/* 파일명 표시 */}
+                </ImgContainer>
 
-            <ImgContainer>
-                <label>사람 그림 업로드: </label>
-                <input
-                    hidden
-                    accept="image/*"
-                    type="file"
-                    ref={inputRefP}
-                    onChange={handleFileChange(setPersonFile, setImageSrcP)}
-                />
-                <button onClick={() => inputRefP.current?.click()}>이미지 선택</button>
-                {personFile && <span>{personFile.name}</span>} {/* 파일명 표시 */}
-            </ImgContainer>
+                <ImgContainer>
+                    <label>사람 그림 업로드: </label>
+                    <input
+                        hidden
+                        accept="image/*"
+                        type="file"
+                        ref={inputRefP}
+                        onChange={handleFileChange(setPersonFile, setImageSrcP)}
+                    />
+                    <button onClick={() => inputRefP.current?.click()}>이미지 선택</button>
+                    {personFile && <span>{personFile.name}</span>} {/* 파일명 표시 */}
+                </ImgContainer>
 
-            <BackgroundContainer>
-                <label>검사 배경 및 이유</label>
-                <textarea
-                    maxLength={200}
-                    value={background}
-                    onChange={(e) => {
-                        setBackground(e.target.value);
-                        setTextSize(e.target.value.length);
-                    }}
-                />
-                <span>{textSize} / 200</span>
-            </BackgroundContainer>
-            <Submit>
-                <button onClick={handleSubmit}>검사 시작</button>
-            </Submit>
+                <BackgroundContainer>
+                    <label>검사 배경 및 이유</label>
+                    <textarea
+                        maxLength={200}
+                        value={background}
+                        onChange={(e) => {
+                            setBackground(e.target.value);
+                            setTextSize(e.target.value.length);
+                        }}
+                    />
+                    <span>{textSize} / 200</span>
+                </BackgroundContainer>
+                <Submit>
+                    <button onClick={handleSubmit}>검사 시작</button>
+                </Submit>
+            </TestContainer>
             {isModal && (
                 <ModalBackground>
                     {loading && (
@@ -499,7 +503,7 @@ const HTPExamContainer = (): JSX.Element => {
                     </ModalWrapper>
                 </ModalBackground>
             )}
-        </TestContainer>
+        </>
     );
 };
 
