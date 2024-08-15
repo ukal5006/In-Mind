@@ -253,6 +253,7 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                                             childName: reservation.childName,
                                             reserveInfoIdx: reservation.reserveInfoIdx,
                                             reportIdx: reservation.reportIdx,
+                                            coIdx: reservation.coIdx,
                                         })
                                     }
                                 >
