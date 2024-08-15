@@ -12,8 +12,9 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class ReserveUserResponseDto {
     private Long reserveInfoIdx;
-    private String coName;
+    private Long coIdx;
     private Long reportIdx;
+    private String coName;
     private String childName;
     private LocalDate reserveInfoDate;
     private LocalTime reserveInfoStartTime;

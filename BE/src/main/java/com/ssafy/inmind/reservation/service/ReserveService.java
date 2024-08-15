@@ -130,6 +130,7 @@ public class ReserveService {
 
                     return ReserveCoResponseDto.builder()
                             .reserveInfoIdx(reservation.getId())
+                            .coIdx(reservation.getCounselor().getId())
                             .coName(reservation.getCounselor().getName())
                             .reportIdx(reservation.getReportIdx())
                             .childName(child.getName())
@@ -153,6 +154,7 @@ public class ReserveService {
 
         return ReserveUserResponseDto.builder()
                 .reserveInfoIdx(reservation.getId())
+                .coIdx(reservation.getCounselor().getId())
                 .coName(reservation.getCounselor().getName())
                 .reportIdx(report.getId())
                 .childName(report.getChild().getName())
@@ -160,21 +162,24 @@ public class ReserveService {
                 .reserveInfoStartTime(reservation.getStartTime())
                 .reserveInfoEndTime(reservation.getEndTime())
                 .reserveInfoCreateTime(reservation.getCreatedAt())
+                .isEnd(reservation.getIsEnd())
                 .build();
     }
 
     @Transactional
-    public void updateReserve(ReserveUpdateDto request) {
-        Reservation reservation = reserveRepository.findById(request.getReserveInfoIdx())
+    public void updateReserve(Long reserveInfoIdx) {
+        Reservation reservation = reserveRepository.findById(reserveInfoIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
 
         Reservation updatedReservation = Reservation.builder()
                 .id(reservation.getId())
+                .reportIdx(reservation.getId())
+                .isEnd("Y")
                 .user(reservation.getUser())
                 .counselor(reservation.getCounselor())
-                .localDate(request.getReserveInfoDate())
-                .startTime(request.getReserveInfoStartTime())
-                .endTime(request.getReserveInfoEndTime())
+                .localDate(reservation.getLocalDate())
+                .startTime(reservation.getStartTime())
+                .endTime(reservation.getEndTime())
                 .build();
 
         reserveRepository.save(updatedReservation);
