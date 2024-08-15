@@ -99,17 +99,21 @@ const ResultContainer = styled(Container)`
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     width: 330px;
     border-radius: 10px;
-    height: 400px;
+    height: 370px;
     margin-top: 20px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: flex-start;
     padding: 20px 10px;
     background-color: white;
+    overflow-y: scroll;
 `;
 
 const ResultText = styled(Text)`
     width: 95%;
+    /* height: 00px; */
+    box-sizing: border-box;
+    /* overflow-y: scroll; */
 `;
 
 const NoChild = styled.div`
@@ -190,17 +194,19 @@ function ChildTestResult() {
                                     </ChildInfo>
                                 </ChildInfoContainer>
                                 {result.length > 0 && result[index].reports.length > 0 ? (
-                                    <ResultContainer>
+                                    <>
                                         <TestDate>
                                             검사일 :{' '}
                                             {moment(
                                                 result[index].reports[result[index].reports.length - 1].reportCreatedAt
                                             ).format('YYYY-MM-DD')}
                                         </TestDate>
-                                        <ResultText>
-                                            {result[index].reports[result[index].reports.length - 1].reportResult}
-                                        </ResultText>
-                                    </ResultContainer>
+                                        <ResultContainer>
+                                            <ResultText>
+                                                {result[index].reports[result[index].reports.length - 1].reportResult}
+                                            </ResultText>
+                                        </ResultContainer>
+                                    </>
                                 ) : (
                                     <div>검사없음.</div>
                                 )}
