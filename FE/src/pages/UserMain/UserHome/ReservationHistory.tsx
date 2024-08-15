@@ -238,6 +238,10 @@ function ReservationHistory() {
                                         onClick={() => {
                                             console.log('예약번호');
                                             console.log(facialInfo?.reserveInfoIdx);
+                                            console.log('요청URL');
+                                            console.log(
+                                                `https://i11b301.p.ssafy.io/api/reserve?reserveInfoIdx=${facialInfo?.reserveInfoIdx}`
+                                            );
 
                                             // eslint-disable-next-line no-restricted-globals
                                             const command = confirm('상담을 종료하시겠습니까?');
