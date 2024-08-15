@@ -167,8 +167,8 @@ public class ReserveService {
     }
 
     @Transactional
-    public void updateReserve(ReserveUpdateDto request) {
-        Reservation reservation = reserveRepository.findById(request.getReserveInfoIdx())
+    public void updateReserve(Long reserveInfoIdx) {
+        Reservation reservation = reserveRepository.findById(reserveInfoIdx)
                 .orElseThrow(() -> new RestApiException(ErrorCode.BAD_REQUEST));
 
         Reservation updatedReservation = Reservation.builder()
