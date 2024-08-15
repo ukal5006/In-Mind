@@ -5,7 +5,7 @@ import Wrapper from '../../../components/Wrapper';
 import ContainerTop from '../../../components/ContainerTop';
 import ContainerTopTitle from '../../../components/ContainerTopTitle';
 import ContainerTopLink from '../../../components/ContainerTopLink';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaPowerOff } from 'react-icons/fa';
 import ActiveBtn from '../../../components/ActiveBtn';
 // import reservationStore from '../../../stores/reservationStore';
 import userStore from '../../../stores/userStore';
@@ -87,12 +87,55 @@ export const FacialContainer = styled.div`
     height: 90vh;
 `;
 
+const ReportContainer = styled.div`
+    position: fixed;
+    left: 0;
+    /* width: 300px; */
+    background-color: white;
+`;
+const BtnContainer = styled.div`
+    position: fixed;
+    z-index: 999999;
+    top: 46px;
+    right: 570px;
+    display: flex;
+    align-items: center;
+`;
+const ReportBtn = styled.div`
+    font-size: 30px;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+`;
+
+const ExitBtn = styled.div`
+    font-size: 28px;
+    color: tomato;
+    cursor: pointer;
+`;
+const ImgContainer = styled.div`
+    display: flex;
+`;
+const ImgTP = styled.img`
+    width: 300px;
+    height: 500px;
+`;
+const ImgH = styled.img`
+    width: 500px;
+    height: 300px;
+`;
+
 function ReservationHistory() {
     const { userInfo, token } = userStore();
     const [reservationHistory, setReservationHistory] = useState<reservationInfo[]>([]); // 타입 명시
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
     const [report, setReport] = useState<any>();
+    const [reportOpen, setReportOpen] = useState(false);
+    const [reviewOpen, setReviewOpen] = useState(false);
+    const handleReport = () => {
+        setReportOpen(true);
+    };
 
     const handleFacial = (facialInfo: FacialInfo) => {
         setFacialInfo(facialInfo);
@@ -118,7 +161,10 @@ function ReservationHistory() {
                         'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
-                .then((response) => setReservationHistory(response.data));
+                .then((response) => setReservationHistory(response.data))
+                .catch((error) => {
+                    console.log(error);
+                });
             // .then((response) => console.log(response.data));
         }
     }, [userInfo, token]);
@@ -147,13 +193,14 @@ function ReservationHistory() {
                                     <ReservationHistoryItem>{e.childName}</ReservationHistoryItem>
                                     <ReservationHistoryItem>
                                         <ActiveBtn
-                                            onClick={() =>
+                                            onClick={() => {
+                                                console.log(facialInfo);
                                                 handleFacial({
                                                     childName: e.childName,
                                                     reserveInfoIdx: e.reserveInfoIdx,
                                                     reportIdx: e.reportIdx,
-                                                })
-                                            }
+                                                });
+                                            }}
                                         >
                                             입장하기
                                         </ActiveBtn>
@@ -168,24 +215,59 @@ function ReservationHistory() {
             </ReservationHistoryWrapper>
             {isFacial && (
                 <ModalBackground>
-                    <FacialContainer>
-                        <VideoRoomComponent
-                            userName={userInfo?.userName}
-                            childName={facialInfo?.childName}
-                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
-                            reportIdx={facialInfo?.reportIdx}
-                            role={userInfo?.userRole}
-                        />
-                    </FacialContainer>
-                    <Btn
-                        onClick={() => {
-                            setIsFacial(false);
-                            setFacialInfo(null);
-                        }}
-                    >
-                        닫기
-                    </Btn>
+                    {!reviewOpen ? (
+                        <>
+                            <FacialContainer>
+                                <VideoRoomComponent
+                                    userName={userInfo?.userName}
+                                    role={userInfo?.userRole}
+                                    childName={facialInfo?.childName}
+                                    reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                                    reportIdx={facialInfo?.reportIdx}
+                                    report={report}
+                                />
+                            </FacialContainer>
+                            <BtnContainer>
+                                <ReportBtn onClick={handleReport}>
+                                    <TbReportAnalytics />
+                                </ReportBtn>
+                                <ExitBtn
+                                    onClick={() => {
+                                        // eslint-disable-next-line no-restricted-globals
+                                        const command = confirm('상담을 종료하시겠습니까?');
+                                        if (command !== true) {
+                                            return;
+                                        }
+                                        setReportOpen(false);
+                                        setFacialInfo(null);
+                                        setReviewOpen(true);
+                                    }}
+                                >
+                                    <FaPowerOff />
+                                </ExitBtn>
+                            </BtnContainer>
+                        </>
+                    ) : (
+                        <>
+                            <ReviewModalButton reserveInfoIdx={facialInfo?.reserveInfoIdx} coIdx={facialInfo} />
+                        </>
+                    )}
                 </ModalBackground>
+            )}
+
+            {reportOpen && (
+                <ReportContainer>
+                    <Btn onClick={() => setReportOpen(false)}>닫기</Btn>
+                    <div>
+                        <div>{report.objectResult}</div>
+                        <div>{report.reportResult}</div>
+                    </div>
+                    <ImgContainer>
+                        <ImgH src={report.houseImage} />
+                        <ImgTP src={report.treeImage} />
+                        <ImgTP src={report.personImage} />
+                    </ImgContainer>
+                </ReportContainer>
             )}
         </ReservationHistoryContainer>
     );
