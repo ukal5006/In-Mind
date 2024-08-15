@@ -1,56 +1,290 @@
-# 웹/모바일(웹 기술) 스켈레톤 프로젝트
-
+# IN MIND
 <!-- 필수 항목 -->
 
 ## 카테고리
 
 | Application | Domain | Language | Framework |
 | ---- | ---- | ---- | ---- |
-| :white_check_mark: Desktop Web | :black_square_button: AI | :white_check_mark: JavaScript | :white_check_mark: Vue.js |
-| :white_check_mark: Mobile Web | :black_square_button: Big Data | :black_square_button: TypeScript | :black_square_button: React |
-| :white_check_mark: Responsive Web | :black_square_button: Blockchain | :black_square_button: C/C++ | :black_square_button: Angular |
-| :black_square_button: Android App | :black_square_button: IoT | :black_square_button: C# | :black_square_button: Node.js |
+| :white_check_mark: Desktop Web | :white_check_mark: AI | :white_check_mark: TypeScript | :white_check_mark: React |
+| :black_square_button: Mobile Web | :black_square_button: Big Data | :black_square_button: JavaScript | :white_check_mark: Node.js |
+| :black_square_button: Responsive Web | :black_square_button: Blockchain | :black_square_button: C/C++ | :black_square_button: Angular |
+| :black_square_button: Android App | :black_square_button: IoT | :black_square_button: C# | :black_square_button: Vue.js |
 | :black_square_button: iOS App | :black_square_button: AR/VR/Metaverse | :white_check_mark: Python | :white_check_mark: Flask/Django |
 | :black_square_button: Desktop App | :black_square_button: Game | :white_check_mark: Java | :white_check_mark: Spring/Springboot |
 | | | :black_square_button: Kotlin | |
 
+
 <!-- 필수 항목 -->
 
-## 프로젝트 소개
+## 목차
+  1. 기획 배경
+  2. 서비스 소개
+  3. 기능 소개
+  4. 시연
+  5. 기술 스택
+  6. 프로젝트 일정 및 기타 산출물
 
-* 프로젝트명: 그룹 비디오 컨퍼런스 서비스
-* 서비스 특징: 웹/모바일(웹 기술) 프로젝트를 위한 스켈레톤 프로젝트
-* 주요 기능
-  - 회원 관리
-  - 화상 미팅룸
-  - 그룹 채팅
-* 주요 기술
-  - WebRTC
-  - WebSocket
-  - JWT Authentication
-  - REST API
-* 참조 리소스
-  * Vuetify: 디자인 전반 적용
-  * Vue Argon Design System: 디자인 전반 적용
-  * Vue Black Dashboard Pro(유료): 캘린더 컴포넌트 사용
-  * AR Core: 구글에서 제공하는 AR 지원 라이브러리. 이미지 인식 및 오버레이 영상에 활용
-  * Color Thief: 이미지 색상 추출 라이브러리. 커버 사진 색상 추출 및 배경 변경에 활용
-  * Animation.css: CSS 애니메이션 지원 라이브러리. 메인 페이지 진입 애니메이션에 활용
-* 배포 환경
-  - URL: // 웹 서비스, 랜딩 페이지, 프로젝트 소개 등의 배포 URL 기입
-  - 테스트 계정: // 로그인이 필요한 경우, 사용 가능한 테스트 계정(ID/PW) 기입
 
-<!-- 자유 양식 -->
 
 ## 팀 소개
-* 김ㅇㅇ: 팀장, 프론트엔드 개발
-* 이ㅇㅇ: 부팀장, 기획 및 와이어프레임 작성, 프론트엔드 개발
-* 박ㅇㅇ: 백엔드 개발 및 QA 담당
-* 홍ㅇㅇ: 백엔드 개발, Swagger API 문서 관리
-* 전ㅇㅇ: 코드 리뷰 및 인프라 담당, CI/CD, HTTPS, Docker 구성
+- **김성원** : 팀장, 프론트엔드 개발
+- **김종원** : 백엔드, 인프라 Docker 구성 담당
+- **유현진** : 백엔드 개발 및 UCC 담당
+- **박하운** : 백엔드 개발
+- **이용성** : 프론트엔드 개발
+- **강병규** : AI 개발
 
-<!-- 자유 양식 -->
 
-## 프로젝트 상세 설명
 
-// 개발 환경, 기술 스택, 시스템 구성도, ERD, 기능 상세 설명 등
+
+## :sparkles: 기획 배경
+
+
+### 개요
+
+  - 한 줄 설명 : 아이의 마음을 알아보기 위한 **HTP** '심리 상담 서비스'
+  - 서비스 명 " **IN MIND** 
+
+
+
+### 목적
+
+  - 아이가 그린 **그림**을 통해 아이의 현재 마음을 알아보기
+  - 아이의 마음을 AI를 통해 분석하고 심리 상담을 위한 도구로써 활용한다.
+
+
+
+### 현재 상황
+  - 아이의 심리를 알아보기 위한 수단으로써 가정에서 실시하기 마땅한 프로그램이 존재하지 않음
+  - 심리상담을 받으려 해도 퇴근시간 이후 상담센터 방문이 어려움
+  - 대면 심리상담의 가격이 부담스럽거나, 아이가 심리상담이 필요한 상태인지 판단이 어려움
+
+
+
+
+
+
+
+## :sparkles: 서비스 소개
+
+### 페르소나
+
+  - **이름**: 김현우
+  - **나이**: 35세
+  - **직업**: IT 회사 대리
+  - **가족 상황**: 아내와 7세 딸이 있음
+  - **거주지**: 서울, 직장까지 왕복 2시간 소요
+
+  ##### 배경
+  - 김현우는 IT 회사에서 대리로 근무 중이며, 평일에 잦은 야근과 긴 출퇴근 시간 때문에 퇴근 후 여유 시간이 거의 없음.
+  - 딸의 심리적 어려움(사회성 부족, 학교 적응 문제 등)을 해결하기 위해 심리 상담을 받으려 하지만 평일 근무 시간이 끝난 후에는 상담센터가 모두 문을 닫아 상담을 받을 수 없음.
+
+  ##### 필요와 목표
+  - 평일 저녁 늦은 시간에도 상담을 받을 수 있는 곳을 찾고자 함.
+  - 퇴근 후 집에서 비대면으로 심리 상담을 받을 수 있는 서비스가 필요함.
+  - 주중 퇴근 후에도 이용 가능한 심리 상담 센터를 원함.
+
+  ##### 문제점
+  - 대부분의 심리 상담 센터가 6시 이후 문을 닫아 상담을 받을 수 없음.
+  - 긴 근무 시간과 출퇴근 시간으로 인해 상담을 위한 시간을 따로 내기 어려움.
+  - 상담을 받을 수 있는 시간을 확보하려면 연차나 반차를 써야 하지만, 업무 부담으로 인해 자주 쓰기가 어려움.
+
+  ##### 동기
+  - 딸의 정서적 안정과 학교 적응을 위해 전문적인 도움을 받고 싶음.
+  - 아이의 심리적 문제를 조기에 해결하여 큰 문제로 번지지 않도록 예방하고자 함.
+
+  ##### 행동 패턴
+  - 인터넷으로 야간이나 주말에 상담 가능한 센터를 지속적으로 검색.
+  - 직장 근처보다는 집 근처의 상담 센터를 선호하지만, 근처에 적절한 곳을 찾기 어려움.
+  - 모바일 앱을 통해 비대면 상담 서비스에 대한 정보도 탐색 중.
+
+
+
+
+
+
+
+### 서비스 시퀸스 
+
+  1. 상담사가 상담사 회원가입을 통해 상담사 정보를 등록한다. (상담사 인적사항, 상담 가능 시간)
+  2. 사용자가 회원가입 후 자녀정보를 등록한다.
+  3. 등록한 자녀의 HTP그림을 통해 AI 심리 분석을 진행한다.
+  4. 사용자가 업로드한 사진을 YOLO모델을 통해 객체를 추출하고 알고리즘을 통해 사진의 해석을 생성한다.
+  5. AI가 분석한 심리 결과를 토대로 상담사와 예약을 확정한다.
+  6. 아이가 그린 그림과 해석 결과가 상담사에게 전해진다
+  7. 확정된 예약 당일날 상담사가 화상 미팅 채널을 개설하고 사용자가 접속한다.
+  8. 화상 미팅을 통해 구체적인 심리 상담을 받는다.
+
+
+
+
+
+
+### 기대효과
+
+  - **상담의 접근성 향상**: AI를 통한 초기 심리 상담으로 상담사의 스케줄에 구애받지 않고 언제든지 상담을 시작할 수 있다. 이는 시간적 제약으로 인해 기존에 상담을 받기 어려웠던 사람들이 심리 지원을 받을 수 있는 기회를 확대한다.
+
+  - **효율적인 상담 준비**: AI가 초기 상담 데이터를 수집하고 분석하여 상담사에게 제공함으로써, 상담사는 내담자의 상태와 문제를 사전에 파악할 수 있다. 상담사가 보다 심층적이고 맞춤형 상담을 빠르게 시작할 수 있다.
+
+  - **맞춤형 상담 제공**: AI가 초기 진단에서 내담자의 감정 상태, 스트레스 수준 등을 분석해 상담사에게 제공하므로, 화상 상담 시 더욱 구체적이고 개인화된 조언과 치료 계획을 만들 수 있다.
+
+  - **상담 시간 최적화**: AI를 통한 분석 과정으로 초기 평가와 정보 수집이 이루어져, 화상 상담 시간은 핵심 문제 해결에 할 수 있다. 이를 통해 내담자와 상담사 모두 시간을 효율적으로 사용할 수 있습다.
+
+  - **비대면 상담의 편리성**: AI 상담과 화상 상담의 결합으로, 내담자는 집에서 편안하게 전문적인 심리 상담을 받을 수 있습다. 이는 상담 센터 방문이 어려운 사람들에게 매우 유용한 서비스가 될 수 있다.
+
+
+
+
+
+
+
+## :sparkles: 기능 소개
+
+
+### 기능 명세서
+  ![image](/uploads/9944cf5cadf857f0f9d515a03e472f56/image.png)
+  ![image](/uploads/8045ec2e0d8047806adc54580de6e4c1/image.png)
+  ![image](/uploads/520de19e9ab5400acf7595bcc2940545/image.png)
+  ![image](/uploads/637ad7b772b710daab0ad2d2dcb27419/image.png)
+  ![image](/uploads/9f6fafd13513ce770a8628d309d64294/image.png)
+  ![image](/uploads/c7df263c75a24cd626eff9291717eb25/image.png)
+  ![image](/uploads/d1b6582cf0cc03e4123a2ca8943a656d/image.png)
+  
+
+### 부모 페이지 필수 기능
+  
+  - 아이 프로필 생성 기능 제공
+  - 아이 프로필 마다 검사를 진행하고 상세정보 제공
+  - 원하는 시간, 상담사에게 예약하기 위해 상담사 정보 검색 기능 제공
+  - 예약 취소, 수정, 추가상담 예약 기능 제공
+  - 상담이 끝나고 상담사 평가 기능 제공
+
+
+# 상담사 페이지 필수 기능
+  - 상담 예약 가능시간 등록, 수정 기능 제공
+  - 학부모와 소통을 통해 예약시간 수정, 삭제 기능 제공
+  - 화상 채팅방 생성 기능 제공
+
+
+
+
+
+
+
+
+## :sparkles: 시연
+  ### 추후 시연영상 추가
+
+
+
+
+
+
+
+## :sparkles: 기술 스택
+
+
+
+- 프론트엔드 : React, NodeJS, TypeScript
+- 백엔드 : Java, Spring boot, JPA, Swagger, python, MySQL
+
+- CI/CD: Jenkins, Docker, AWS ec2, FastAPI(서버)
+- AI : YOLOv8
+
+- 이슈관리 : Jira, Notion
+
+
+
+#### 	Architecture 설계도
+  ![image](/uploads/1d931e94c799a657fb6884868bd1a656/image.png)
+
+
+
+
+
+
+
+## :sparkles: 프로젝트 일정 및 기타 산출물
+
+
+
+### API 명세서
+  ![image](/uploads/7d4142673253cfbaf21490d9ad4089d8/image.png)
+  ![image](/uploads/51f1d6e2b272a52086d56dfaf9ae46d7/image.png)
+  ![image](/uploads/ad6fb16832080318f86118e0dc661bbb/image.png)
+
+### ERD
+  ![inMind](/uploads/dc032ffc6907f16cd351d1b3b03852b1/inMind.png)
+
+
+### AI 명세서
+
+- **한 줄 설명**: YOLOv8 모델을 이용하여 사전 준비된 이미지-라벨링 데이터 세트를 학습시키고, 학습된 모델을 통해 사용자가 업로드한 이미지를 분석한 뒤 해당 분석 결과를 해석하여 제공한다.
+
+
+
+#### 상세 내용
+
+1. **모델 개요**: 
+    - YOLOv8(You Only Look Once, version 8) 모델을 사용하여 객체 검출 및 이미지 분석을 수행한다. 이 모델은 실시간 성능을 제공하며, 높은 정확도와 속도를 자랑합한다. Fast R-CNN등 타 모델에 비해 우수한 성능을 보인다.
+
+2. **데이터 준비**:
+    - 이미지-라벨링 데이터 쌍을 사전 준비하여 학습에 사용. 이 데이터는 객체의 경계 상자와 클래스 라벨을 포함합니다. AI허브에 업로드되어있는 58000개의 데이터를 가져와 전처리(노이즈 제거, 흑백 전환, 이미지 사이즈 1280으로 리사이징)해 준비.
+
+3. **모델 학습**:
+    - 사전 준비된 데이터를 사용해 YOLOv8 모델을 학습시킨다. 학습 과정에서 epoch나 batch를 최적화하여 가지고있는 하드웨어 성능에 최적화된 학습을 진행한다.
+
+4. **이미지 분석 및 결과 해석**:
+    - 사용자가 업로드한 이미지를 학습된 YOLOv8 모델에 입력하여 객체를 검출하고, 해당 객체의 위치와 클래스 정보를 도출합니다.
+    - 분석된 결과는 사용자에게 쉽게 이해할 수 있는 해석과 함께 제공됩니다. 예를 들어, 검출된 객체의 의미나 관련된 추가 정보를 함께 표시합니다
+
+5. **기술 스택**:
+    - **프레임워크**: PyTorch
+    - **모델**: YOLOv8
+    - **프로그래밍 언어**: Python
+    - **배포 환경**: Fast API
+
+
+
+#### 데이터 전처리
+  # 사진 업로드
+
+
+
+
+##### Ground Rules
+
+
+
+  - 매일 아침 스크럼 9:00 ~ 10:00 오늘 할 일을 공유한다. (Jira)
+
+  - 수요일마다 정기 회의를 진행한다.
+
+  - Git과 코드 컨벤션을 준수해 작성한다!
+
+
+**Mind Set**
+
+  - 지각시 커피사기!
+  
+  - 지각이나 조퇴, 사유 발생시 일정 빠르게 공유하기!
+
+  - 공감과 리액션 잘해주기!
+
+  - 집가기 전에 자리 주변 정리 잘하기!
+
+
+
+**다짐** 
+
+  - 김성원 : 팀원들을 잘 서포트해서 각자 가진 역량의 최대를 발휘할 . 수있도록 노력하겠습니다.
+
+  - 김종원 : 맡은 역할에 충실히 임해서 팀에 도움이 될 수 수있도록 열심히 노력하겠습니다.
+
+  - 강병규 : 맡은 바 최선을 다해 최고의 프로젝트를 만들겠습니다.
+
+  - 박하운 : 항상 팀원들과 소통하며 책임감있게 프로젝트 완성되는 날까지 임하겠습니다.
+
+  - 이용성 : 오늘 할 일을 내일로 미루지 않고 열심히 하겠습니다!
+
+  - 유현진 : 팀원들과 좋은 분위기에서 좋은 프로젝트를 만들 수 있도록 항상 소통하고 열심히 하겠습니다!
