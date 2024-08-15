@@ -588,11 +588,25 @@ server {
 ### 9. 젠킨스 설정
 `https://i11b301.p.ssafy.io/jenkins/` 에 접속
 
+
 ```
 docker exec openvidu-jenkins-1 cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 ![image](/uploads/d6058331fa290fe662acf0fe7573deef/image.png)
+![image](/uploads/1492c46ad481457215ec57879ce22e4f/image.png)
+![image](/uploads/98d21055497e3eb0640ad7b37c5c70b7/image.png)
+![image](/uploads/fe7dc329ce51d47826bff66d70ff9af6/image.png)
+![image](/uploads/037a9629bf77c82b2d9d2a4809468a44/image.png)
+![image](/uploads/900b2c706890954df84bc9446e3a1f30/image.png)
+![image](/uploads/73552453b8c4446e599e54aee4615729/image.png)
+![image](/uploads/52f7975086ea990cbbac03b3df69045e/image.png)
+![image](/uploads/a0aff4a72e65449dbd14c976a1e70657/image.png)
+![image](/uploads/599060b481042573f8cc72b4b9d5fb33/image.png)
+![image](/uploads/12e587dbeea25e90144e93b3d4a72170/image.png)
+![image](/uploads/70d8e0cea6b4d19655d234eb5cc591f1/image.png)
+![image](/uploads/c8af5bb395dc89bcd9786cc625d6103c/image.png)
+![image](/uploads/c67e88e57e78d6a01f391b26ccdd6f28/image.png)
+![image](/uploads/a7234c7a0adc42623bb46913f9d62537/image.png)
 
 # 6. 빌드 및 실행
 
-# 7. 외부 서비스 사용
