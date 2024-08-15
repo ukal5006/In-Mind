@@ -130,6 +130,7 @@ public class ReserveService {
 
                     return ReserveCoResponseDto.builder()
                             .reserveInfoIdx(reservation.getId())
+                            .coIdx(reservation.getCounselor().getId())
                             .coName(reservation.getCounselor().getName())
                             .reportIdx(reservation.getReportIdx())
                             .childName(child.getName())
@@ -153,6 +154,7 @@ public class ReserveService {
 
         return ReserveUserResponseDto.builder()
                 .reserveInfoIdx(reservation.getId())
+                .coIdx(reservation.getCounselor().getId())
                 .coName(reservation.getCounselor().getName())
                 .reportIdx(report.getId())
                 .childName(report.getChild().getName())
