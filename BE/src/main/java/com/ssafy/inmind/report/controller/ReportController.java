@@ -28,11 +28,11 @@ public class ReportController {
     @Operation(summary = "검사 시작", description = "gpt response를 저장합니다.")
     @PostMapping("/start")
     public ResponseEntity<ReportEndResponseDto> addReport(@RequestBody ReportRequestDto requestDto) {
-        String fastApi = "https://i11b301.p.ssafy.io/yolo/analyze";
+        String fastApi = "https://b301.xyz/interpretation";
         FastApiRequestDto fastApiRequestDto = FastApiRequestDto.builder()
                 .treeUrl(requestDto.getTreeImage())
                 .houseUrl(requestDto.getHouseImage())
-                .personUrl(requestDto.getHouseImage())
+                .personUrl(requestDto.getPersonImage())
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
@@ -41,15 +41,15 @@ public class ReportController {
 
         try {
             ResponseEntity<FastApiResponseDto> response = restTemplate.exchange(fastApi, HttpMethod.POST, requestEntity, FastApiResponseDto.class);
+
             if (response.getStatusCode().is2xxSuccessful()) {
                 FastApiResponseDto jsonData = response.getBody();
                 String result;
-                if(jsonData!=null) {
+                if(jsonData != null) {
                     result = gptService.generateResult(jsonData);
                     ReportEndResponseDto reportEndResponseDto = reportService.addReport(requestDto, jsonData, result);// 검사 결과 저장하고 바로 조회하게 해야하나?
                     return ResponseEntity.status(HttpStatus.OK).body(reportEndResponseDto);
-                }
-                else {
+                } else {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
             } else {
