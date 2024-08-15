@@ -156,3 +156,97 @@
 /* .react-calendar--selectRange .react-calendar__tile--hover {
     background-color: #e6e6e6;
 } */
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    background: white;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.calendar-header .month {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.calendar-header .year {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.react-calendar__navigation {
+    display: none; /* 기본 네비게이션 숨기기 */
+}
+
+.calendar-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+
+.calendar-grid .day {
+    background: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #dcdcdc;
+    text-align: center;
+}
+
+.calendar-grid .day.sun {
+    background-color: #ffcccc;
+    color: red;
+}
+
+.calendar-grid .day.sat {
+    background-color: #cce5ff;
+    color: blue;
+}
+
+.calendar-grid .day.schedule {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    background: white;
+    border: 1px solid #dcdcdc;
+}
+
+.schedule-tag {
+    padding: 3px 6px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    text-align: left;
+    width: 100%;
+}
+
+.schedule-tag.green {
+    background-color: #28a745;
+}
+
+.schedule-tag.blue {
+    background-color: #007bff;
+}
+
+.schedule-tag.yellow {
+    background-color: #ffc107;
+}
+
+.schedule-tag.red {
+    background-color: #dc3545;
+}

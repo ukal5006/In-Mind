@@ -5,18 +5,15 @@ import Wrapper from '../../../components/Wrapper';
 import ContainerTop from '../../../components/ContainerTop';
 import ContainerTopTitle from '../../../components/ContainerTopTitle';
 import ContainerTopLink from '../../../components/ContainerTopLink';
-import { FaPlus, FaPowerOff } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import ActiveBtn from '../../../components/ActiveBtn';
+// import reservationStore from '../../../stores/reservationStore';
 import userStore from '../../../stores/userStore';
 import axios from 'axios';
 import { READRESERVEALL } from '../../../apis/reserveApi';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
+import Btn from '../../../components/Btn';
 import { READREPORTS } from '../../../apis/reportsApi';
-import Glass from '../../../components/Glass';
-import { TbReportAnalytics } from 'react-icons/tb';
-import ReviewModal from '../../../components/ReviewModal';
-import { CloseBtn, DetailTitle, ImgWrapper, ResultDiv } from './TestHistory';
-import { IoClose } from 'react-icons/io5';
 
 interface reservationInfo {
     reserveInfoIdx: number;
@@ -27,50 +24,41 @@ interface reservationInfo {
     reserveInfoStartTime: string;
     reserveInfoEndTime: string;
     reserveInfoCreateTime: string;
-    isEnd: 'Y' | 'N';
-    coIdx: any;
+    isEnd: "Y" | "N";
 }
 
 export interface FacialInfo {
     childName: string;
     reserveInfoIdx: number;
     reportIdx: number;
-    coIdx: any;
 }
 
 const ReservationHistoryContainer = styled(Container)`
-    margin-top: 40px;
     width: 100%;
-    height: 40%;
-    ${Glass}
+    height: 50%;
 `;
 
 const ReservationHistoryWrapper = styled(Wrapper)`
     width: 90%;
-    height: 95%;
+    height: 70%;
     border-radius: 10px;
-    /* box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04); */
+    box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
     flex-direction: column;
-    /* justify-content: space-between; */
-    justify-content: flex-start;
-    overflow-y: scroll;
+    justify-content: space-between;
 `;
 
 const ReservationHistoryList = styled.div`
     width: 100%;
-    /* height: 80px; */
-    min-height: 65px;
+    height: 80px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #e3e5e8, 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-    margin-top: 20px;
-    ${Glass}
 `;
 
 const ReservationHistoryItem = styled.div`
-    /* font-size: 12px; */
+    /* font-size: 19px; */
     /* font-weight: 700; */
 `;
 
@@ -90,45 +78,6 @@ export const FacialContainer = styled.div`
     position: relative;
     width: 90vw;
     height: 90vh;
-    display: flex;
-    justify-content: center;
-    min-width: 700px;
-`;
-
-const ReportContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 700px;
-    background-color: whitesmoke;
-    position: relative;
-    padding: 20px;
-    align-items: center;
-    border-radius: 10px;
-    position: fixed;
-`;
-const BtnContainer = styled.div`
-    position: absolute;
-    top: 5px;
-    right: 200px;
-    z-index: 9999999;
-    display: flex;
-    align-items: center;
-`;
-const ReportBtn = styled.div`
-    font-size: 30px;
-    color: white;
-    margin-right: 10px;
-    cursor: pointer;
-`;
-
-const ExitBtn = styled.div`
-    font-size: 28px;
-    color: tomato;
-    cursor: pointer;
-`;
-const ImgContainer = styled.div`
-    display: flex;
 `;
 
 function ReservationHistory() {
@@ -137,11 +86,6 @@ function ReservationHistory() {
     const [isFacial, setIsFacial] = useState(false);
     const [facialInfo, setFacialInfo] = useState<FacialInfo | null>();
     const [report, setReport] = useState<any>();
-    const [reportOpen, setReportOpen] = useState(false);
-    const [reviewOpen, setReviewOpen] = useState(false);
-    const handleReport = () => {
-        setReportOpen(true);
-    };
 
     const handleFacial = (facialInfo: FacialInfo) => {
         setFacialInfo(facialInfo);
@@ -167,10 +111,7 @@ function ReservationHistory() {
                         "Content-Type": "application/json;charset=UTF-8",
                     },
                 })
-                .then((response) => setReservationHistory(response.data))
-                .catch((error) => {
-                    console.log(error);
-                });
+                .then((response) => setReservationHistory(response.data));
             // .then((response) => console.log(response.data));
         }
     }, [userInfo, token]);
@@ -179,108 +120,67 @@ function ReservationHistory() {
     const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === "N");
 
     return (
-        <>
-            <ReservationHistoryContainer>
-                <ReservationHistoryWrapper>
-                    <ContainerTop>
-                        <ContainerTopTitle>상담 예약 내역</ContainerTopTitle>
-                        <ContainerTopLink to="/user/reservationHistory">
-                            <FaPlus />
-                        </ContainerTopLink>
-                    </ContainerTop>
-                    <>
-                        {filteredReservationHistory.length > 0 ? (
-                            filteredReservationHistory.map((e: reservationInfo) => {
-                                return (
-                                    <ReservationHistoryList key={e.reserveInfoIdx}>
-                                        <ReservationHistoryItem>
-                                            {e.reserveInfoDate} {e.reserveInfoStartTime.substring(0, 5)}
-                                            {'~'}
-                                            {e.reserveInfoEndTime.substring(0, 5)}
-                                        </ReservationHistoryItem>
-                                        <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
-                                        <ReservationHistoryItem>{e.childName}</ReservationHistoryItem>
-                                        <ReservationHistoryItem>
-                                            <ActiveBtn
-                                                onClick={() => {
-                                                    console.log(facialInfo);
-                                                    handleFacial({
-                                                        childName: e.childName,
-                                                        reserveInfoIdx: e.reserveInfoIdx,
-                                                        reportIdx: e.reportIdx,
-                                                        coIdx: e.coIdx,
-                                                    });
-                                                }}
-                                            >
-                                                입장
-                                            </ActiveBtn>
-                                        </ReservationHistoryItem>
-                                    </ReservationHistoryList>
-                                );
-                            })
-                        ) : (
-                            <>예약 없음</>
-                        )}
-                    </>
-                </ReservationHistoryWrapper>
-            </ReservationHistoryContainer>
+        <ReservationHistoryContainer>
+            <ReservationHistoryWrapper>
+                <ContainerTop>
+                    <ContainerTopTitle>상담 예약 내역</ContainerTopTitle>
+                    <ContainerTopLink to="/user/reservationHistory">
+                        <FaPlus />
+                    </ContainerTopLink>
+                </ContainerTop>
+                <>
+                    {filteredReservationHistory.length > 0 ? (
+                        filteredReservationHistory.map((e: reservationInfo) => {
+                            return (
+                                <ReservationHistoryList key={e.reserveInfoIdx}>
+                                    <ReservationHistoryItem>
+                                        {e.reserveInfoDate} {e.reserveInfoStartTime} {e.reserveInfoEndTime}
+                                    </ReservationHistoryItem>
+                                    <ReservationHistoryItem>{e.coName} 상담가님</ReservationHistoryItem>
+                                    <ReservationHistoryItem>{e.childName} 어린이</ReservationHistoryItem>
+                                    <ReservationHistoryItem>
+                                        <ActiveBtn
+                                            onClick={() =>
+                                                handleFacial({
+                                                    childName: e.childName,
+                                                    reserveInfoIdx: e.reserveInfoIdx,
+                                                    reportIdx: e.reportIdx,
+                                                })
+                                            }
+                                        >
+                                            입장하기
+                                        </ActiveBtn>
+                                    </ReservationHistoryItem>
+                                </ReservationHistoryList>
+                            );
+                        })
+                    ) : (
+                        <>예약 없음</>
+                    )}
+                </>
+            </ReservationHistoryWrapper>
             {isFacial && (
                 <ModalBackground>
-                    {!reviewOpen ? (
-                        <>
-                            <FacialContainer>
-                                <BtnContainer>
-                                    <ReportBtn onClick={handleReport}>
-                                        <TbReportAnalytics />
-                                    </ReportBtn>
-                                    <ExitBtn
-                                        onClick={() => {
-                                            // eslint-disable-next-line no-restricted-globals
-                                            const command = confirm('상담을 종료하시겠습니까?');
-                                            if (command !== true) {
-                                                return;
-                                            }
-                                            setReportOpen(false);
-                                            setReviewOpen(true);
-                                        }}
-                                    >
-                                        <FaPowerOff />
-                                    </ExitBtn>
-                                </BtnContainer>
-                                <VideoRoomComponent
-                                    userName={userInfo?.userName}
-                                    role={userInfo?.userRole}
-                                    childName={facialInfo?.childName}
-                                    reserveInfoIdx={facialInfo?.reserveInfoIdx}
-                                    reportIdx={facialInfo?.reportIdx}
-                                    report={report}
-                                />
-                            </FacialContainer>
-                        </>
-                    ) : (
-                        <>
-                            <ReviewModal reserveInfoIdx={facialInfo?.reserveInfoIdx} coIdx={facialInfo?.coIdx} />
-                        </>
-                    )}
-
-                    {reportOpen && (
-                        <ReportContainer>
-                            <DetailTitle>검사 자세히보기</DetailTitle>
-                            <ImgContainer>
-                                <ImgWrapper src={report?.houseImage} />
-                                <ImgWrapper src={report?.treeImage} />
-                                <ImgWrapper src={report?.personImage} />
-                            </ImgContainer>
-                            {/* <ResultDiv>{report.objectResult}</ResultDiv> */}
-                            <ResultDiv>{report.reportResult}</ResultDiv>
-                            <CloseBtn onClick={() => setReportOpen(false)}>
-                                <IoClose />
-                            </CloseBtn>
-                        </ReportContainer>
-                    )}
+                    <FacialContainer>
+                        <VideoRoomComponent
+                            userName={userInfo?.userName}
+                            childName={facialInfo?.childName}
+                            reserveInfoIdx={facialInfo?.reserveInfoIdx}
+                            reportIdx={facialInfo?.reportIdx}
+                            role={userInfo?.userRole}
+                        />
+                    </FacialContainer>
+                    <Btn
+                        onClick={() => {
+                            setIsFacial(false);
+                            setFacialInfo(null);
+                        }}
+                    >
+                        닫기
+                    </Btn>
                 </ModalBackground>
             )}
-        </>
+        </ReservationHistoryContainer>
     );
 }
 

@@ -8,11 +8,22 @@ import LoginLinkWrapper from './LoginLinkWrapper';
 import LoginWrapper from './LoginWrapper';
 import BigLogo from '../../components/BigLogo';
 import { useNavigate } from 'react-router-dom';
+import ReviewModalButton from '../../components/ReviewModal';
 import axios from 'axios';
 import { LOGIN } from '../../apis/userApi';
 import userStore from '../../stores/userStore';
+import useChildStore from '../../stores/childStore';
+import styled from 'styled-components';
+import useNotificationStore from '../../stores/notificationStore';
+
+interface ChildData {
+    childIdx: number;
+    childName: string;
+    childBirth: string;
+}
 
 function Login() {
+    const notificationStore = useNotificationStore();
     // const childStore = useChildStore();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -53,6 +64,7 @@ function Login() {
 
     return (
         <LoginContainer>
+            <ReviewModalButton>리뷰모달</ReviewModalButton>
             <BigLogo />
             <LoginWrapper>
                 <LoginInput
