@@ -67,7 +67,7 @@ const TestHistoryList = styled.div`
     ${Glass}
 `;
 
-const ModalBackground = styled.div`
+export const ModalBackground = styled.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -82,7 +82,7 @@ const ModalBackground = styled.div`
     z-index: 1;
 `;
 
-const DetailContainer = styled.div`
+export const DetailContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
