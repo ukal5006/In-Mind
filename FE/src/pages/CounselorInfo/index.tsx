@@ -194,7 +194,7 @@ const formatPhoneNumber = (phoneNumber: string) => {
 };
 
 function CounselorInfo() {
-    const { userInfo, setUserInfo, token } = userStore((state) => state);
+    const { userInfo, setUserInfo, token, setToken } = userStore((state) => state);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [type, setType] = useState('');
     const [name, setName] = useState(userInfo?.userName || '');
@@ -396,16 +396,24 @@ function CounselorInfo() {
         const check = window.confirm('정말 회원탈퇴를 하시겠습니까?');
         if (check === true && userInfo?.userIdx) {
             axios
-                .put(DELETEUSER(userInfo?.userIdx), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                })
+                .put(
+                    DELETEUSER(userInfo?.userIdx),
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    }
+                )
                 .then()
                 .catch((error) => console.log(error));
             alert('회원 탈퇴가 완료되었습니다.');
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('userInfo');
+            setToken('');
+            setUserInfo(null); // 사용자 정보를 초기화
             navigate('/');
         }
     };
