@@ -27,6 +27,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,8 @@ public class UserService {
     private final Long accessTokenExpiredMs = 1000 * 60 * 60L; //
     private final Long refreshTokenExpiredMs = 7 * 24 * 1000 * 60 * 60L; //
     private final DefaultTimeRepository defaultTimeRepository;
+
+    private final String emailPattern = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"; // 이메일 패턴
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -91,8 +94,25 @@ public class UserService {
     @Transactional
     public void saveUser(UserRequestDto userRequestDto) {
         if (checkUserEmail(userRequestDto.getEmail()).equals("duplicated")) {
-            throw new RestApiException(ErrorCode.NOT_FOUND);
+            // 이메일이 중복된 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
+
+        if (!Pattern.matches(emailPattern, userRequestDto.getEmail())) {
+            // 올바른 이메일 형식이 아닌 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (userRequestDto.getEmail().length() > 30) {
+            // 이메일의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (userRequestDto.getPassword().length() > 30) {
+            // 비밀번호의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
         String hashedString = sha256(userRequestDto.getPassword() + salt);
         User user = User.builder()
                 .email(userRequestDto.getEmail())
@@ -110,11 +130,28 @@ public class UserService {
     @Transactional
     public void saveCounselor(CounselorRequestDto requestDto) {
         if (checkUserEmail(requestDto.getEmail()).equals("duplicated")) {
-            throw new RestApiException(ErrorCode.NOT_FOUND);
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
         }
+
+
+        if (!Pattern.matches(emailPattern, requestDto.getEmail())) {
+            // 올바른 이메일 형식이 아닌 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (requestDto.getEmail().length() > 30) {
+            // 이메일의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (requestDto.getPassword().length() > 30) {
+            // 비밀번호의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
         String hashedString = sha256(requestDto.getPassword() + salt);
 
-        // null 인 경우는 프리랜서
+        // null 또는 idx가 0 인 경우는 프리랜서로 설정
         Organization organization = null;
         if (requestDto.getOrgIdx() != null && requestDto.getOrgIdx() != 0) {
             organization = orgRepository.findById(requestDto.getOrgIdx())
@@ -161,9 +198,15 @@ public class UserService {
 
     @Transactional
     public void updateUserPassword(Long userId, UserPasswordRequestDto requestDto) {
-        String inputPassKey = sha256(requestDto.getPassword() + salt);
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RestApiException(ErrorCode.NOT_FOUND));
+
+        if (requestDto.getPassword().length() > 30) {
+            // 비밀번호의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        String inputPassKey = sha256(requestDto.getPassword() + salt);
         User updateUser = User.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -184,7 +227,17 @@ public class UserService {
     @Transactional
     public String checkUserEmail(String email) {
         Optional<User> user = userRepository.findByUserEmail(email);
-        System.out.println(user.isPresent());
+
+        if (!Pattern.matches(emailPattern, email)) {
+            // 올바른 이메일 형식이 아닌 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
+        if (email.length() > 30) {
+            // 이메일의 길이가 30을 초과한 경우
+            throw new RestApiException(ErrorCode.BAD_REQUEST);
+        }
+
         if (user.isPresent()) {
             return "duplicated"; // 중복된 이메일
         }
@@ -288,3 +341,4 @@ public class UserService {
         return hexString.toString();
     }
 }
+
