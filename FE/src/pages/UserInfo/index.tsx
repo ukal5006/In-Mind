@@ -331,6 +331,8 @@ function UserInfo() {
     const handleSignOut = () => {
         const check = window.confirm('정말 회원탈퇴를 하시겠습니까?');
         if (check === true && userInfo?.userIdx) {
+            console.log(DELETEUSER(userInfo?.userIdx));
+            console.log(token);
             axios
                 .put(DELETEUSER(userInfo?.userIdx), {
                     headers: {
@@ -341,8 +343,8 @@ function UserInfo() {
                 })
                 .then()
                 .catch((error) => console.log(error));
-            alert('회원 탈퇴가 완료되었습니다.');
-            navigate('/');
+            // alert('회원 탈퇴가 완료되었습니다.');
+            // navigate('/');
         }
     };
 

@@ -186,7 +186,12 @@ function CounselorForm() {
             />
             <InputRow>
                 <HalfWidthInput placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} />
-                <HalfWidthInput placeholder="전화번호" value={tel} onChange={(e) => setPhone(e.target.value)} />
+                <HalfWidthInput
+                    placeholder="전화번호"
+                    value={tel}
+                    onChange={(e) => setPhone(e.target.value)}
+                    maxLength={11}
+                />
             </InputRow>
 
             <EmailWrapper>
