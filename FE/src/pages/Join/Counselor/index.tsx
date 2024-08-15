@@ -132,7 +132,6 @@ function CounselorForm() {
     };
 
     const signInSubmit = async () => {
-        // 이메일 인증번호 확인 후 검증 제약조건 추가 필요
         if (password === passwordCheck) {
             try {
                 await axios.post(
@@ -143,6 +142,7 @@ function CounselorForm() {
                         name,
                         tel,
                         role,
+                        orgIdx,
                     },
                     {
                         headers: {

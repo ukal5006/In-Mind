@@ -144,6 +144,8 @@ function ReservationHistory() {
     };
 
     const handleFacial = (facialInfo: FacialInfo) => {
+        console.log('여기서 페이셜 설정');
+        console.log(facialInfo);
         setFacialInfo(facialInfo);
         axios
             .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
@@ -203,7 +205,6 @@ function ReservationHistory() {
                                         <ReservationHistoryItem>
                                             <ActiveBtn
                                                 onClick={() => {
-                                                    console.log(facialInfo);
                                                     handleFacial({
                                                         childName: e.childName,
                                                         reserveInfoIdx: e.reserveInfoIdx,
@@ -235,6 +236,9 @@ function ReservationHistory() {
                                     </ReportBtn>
                                     <ExitBtn
                                         onClick={() => {
+                                            console.log('예약번호');
+                                            console.log(facialInfo?.reserveInfoIdx);
+
                                             // eslint-disable-next-line no-restricted-globals
                                             const command = confirm('상담을 종료하시겠습니까?');
                                             if (command !== true) {

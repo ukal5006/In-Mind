@@ -199,7 +199,7 @@ const BtnContainer = styled.div`
     width: 100%;
     justify-content: space-evenly;
     & > button {
-        width: 140px;
+        width: 150px;
         margin-top: 10px;
         padding: 10px 20px;
         background-color: #28a745;
