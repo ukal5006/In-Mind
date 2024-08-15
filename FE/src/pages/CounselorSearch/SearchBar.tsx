@@ -1,5 +1,6 @@
 import React from 'react';
 import useCounselorStore from '../../stores/counselorStore';
+import './Calendar.css';
 
 const SearchBar: React.FC = () => {
   const { searchType, searchTerm, setSearchType, setSearchTerm, fetchCounselors } = useCounselorStore();
@@ -16,7 +17,6 @@ const SearchBar: React.FC = () => {
     e.preventDefault();
     fetchCounselors(searchTerm);
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <select value={searchType} onChange={handleSearchTypeChange}>
