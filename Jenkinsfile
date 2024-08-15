@@ -50,5 +50,35 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Docker Image Build'){
+            steps{
+                dir('FE'){
+                    sh 'docker build -t inmind-nginx-image .'
+                }
+            }
+        }
+
+        stage('Docker Stop & Remove') {
+            steps {
+                echo 'Stopping and removing the Docker container named inmind-nginx...'
+                dir('FE') {
+                    sh '''
+                    docker stop inmind-nginx || true
+                    docker rm -v inmind-nginx || true
+                    '''
+                }
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                dir('FE') {
+                    echo 'Deploying Docker containers...'
+                    sh 'docker run -d --network host --name inmind-nginx inmind-nginx-image'
+                }
+            }
+        }
+
     }
 }
