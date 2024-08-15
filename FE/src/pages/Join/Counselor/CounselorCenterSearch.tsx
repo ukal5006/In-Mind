@@ -7,7 +7,7 @@ import { useOrganization } from './OrganizationContext';
 import userStore from '../../../stores/userStore';
 import './CounselingOrganizationModal.css';
 
-const apiUrl = 'https://i11b301.p.ssafy.io/api';
+const apiUrl = 'https://i11b301.p.ssafy.io/api/org';
 
 interface ModalProps {
     isOpen: boolean;
@@ -66,13 +66,16 @@ const CounselingOrganizationModal: React.FC = () => {
 
     const searchOrganizations = async () => {
         try {
-            const response = await axios.get(apiUrl + '/orgs', {
+            const response = await axios.get(`${apiUrl}?type=name&keyword=${searchTerm}`, {
+                params: {
+                    type: 'name', // 여기에 type 값을 넣습니다.
+                    keyword: searchTerm, // 여기에 keyword 값을 넣습니다.
+                },
                 headers: {
                     Authorization: `Bearer ${token}`,
                     accept: '*/*',
                     'Content-Type': 'application/json;charset=UTF-8',
                 },
-                params: { query: searchTerm },
             });
             setOrganizations(response.data);
             filterOrganizations(response.data, searchTerm);
