@@ -118,9 +118,6 @@ function Nav() {
             <UserInfoContainer>
                 {userInfo !== null ? (
                     <>
-                        <NotificationLink to="/notifications">
-                            <NotificationBadge>{unreadCount}</NotificationBadge>
-                        </NotificationLink>
                         <Link to="mypage">{userInfo.userName}님, 환영합니다!</Link>
 
                         <LogoutBtn onClick={handleLogout}>로그아웃</LogoutBtn>

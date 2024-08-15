@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Container from '../../../components/Container';
+import Glass from '../../../components/Glass';
 
 const ReservationListContainer = styled(Container)`
     height: 90%;
@@ -11,7 +12,7 @@ const ReservationListContainer = styled(Container)`
     flex-direction: column;
     justify-content: flex-start;
     box-sizing: border-box;
-    overflow-y: scroll;
+    ${Glass}
 `;
 
 export default ReservationListContainer;

@@ -149,8 +149,8 @@ function ReservationHistory() {
             .get(READREPORTS(facialInfo.reportIdx, userInfo?.userIdx), {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    accept: "*/*",
-                    "Content-Type": "application/json;charset=UTF-8",
+                    accept: '*/*',
+                    'Content-Type': 'application/json;charset=UTF-8',
                 },
             })
             .then((response) => setReport(response.data))
@@ -163,8 +163,8 @@ function ReservationHistory() {
                 .get(READRESERVEALL(userInfo?.userIdx), {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        accept: "*/*",
-                        "Content-Type": "application/json;charset=UTF-8",
+                        accept: '*/*',
+                        'Content-Type': 'application/json;charset=UTF-8',
                     },
                 })
                 .then((response) => setReservationHistory(response.data))
@@ -176,7 +176,7 @@ function ReservationHistory() {
     }, [userInfo, token]);
 
     // isEnd가 'N'인 예약 내역만 필터링
-    const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === "N");
+    const filteredReservationHistory = reservationHistory.filter((e) => e.isEnd === 'N');
 
     return (
         <>
@@ -240,6 +240,19 @@ function ReservationHistory() {
                                             if (command !== true) {
                                                 return;
                                             }
+                                            axios.put(
+                                                'https://i11b301.p.ssafy.io/api/reserve',
+                                                {
+                                                    reserveInfoIdx: facialInfo?.reserveInfoIdx,
+                                                },
+                                                {
+                                                    headers: {
+                                                        Authorization: `Bearer ${token}`,
+                                                        accept: '*/*',
+                                                        'Content-Type': 'application/json;charset=UTF-8',
+                                                    },
+                                                }
+                                            );
                                             setReportOpen(false);
                                             setReviewOpen(true);
                                         }}

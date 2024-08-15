@@ -5,17 +5,19 @@ import './Calendar.css';
 import styled from 'styled-components';
 import { colors } from '../../../theme/colors';
 import { ReservationInfo } from '.';
+import Glass from '../../../components/Glass';
 
 export type DatePiece = any | null;
 export type SelectedDate = DatePiece | [DatePiece, DatePiece];
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
-    onDateSelect: (dates: (string | null)[]) => void; // 날짜 배열을 받을 수 있도록 수정
+    onDateSelect: (dates: (string | null)[]) => void;
 }
 
 const CustomCalendar = styled(Calendar)`
-    border-radius: 1px solid black;
+    padding: 10px 20px;
+    ${Glass}
     width: 700px;
 
     .react-calendar__navigation {
@@ -53,6 +55,17 @@ const CustomCalendar = styled(Calendar)`
     }
 `;
 
+const Count = styled.div`
+    background-color: #55b9f1;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: white;
+`;
+
 const ReservationDiv = styled.div`
     color: black;
 `;
@@ -70,16 +83,16 @@ function ScheduleCalendar({ reservationList, onDateSelect }: ScheduleCalendarPro
 
         if (Array.isArray(selectedDate)) {
             formattedDate = selectedDate.map((date) => (date ? moment(date).format('YYYY-MM-DD') : null));
-            onDateSelect(formattedDate); // 배열 전달
+            onDateSelect(formattedDate);
         } else {
             formattedDate = selectedDate ? [moment(selectedDate).format('YYYY-MM-DD')] : [null];
-            onDateSelect(formattedDate); // 단일 날짜도 배열로 전달
+            onDateSelect(formattedDate);
         }
     }, [selectedDate]);
 
     // 예약 건수를 날짜별로 맵핑
     const reservationCountByDate = reservationList?.reduce((acc, reservation) => {
-        const date = moment(reservation.date).format('YYYY-MM-DD'); // 예약 날짜 형식 맞추기
+        const date = moment(reservation.reserveInfoDate).format('YYYY-MM-DD'); // reserveInfoDate를 사용하여 날짜 형식 맞추기
         acc[date] = (acc[date] || 0) + 1; // 해당 날짜의 예약 건수 증가
         return acc;
     }, {} as Record<string, number>);
@@ -91,19 +104,19 @@ function ScheduleCalendar({ reservationList, onDateSelect }: ScheduleCalendarPro
                 value={selectedDate}
                 calendarType="gregory"
                 view="month"
-                next2Label={null} // +1년 & +10년 이동 버튼 숨기기
-                prev2Label={null} // -1년 & -10년 이동 버튼 숨기기
-                minDetail="year" // 10년단위 년도 숨기기
+                next2Label={null}
+                prev2Label={null}
+                minDetail="year"
                 formatDay={(locale, date) => moment(date).format('D')}
-                formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')} // 네비게이션에서 2023. 12 이렇게 보이도록 설정
-                formatYear={(locale, date) => moment(date).format('YYYY')} // 네비게이션 눌렀을때 숫자 년도만 보이게
+                formatMonthYear={(locale, date) => moment(date).format('YYYY. MM')}
+                formatYear={(locale, date) => moment(date).format('YYYY')}
                 locale="kr"
                 tileContent={({ date }) => {
                     const formattedDate = moment(date).format('YYYY-MM-DD');
                     const count = reservationCountByDate?.[formattedDate] || 0;
                     return (
                         <ReservationDiv>
-                            {count > 0 && <span>{count}건의 예약이 있습니다.</span>}
+                            {count > 0 && <Count>{count}</Count>}
                             {moment(date).isBefore(moment(), 'day') && <Checkmark>✔️</Checkmark>}
                         </ReservationDiv>
                     );
