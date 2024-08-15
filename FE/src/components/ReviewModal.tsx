@@ -110,7 +110,8 @@ const ReviewModal = (props: any) => {
                     },
                 }
             );
-            console.log('리뷰가 성공적으로 제출되었습니다.');
+            alert('리뷰를 남겨주셔서 감사합니다!');
+            navigate('/');
         } catch (error) {
             console.error('리뷰 제출 중 오류 발생:', error);
         }
