@@ -95,7 +95,7 @@ export const FacialContainer = styled.div`
     min-width: 700px;
 `;
 
-const ReportContainer = styled.div`
+export const ReportContainer = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -250,6 +250,7 @@ function ReservationHistory() {
                                             }
                                             axios.put(
                                                 `https://i11b301.p.ssafy.io/api/reserve?reserveInfoIdx=${facialInfo?.reserveInfoIdx}`,
+                                                {},
                                                 {
                                                     headers: {
                                                         Authorization: `Bearer ${token}`,

@@ -10,11 +10,13 @@ import axios from 'axios';
 import { DELETERESERVE, RUDRESERVE } from '../../../apis/reserveApi';
 import { useNavigate } from 'react-router-dom';
 import userStore from '../../../stores/userStore';
-import { FacialContainer, FacialInfo } from '../../UserMain/UserHome/ReservationHistory';
+import { FacialContainer, FacialInfo, ReportContainer } from '../../UserMain/UserHome/ReservationHistory';
 import VideoRoomComponent from '../../FacialMeeting/components/VideoRoomComponent';
 import { READREPORTS } from '../../../apis/reportsApi';
 import { TbReportAnalytics } from 'react-icons/tb';
 import { FaPowerOff } from 'react-icons/fa';
+import { CloseBtn, DetailTitle, ImgWrapper, ResultDiv } from '../../UserMain/UserHome/TestHistory';
+import { IoClose } from 'react-icons/io5';
 
 interface ScheduleCalendarProps {
     reservationList: ReservationInfo[] | undefined;
@@ -140,13 +142,6 @@ const ExitBtn = styled.div`
     font-size: 28px;
     color: tomato;
     cursor: pointer;
-`;
-
-const ReportContainer = styled.div`
-    position: fixed;
-    left: 0;
-    /* width: 300px; */
-    background-color: white;
 `;
 
 const ImgContainer = styled.div`
@@ -326,22 +321,23 @@ function ReservationList({ reservationList, selectedDate }: ScheduleCalendarProp
                             <FaPowerOff />
                         </ExitBtn>
                     </BtnContainer>
-                </ModalBackground>
-            )}
 
-            {reportOpen && (
-                <ReportContainer>
-                    <Btn onClick={() => setReportOpen(false)}>닫기</Btn>
-                    <div>
-                        <div>{report.objectResult}</div>
-                        <div>{report.reportResult}</div>
-                    </div>
-                    <ImgContainer>
-                        <ImgH src={report.houseImage} />
-                        <ImgTP src={report.treeImage} />
-                        <ImgTP src={report.personImage} />
-                    </ImgContainer>
-                </ReportContainer>
+                    {reportOpen && (
+                        <ReportContainer>
+                            <DetailTitle>검사 보기</DetailTitle>
+                            <ImgContainer>
+                                <ImgWrapper src={report?.houseImage} />
+                                <ImgWrapper src={report?.treeImage} />
+                                <ImgWrapper src={report?.personImage} />
+                            </ImgContainer>
+                            {/* <ResultDiv>{report.objectResult}</ResultDiv> */}
+                            <ResultDiv>{report.reportResult}</ResultDiv>
+                            <CloseBtn onClick={() => setReportOpen(false)}>
+                                <IoClose />
+                            </CloseBtn>
+                        </ReportContainer>
+                    )}
+                </ModalBackground>
             )}
         </>
     );

@@ -233,7 +233,7 @@ const ButtonContainer = styled.div`
 `;
 
 function UserInfo() {
-    const { userInfo, setUserInfo, token } = userStore((state) => state);
+    const { userInfo, setUserInfo, token, setToken } = userStore((state) => state);
     const [modalType, setModalType] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [changePhone, setChangePhone] = useState(userInfo?.userTel);
@@ -334,17 +334,25 @@ function UserInfo() {
             console.log(DELETEUSER(userInfo?.userIdx));
             console.log(token);
             axios
-                .put(DELETEUSER(userInfo?.userIdx), {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        accept: '*/*',
-                        'Content-Type': 'application/json;charset=UTF-8',
-                    },
-                })
+                .put(
+                    DELETEUSER(userInfo?.userIdx),
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            accept: '*/*',
+                            'Content-Type': 'application/json;charset=UTF-8',
+                        },
+                    }
+                )
                 .then()
                 .catch((error) => console.log(error));
-            // alert('회원 탈퇴가 완료되었습니다.');
-            // navigate('/');
+            localStorage.removeItem('jwt');
+            localStorage.removeItem('userInfo');
+            setToken('');
+            setUserInfo(null); // 사용자 정보를 초기화
+            alert('회원 탈퇴가 완료되었습니다.');
+            navigate('/');
         }
     };
 
