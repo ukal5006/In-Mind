@@ -142,7 +142,7 @@
 
 
 ### 기능 명세서
-  ![image](/uploads/9944cf5cadf857f0f9d515a03e472f56/image.png)
+  ![image](/docs/기능명세1.png)
   ![image](/uploads/8045ec2e0d8047806adc54580de6e4c1/image.png)
   ![image](/uploads/520de19e9ab5400acf7595bcc2940545/image.png)
   ![image](/uploads/637ad7b772b710daab0ad2d2dcb27419/image.png)
